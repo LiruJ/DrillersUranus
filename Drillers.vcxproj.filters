@@ -1,0 +1,262 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Services">
+      <UniqueIdentifier>{07ed6f5f-3a5e-47b3-8df2-f5d9019d2a0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Services">
+      <UniqueIdentifier>{0e5936ee-5c0b-49b1-ae00-0d0b3eced3ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjects">
+      <UniqueIdentifier>{0013e9a6-5857-431c-8910-00d0d41e3e3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObjects">
+      <UniqueIdentifier>{49503d86-6243-4bf7-8ac5-fa53a84cc8a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Structures">
+      <UniqueIdentifier>{e85adf82-1bfe-44e4-9282-588b882d7a6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Structures">
+      <UniqueIdentifier>{617548f2-317f-427b-96ba-658533d7acb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\MapGenerators">
+      <UniqueIdentifier>{4f8d8511-fd06-4d1d-94d1-3a7c2c8fe69b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utilities">
+      <UniqueIdentifier>{13c2d86f-09c2-4ae3-a1e1-1fe63a36a975}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\MapGenerators">
+      <UniqueIdentifier>{556c7f9a-aea5-493b-a001-aad3d4e3e96c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Services\Graphics">
+      <UniqueIdentifier>{86a0e004-2696-4875-8f4f-59552a65b879}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Services\Controls">
+      <UniqueIdentifier>{9a63bbac-99a1-4f82-bc4d-431a8be9fbbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Services\Logging">
+      <UniqueIdentifier>{8f4785a9-1f72-414e-a8a9-f6dc760be2fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Minigames">
+      <UniqueIdentifier>{2576e29a-a623-4d39-a10b-d4caf8181bfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Minigames">
+      <UniqueIdentifier>{1b61aa2b-62fd-4f4f-a015-1bd3f16edf4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Interfaces">
+      <UniqueIdentifier>{e0a99fe0-2e92-41f8-ab6f-3ade3eb5db9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Services\Screen">
+      <UniqueIdentifier>{1cc0136c-d49e-456a-9dff-8a945f745c62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UI">
+      <UniqueIdentifier>{77f22f10-ef8a-422f-9afc-60e213386cf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI">
+      <UniqueIdentifier>{f1cce200-acec-4c7d-b232-b2a504456177}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Services\Events">
+      <UniqueIdentifier>{19264c25-40fd-4219-95ca-dc9f1621725b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsoleLogger.cpp">
+      <Filter>Source Files\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="SDLGraphics.cpp">
+      <Filter>Source Files\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObject.cpp">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="DungeonGenerator.cpp">
+      <Filter>Source Files\MapGenerators</Filter>
+    </ClCompile>
+    <ClCompile Include="CavernGenerator.cpp">
+      <Filter>Source Files\MapGenerators</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMap.cpp">
+      <Filter>Source Files\Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyboardControls.cpp">
+      <Filter>Source Files\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="MiningMinigame.cpp">
+      <Filter>Source Files\Minigames</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool.cpp">
+      <Filter>Source Files\Minigames</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile.cpp">
+      <Filter>Source Files\Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="LetterBoxScreen.cpp">
+      <Filter>Source Files\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="Frame.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ProgressBar.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SDLEvents.cpp">
+      <Filter>Source Files\Services</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ServiceProvider.h">
+      <Filter>Header Files\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Services.h">
+      <Filter>Header Files\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Point.h">
+      <Filter>Header Files\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObject.h">
+      <Filter>Header Files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Direction.h">
+      <Filter>Header Files\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="CavernGenerator.h">
+      <Filter>Header Files\MapGenerators</Filter>
+    </ClInclude>
+    <ClInclude Include="DungeonGenerator.h">
+      <Filter>Header Files\MapGenerators</Filter>
+    </ClInclude>
+    <ClInclude Include="MapGenerator.h">
+      <Filter>Header Files\MapGenerators</Filter>
+    </ClInclude>
+    <ClInclude Include="Random.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteData.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMap.h">
+      <Filter>Header Files\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics.h">
+      <Filter>Header Files\Services\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="SDLGraphics.h">
+      <Filter>Header Files\Services\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Header Files\Services\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleLogger.h">
+      <Filter>Header Files\Services\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardControls.h">
+      <Filter>Header Files\Services\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls.h">
+      <Filter>Header Files\Services\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="MiningMinigame.h">
+      <Filter>Header Files\Minigames</Filter>
+    </ClInclude>
+    <ClInclude Include="Tool.h">
+      <Filter>Header Files\Minigames</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureBound.h">
+      <Filter>Header Files\Services\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
+      <Filter>Header Files\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2.h">
+      <Filter>Header Files\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="IReadOnlyMapObject.h">
+      <Filter>Header Files\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="LetterBoxScreen.h">
+      <Filter>Header Files\Services\Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="Screen.h">
+      <Filter>Header Files\Services\Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="Frame.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ProgressBar.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Events.h">
+      <Filter>Header Files\Services\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="SDLEvents.h">
+      <Filter>Header Files\Services\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Rectangle.h">
+      <Filter>Header Files\Structures</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Content\Tiles.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Content\MapObjects.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Content\CaveWalls.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Content\UI.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Content\Bindings.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

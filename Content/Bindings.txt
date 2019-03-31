@@ -1,0 +1,6 @@
+Up 26;
+Down 22;
+Left 4;
+Right 7;
+Interact 8;
+Swing 44;
