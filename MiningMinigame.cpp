@@ -37,8 +37,8 @@ void Minigames::MiningMinigame::Draw()
 		for (int y = 0; y < c_wallHeight; y++)
 		{
 			// Calculate the screen position and draw.
-			Point screenPosition = screen.ToScreenSpace(Point(x, y) * SpriteData::c_wallSize);
-			graphics.Draw(SpriteData::SheetID::MineWalls, m_wallData[x][y], Rectangle(screenPosition, screen.ToScreenSize(Point(SpriteData::c_wallSize))));
+			Point screenPosition = screen.WindowToScreenSpace(Point(x, y) * SpriteData::c_wallSize);
+			graphics.Draw(SpriteData::SheetID::MineWalls, m_wallData[x][y], Rectangle(screenPosition, screen.WindowToScreenSize(Point(SpriteData::c_wallSize))));
 		}
 	}
 
@@ -81,7 +81,7 @@ void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
 	Screen& screen = Game::GetService().GetScreen();
 
 	// Convert the screen position to a tile position.
-	Point tilePosition = screen.ToWindowSpace(Point(*static_cast<int*>(_windowX), *static_cast<int*>(_windowY))) / SpriteData::c_wallSize;
+	Point tilePosition = screen.ScreenToWindowSpace(Point(*static_cast<int*>(_windowX), *static_cast<int*>(_windowY))) / SpriteData::c_wallSize;
 
 	// If the tile position is not in range, do nothing.
 	if (!isInRange(tilePosition)) { return; }

@@ -207,7 +207,7 @@ void Graphics::SDLGraphics::LoadSheetToID(const std::string _fileName, const uin
 	m_sheets.emplace(_sheetID, std::vector<SDL_Texture*>(_textureBounds.size()));
 
 	// Go over each given bound and add it to the vector.
-	for (int32_t i = 0; i < _textureBounds.size(); i++)
+	for (uint32_t i = 0; i < _textureBounds.size(); i++)
 	{
 		// Create a new texture for this sprite.
 		SDL_Texture* spriteTexture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, _textureBounds[i].w, _textureBounds[i].h);

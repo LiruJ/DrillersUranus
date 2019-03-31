@@ -36,33 +36,33 @@ struct Point
 	bool operator==(const Point& _other)	const	{ return (x == _other.x && y == _other.y); }
 	bool operator!=(const Point& _other)	const	{ return (x != _other.x || y != _other.y); }
 
-	Point operator+(const Point& _point)	const	{ return Point(x + _point.x, y + _point.y); }
-	Point operator+(const int32_t _value)	const	{ return Point(x + _value, y + _value); }
+	Point operator+(const Point& _point)	const	{ return Point(x + _point.x,			y + _point.y); }
+	Point operator+(const int32_t _value)	const	{ return Point(x + _value,				y + _value); }
 
-	Point& operator+=(const Point& _point)			{ x += _point.x;	y += _point.y;	return *this; }
-	Point& operator+=(const int32_t _value)			{ x += _value;		y += _value;	return *this; }
+	Point& operator+=(const Point& _point)			{ x += _point.x;						y += _point.y;	return *this; }
+	Point& operator+=(const int32_t _value)			{ x += _value;							y += _value;	return *this; }
 
-	Point operator-(const Point& _point)	const	{ return Point(x - _point.x, y - _point.y); }
-	Point operator-(const int32_t _value)	const	{ return Point(x - _value, y - _value); }
+	Point operator-(const Point& _point)	const	{ return Point(x - _point.x,			y - _point.y); }
+	Point operator-(const int32_t _value)	const	{ return Point(x - _value,				y - _value); }
 
-	Point& operator-=(const Point& _point)			{ x -= _point.x;	y -= _point.y;	return *this; }
-	Point& operator-=(const int32_t _value)			{ x -= _value;		y -= _value;	return *this; }
+	Point& operator-=(const Point& _point)			{ x -= _point.x;						y -= _point.y;	return *this; }
+	Point& operator-=(const int32_t _value)			{ x -= _value;							y -= _value;	return *this; }
 
-	Point operator*(const Point& _point)	const	{ return Point(x * _point.x, y * _point.y); }
-	Point operator*(const int32_t _value)	const	{ return Point(x * _value, y * _value); }
-	Point operator*(const float_t _value)	const	{ return Point(x * _value, y * _value); }
+	Point operator*(const Point& _point)	const	{ return Point(x * _point.x,			y * _point.y); }
+	Point operator*(const int32_t _value)	const	{ return Point(x * _value,				y * _value); }
+	Point operator*(const float_t _value)	const	{ return Point((int32_t)(x * _value),	(int32_t)(y * _value)); }
 
-	Point& operator*=(const Point& _point)			{ x *= _point.x;	y *= _point.y;	return *this; }
-	Point& operator*=(const int32_t _value)			{ x *= _value;		y *= _value;	return *this; }
-	Point& operator*=(const float_t _value)			{ x = (float_t)x * _value; y = (float_t)y * _value; return *this; }
+	Point& operator*=(const Point& _point)			{ x *= _point.x;						y *= _point.y;	return *this; }
+	Point& operator*=(const int32_t _value)			{ x *= _value;							y *= _value;	return *this; }
+	Point& operator*=(const float_t _value)			{ x = (int32_t)(x * _value);			y = (int32_t)(y * _value); return *this; }
 
-	Point operator/(const Point& _point)	const	{ return Point(x / _point.x, y / _point.y); }
-	Point operator/(const int32_t _value)	const	{ return Point(x / _value, y / _value); }
-	Point operator/(const float_t _value)	const	{ return Point(x / _value, y / _value); }
+	Point operator/(const Point& _point)	const	{ return Point(x / _point.x,			y / _point.y); }
+	Point operator/(const int32_t _value)	const	{ return Point(x / _value,				y / _value); }
+	Point operator/(const float_t _value)	const	{ return Point((int32_t)(x / _value),	(int32_t)(y / _value)); }
 
-	Point& operator/=(const Point& _point)			{ x /= _point.x;	y /= _point.y;	return *this; }
-	Point& operator/=(const int32_t _value)			{ x /= _value;		y /= _value;	return *this; }
-	Point& operator/=(const float_t _value)			{ x /= _value;		y /= _value;	return *this; }
+	Point& operator/=(const Point& _point)			{ x /= _point.x;						y /= _point.y;	return *this; }
+	Point& operator/=(const int32_t _value)			{ x /= _value;							y /= _value;	return *this; }
+	Point& operator/=(const float_t _value)			{ x = (int32_t)(x / _value);			y = (int32_t)(y /_value);	return *this; }
 };
 
 #endif

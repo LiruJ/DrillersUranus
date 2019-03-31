@@ -11,19 +11,19 @@ namespace UserInterface
 	{
 	public:
 		ProgressBar() : Frame::Frame(), m_max(100), m_current(0) {}
-		ProgressBar(const Point _position, const Point _size, const unsigned short _spriteID) : Frame::Frame(_position, _size, _spriteID), m_max(100), m_current(0) {}
+		ProgressBar(const Point _position, const Point _size, const uint16_t _spriteID) : Frame::Frame(_position, _size, _spriteID), m_max(100), m_current(0) {}
 
 		virtual void Draw();
 
-		void SetValue(const unsigned int _value)	{ m_current =  std::min(m_max, _value); }
-		void SetMax(const unsigned int _max)		{ m_max = _max; }
+		void SetValue(const uint32_t _value)	{ m_current =  std::min(m_max, _value); }
+		void SetMax(const uint32_t _max)		{ m_max = _max; }
 
 	private:
 		/// <summary> The highest value of the bar. </summary>
-		unsigned int m_max;
+		uint32_t m_max;
 
 		/// <summary> The current value of the bar. </summary>
-		unsigned int m_current;
+		uint32_t m_current;
 	};
 }
 #endif

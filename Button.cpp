@@ -28,8 +28,8 @@ void UserInterface::Button::handleClick(void* _windowX, void* _windowY)
 	Point windowPosition(*static_cast<int*>(_windowX), *static_cast<int*>(_windowY));
 
 	// Convert everything into screen-space.
-	Point buttonScreenPosition = screen.ToScreenSpace(m_windowPosition);
-	Point buttonScreenSize = screen.ToScreenSize(m_windowSize);
+	Point buttonScreenPosition = screen.WindowToScreenSpace(m_windowPosition);
+	Point buttonScreenSize = screen.WindowToScreenSize(m_windowSize);
 
 	// Check if the mouse position is within the bounds of this button.
 	if (windowPosition.x >= buttonScreenPosition.x && windowPosition.y >= buttonScreenPosition.y &&

@@ -140,7 +140,7 @@ int Game::Run()
 	while (!update()) 
 	{
 		draw();
-		SDL_Delay(1000.0f / m_SDLGraphics->m_framesPerSecond);
+		SDL_Delay((uint32_t)(1000.0f / (float_t)m_SDLGraphics->m_framesPerSecond));
 	}
 
 	// Return 0 to say the game ran successfully.

@@ -15,6 +15,6 @@ void Tile::Draw(const Point _tilePosition, const Point _cameraPosition)
 	else if (m_prosperity > 193) { spriteID = SpriteData::MaxGems; }
 
 	// Calculate the screen position and draw.
-	Point screenPosition = screen.ToScreenSpace((_tilePosition * SpriteData::c_tileSize) - _cameraPosition);
-	graphics.Draw(SpriteData::Tiles, spriteID, Rectangle(screenPosition, screen.ToScreenSize(SpriteData::c_tileSize)));
+	Point screenPosition = screen.WindowToScreenSpace((_tilePosition * SpriteData::c_tileSize) - _cameraPosition);
+	graphics.Draw(SpriteData::Tiles, spriteID, Rectangle(screenPosition, screen.WindowToScreenSize(SpriteData::c_tileSize)));
 }

@@ -15,6 +15,6 @@ void MapObject::Draw(const Point _cameraPosition)
 	Screen& screen = Game::GetService().GetScreen();
 
 	// Calculate the screen position and draw.
-	Point screenPosition = screen.ToScreenSpace((m_tilePosition * SpriteData::c_tileSize) - _cameraPosition);
-	graphics.Draw(SpriteData::SheetID::Objects, m_spriteID, Rectangle(screenPosition, screen.ToScreenSize(Point(SpriteData::c_tileSize))));
+	Point screenPosition = screen.WindowToScreenSpace((m_tilePosition * SpriteData::c_tileSize) - _cameraPosition);
+	graphics.Draw(SpriteData::SheetID::Objects, m_spriteID, Rectangle(screenPosition, screen.WindowToScreenSize(Point(SpriteData::c_tileSize))));
 }
