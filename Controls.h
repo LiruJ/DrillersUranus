@@ -1,6 +1,9 @@
 #ifndef CONTROLS_H
 #define CONTROLS_H
 
+// Typedef includes.
+#include <stdint.h>
+
 namespace Controls
 {
 	enum Command
@@ -13,8 +16,8 @@ namespace Controls
 	public:
 		virtual ~Controls() {}
 
-		virtual int			GetKeyForCommand(Command) = 0;
-		virtual Command		GetCommandFromKey(int) = 0;
+		virtual int32_t		GetKeyForCommand(Command) = 0;
+		virtual Command		GetCommandFromKey(int32_t) = 0;
 	};
 }
 #endif

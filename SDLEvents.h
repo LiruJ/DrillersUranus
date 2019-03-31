@@ -22,7 +22,7 @@ public:
 	virtual void AddUserListener(const UserEvent _userEvent, std::function<void(void*, void*)> _function) { AddFrameworkListener(m_startingEventIndex + _userEvent, _function); }
 private:
 	/// <summary> The index in SDL's event register of the user-defined events. </summary>
-	unsigned int m_startingEventIndex;
+	uint32_t m_startingEventIndex;
 
 	/// <summary> Vectors of functions keyed by SDLEvent IDs. </summary>
 	std::map<uint32_t, std::vector<std::function<void(void*, void*)>>> m_functionsBySDLEventID;

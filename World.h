@@ -27,7 +27,7 @@ public:
 
 	void GenerateRandomMap();
 	void Draw();
-	int Update();
+	int32_t Update();
 
 	inline IReadOnlyMapObject& GetPlayer()	{ return m_player; }
 	inline IReadOnlyMapObject& GetSpawn()	{ return m_spawnPoint; }
@@ -52,10 +52,10 @@ private:
 	Camera						m_camera;
 
 	/// <summary> The number of floors that the player has explored. </summary>
-	unsigned short				m_floorCount = 0;
+	uint16_t				m_floorCount = 0;
 
 	/// <summary> How many turns the player can make before they lose. </summary>
-	unsigned short				m_turnsUntilCollapse;
+	uint16_t				m_turnsUntilCollapse;
 
 	void handleKeyDown(void*, void*);
 

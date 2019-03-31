@@ -11,8 +11,8 @@ namespace Random
 	/// <summary> The random number generator itself. </summary>
 	static std::default_random_engine generator(seed);
 	
-	inline int RandomBetween(const int _min, const int _max) { std::uniform_int_distribution<int> distribution(_min, _max); return distribution(generator); }
+	inline int32_t RandomBetween(const int32_t _min, const int32_t _max) { std::uniform_int_distribution<int32_t> distribution(_min, _max); return distribution(generator); }
 
-	inline float RandomScalar() { std::uniform_int_distribution<int> distribution(0, 100000); return (float)distribution(generator) / 100000.0f; }
+	inline float RandomScalar() { std::uniform_int_distribution<int32_t> distribution(0, 100000); return (float)distribution(generator) / 100000.0f; }
 }
 #endif

@@ -7,7 +7,7 @@ void Tile::Draw(const Point _tilePosition, const Point _cameraPosition)
 	Graphics::Graphics& graphics = Game::GetService().GetGraphics();
 	Screen& screen = Game::GetService().GetScreen();
 
-	unsigned short spriteID = m_ID;
+	uint16_t spriteID = m_ID;
 
 	if (m_prosperity > 0 && m_prosperity <= 64) { spriteID = SpriteData::LowGems; }
 	else if (m_prosperity > 65 && m_prosperity <= 128) { spriteID = SpriteData::MediumGems; }

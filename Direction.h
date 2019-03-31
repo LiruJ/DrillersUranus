@@ -9,7 +9,7 @@
 // Forward declaration.
 struct Direction;
 
-enum Directions : char
+enum Directions : int8_t
 {
 	None = -1, Left, Up, Right, Down
 };

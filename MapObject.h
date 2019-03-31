@@ -11,7 +11,7 @@ class MapObject : public IReadOnlyMapObject
 {
 public:
 	MapObject() : m_tilePosition(Point(0, 0)) {}
-	MapObject(const unsigned char _spriteID) : m_tilePosition(Point(0, 0)), m_spriteID(_spriteID) {}
+	MapObject(const uint8_t _spriteID) : m_tilePosition(Point(0, 0)), m_spriteID(_spriteID) {}
 	~MapObject() {}
 
 	virtual Point GetTilePosition()										{ return m_tilePosition; }
@@ -21,6 +21,6 @@ public:
 
 protected:
 	Point			m_tilePosition;
-	unsigned char	m_spriteID = 0;
+	uint8_t	m_spriteID = 0;
 };
 #endif

@@ -28,7 +28,7 @@ void Controls::KeyboardControls::LoadFromFile(const std::string _filePath)
 		currentLineStream >> commandName;
 
 		// Read the keycode second.
-		int keyCode;
+		int32_t keyCode;
 		currentLineStream >> keyCode;
 
 		// Can't switch on strings, so just check to see if the name matches anything.

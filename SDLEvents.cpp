@@ -74,5 +74,5 @@ void SDLEvents::AddFrameworkListener(uint32_t _sdlEventID, std::function<void(vo
 
 void SDLEvents::fireEvents(std::vector<std::function<void(void*, void*)>>& _eventFunctions, void* _data1, void* _data2)
 {
-	for (int i = 0; i < _eventFunctions.size(); i++) { _eventFunctions[i](_data1, _data2); }
+	for (uint32_t i = 0; i < _eventFunctions.size(); i++) { _eventFunctions[i](_data1, _data2); }
 }

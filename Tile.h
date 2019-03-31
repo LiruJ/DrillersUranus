@@ -10,9 +10,9 @@
 
 struct Tile
 {
-	unsigned char m_ID : 7;
+	uint8_t m_ID : 7;
 	bool m_visibility : 1;
-	unsigned char m_prosperity : 8;
+	uint8_t m_prosperity : 8;
 
 	Tile() : m_ID(0), m_prosperity(0), m_visibility(false) {}
 

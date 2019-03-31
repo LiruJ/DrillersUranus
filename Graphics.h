@@ -24,7 +24,7 @@ namespace Graphics
 
 		virtual void Draw(uint16_t, uint16_t, Rectangle, Rectangle) = 0;
 
-		int m_framesPerSecond = 30;
+		int32_t m_framesPerSecond = 30;
 	};
 }
 #endif

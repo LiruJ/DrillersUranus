@@ -19,7 +19,7 @@ namespace MapGeneration
 		float				c_maxPercentageOfMapToCarve = 0.8f;
 
 		/// <summary> The amount of prosperity to be added to the map, as an average of all cells. </summary>
-		const unsigned char	c_averageProsperityPerCell = 5;
+		const uint8_t	c_averageProsperityPerCell = 5;
 
 		/// <summary> The chance for each step to go closer towards the centre. <c>0</c> for no weighting, <c>100</c> for full weighting. </summary>
 		const float			c_centreWeight = 0.1f;

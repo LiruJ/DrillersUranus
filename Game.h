@@ -18,7 +18,7 @@ class Game
 public:
 	Game();
 
-	int Run();
+	int32_t Run();
 
 	/// <summary> Gets the current service provider. </summary>
 	/// <returns> The current service provider. </returns>
@@ -52,7 +52,7 @@ private:
 
 	void draw();
 
-	int update();
+	int32_t update();
 
 	void initialiseServices();
 	void initialiseBindings();
@@ -62,6 +62,6 @@ private:
 	void startMinigame(void*, void*);
 	void stopMinigame(void*, void*);
 
-	void resizeScreen(void* _windowX, void* _windowY) { GetService().GetScreen().Resize(*static_cast<int*>(_windowX), *static_cast<int*>(_windowY)); }
+	void resizeScreen(void* _windowX, void* _windowY) { GetService().GetScreen().Resize(*static_cast<int32_t*>(_windowX), *static_cast<int32_t*>(_windowY)); }
 };
 #endif

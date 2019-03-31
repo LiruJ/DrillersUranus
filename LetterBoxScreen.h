@@ -21,7 +21,7 @@ public:
 	virtual Point ScreenToWindowSpace(const Point _screenPosition)	{ return (_screenPosition - m_position) / m_scale; }
 
 	virtual Point	WindowToScreenSize(const Point _size)			{ return Point(ceil((float_t)_size.x * m_scale), ceil((float_t)_size.y * m_scale)); }
-	virtual int		WindowToScreenSize(const int32_t _size)			{ return (int32_t)ceil(_size * m_scale); }
+	virtual int32_t		WindowToScreenSize(const int32_t _size)			{ return (int32_t)ceil(_size * m_scale); }
 
 	virtual void Resize(int32_t, int32_t);
 private:

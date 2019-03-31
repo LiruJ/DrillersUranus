@@ -6,7 +6,7 @@
 // Data includes.
 #include "Game.h"
 
-UserInterface::Button::Button(const Point _position, const Point _size, const unsigned short _spriteID) : Frame::Frame(_position, _size, _spriteID)
+UserInterface::Button::Button(const Point _position, const Point _size, const uint16_t _spriteID) : Frame::Frame(_position, _size, _spriteID)
 { }
 
 void UserInterface::Button::Initialise()
@@ -25,7 +25,7 @@ void UserInterface::Button::handleClick(void* _windowX, void* _windowY)
 	Events& events = Game::GetService().GetEvents();
 	
 	// Cast the x and y into a point.
-	Point windowPosition(*static_cast<int*>(_windowX), *static_cast<int*>(_windowY));
+	Point windowPosition(*static_cast<int32_t*>(_windowX), *static_cast<int32_t*>(_windowY));
 
 	// Convert everything into screen-space.
 	Point buttonScreenPosition = screen.WindowToScreenSpace(m_windowPosition);
@@ -35,6 +35,6 @@ void UserInterface::Button::handleClick(void* _windowX, void* _windowY)
 	if (windowPosition.x >= buttonScreenPosition.x && windowPosition.y >= buttonScreenPosition.y &&
 		windowPosition.x < buttonScreenPosition.x + buttonScreenSize.x && windowPosition.y < buttonScreenPosition.y + buttonScreenSize.y)
 	{
-		events.PushEvent(m_eventID, new int(m_data), NULL);
+		events.PushEvent(m_eventID, new int32_t(m_data), NULL);
 	}
 }

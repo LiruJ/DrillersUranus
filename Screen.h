@@ -16,7 +16,7 @@ public:
 	virtual Point	ScreenToWindowSpace(Point) = 0;
 
 	virtual Point	WindowToScreenSize(Point) = 0;
-	virtual int		WindowToScreenSize(int32_t) = 0;
+	virtual int32_t		WindowToScreenSize(int32_t) = 0;
 
 	virtual void	Resize(int32_t, int32_t) = 0;
 };

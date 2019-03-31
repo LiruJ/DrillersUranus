@@ -1,17 +1,20 @@
 #ifndef TOOL_H
 #define TOOL_H
 
+// Typedef includes.
+#include <stdint.h>
+
 namespace Minigames
 {
 	struct Tool
 	{
 		/// <summary> The size of this tool's effect in tiles. </summary>
-		unsigned char m_size;
+		uint8_t m_size;
 
 		/// <summary> How many layers are destroyed at a time with this tool. </summary>
-		unsigned char m_power;
+		uint8_t m_power;
 
-		Tool(const unsigned char _size, const unsigned char _power) : m_size(_size), m_power(_power) {}
+		Tool(const uint8_t _size, const uint8_t _power) : m_size(_size), m_power(_power) {}
 	};
 }
 #endif

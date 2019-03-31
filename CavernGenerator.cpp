@@ -16,8 +16,8 @@ void MapGeneration::CavernGenerator::Generate(TileMap& _map, MapObject& _start, 
 	Point mapCentre = Point(_map.GetWidth() / 2, _map.GetHeight() / 2);
 
 	// Calculate the amount of floors desired and track how many floors have been placed.
-	int desiredFloors = _map.GetArea() * c_minPercentageOfMapToCarve + ((c_maxPercentageOfMapToCarve - c_minPercentageOfMapToCarve) * Random::RandomScalar());
-	int currentFloors = 0;
+	int32_t desiredFloors = _map.GetArea() * c_minPercentageOfMapToCarve + ((c_maxPercentageOfMapToCarve - c_minPercentageOfMapToCarve) * Random::RandomScalar());
+	int32_t currentFloors = 0;
 	
 	// Keep carving away until the desired amount of floors are made.
 	while (desiredFloors > currentFloors)
@@ -54,7 +54,7 @@ void MapGeneration::CavernGenerator::Generate(TileMap& _map, MapObject& _start, 
 void MapGeneration::CavernGenerator::generateGems(TileMap& _map)
 {
 	// Set the remaining prosperity based on the area of the map and average prosperity per cell.
-	int remainingProsperity = _map.GetArea() * c_averageProsperityPerCell;
+	int32_t remainingProsperity = _map.GetArea() * c_averageProsperityPerCell;
 
 	// Repeat until the remaining prosperity is 0.
 	while (remainingProsperity > 0)
@@ -66,7 +66,7 @@ void MapGeneration::CavernGenerator::generateGems(TileMap& _map)
 		if (_map.CellIsBlockedAndInRange(randomCell))
 		{
 			// Make sure the prosperity doesn't overflow.
-			int prosperityToAdd = Random::RandomBetween(0, UCHAR_MAX - _map.GetTileProsperityAt(randomCell));
+			int32_t prosperityToAdd = Random::RandomBetween(0, UCHAR_MAX - _map.GetTileProsperityAt(randomCell));
 
 			// Add the prosperity to the cell, then subtract that prosperity from the remaining prosperity.
 			_map.SetCellProsperity(randomCell, prosperityToAdd);

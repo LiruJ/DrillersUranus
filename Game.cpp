@@ -30,7 +30,7 @@ void Game::draw()
 
 /// <summary> Updates the game. </summary>
 /// <returns> <c>0</c> if the update loop ran successfully, anything else otherwise. </returns>
-int Game::update()
+int32_t Game::update()
 {
 	// Pump the events service.
 	m_events->PumpEvents();
@@ -119,7 +119,7 @@ void Game::startMinigame(void* _tilePosition, void* _tileProsperity)
 {
 	// Cast the data.
 	Point tilePosition = *static_cast<Point*>(_tilePosition);
-	unsigned char cellProsperity = *static_cast<unsigned char*>(_tileProsperity);
+	uint8_t cellProsperity = *static_cast<uint8_t*>(_tileProsperity);
 
 	// Set the current game state to minigame and generate the cave wall.
 	s_currentGameState = GameState::Minigame;
@@ -134,7 +134,7 @@ void Game::stopMinigame(void* _tilePosition, void* _unused)
 
 /// <summary> Runs the game, starting the update and draw loop. </summary>
 /// <returns> <c>0</c> if the game ran correctly, anything else otherwise. </returns>
-int Game::Run()
+int32_t Game::Run()
 {
 	// Update first, if the update fails, fall out to the return, otherwise draw.
 	while (!update()) 

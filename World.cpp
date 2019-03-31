@@ -21,7 +21,7 @@ void World::Draw()
 	m_camera.Draw(*this);
 }
 
-int World::Update()
+int32_t World::Update()
 {
 	return 0;
 }
@@ -126,7 +126,7 @@ void World::handleSwinging()
 	{
 		// Get the events service then push the event.
 		Events& events = Game::GetService().GetEvents();
-		events.PushEvent(UserEvent::StartMinigame, new Point(minePosition), new unsigned char(m_tileData.GetTileProsperityAt(minePosition)));
+		events.PushEvent(UserEvent::StartMinigame, new Point(minePosition), new uint8_t(m_tileData.GetTileProsperityAt(minePosition)));
 	}
 }
 

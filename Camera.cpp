@@ -16,9 +16,9 @@ void Camera::Draw(World& _world)
 	CentreOnMapObject(_world.GetPlayer());
 
 	// Draw the map data.
-	for (int x = std::max(0, m_worldPosition.x / SpriteData::c_tileSize); x < std::min((int)tileMap.GetWidth(), ((m_worldPosition.x + 832) / SpriteData::c_tileSize) + 1); x++)
+	for (int32_t x = std::max(0, m_worldPosition.x / SpriteData::c_tileSize); x < std::min((int32_t)tileMap.GetWidth(), ((m_worldPosition.x + 832) / SpriteData::c_tileSize) + 1); x++)
 	{
-		for (int y = std::max(0, m_worldPosition.y / SpriteData::c_tileSize); y < std::min((int)tileMap.GetHeight(), ((m_worldPosition.y + m_worldSize.y) / SpriteData::c_tileSize) + 1); y++)
+		for (int32_t y = std::max(0, m_worldPosition.y / SpriteData::c_tileSize); y < std::min((int32_t)tileMap.GetHeight(), ((m_worldPosition.y + m_worldSize.y) / SpriteData::c_tileSize) + 1); y++)
 		{
 			tileMap.GetTileAt(Point(x, y)).Draw(Point(x, y), m_worldPosition);
 		}

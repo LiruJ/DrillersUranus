@@ -8,18 +8,18 @@
 class TileMap
 {
 public:
-	TileMap(unsigned short, unsigned short);
+	TileMap(uint16_t, uint16_t);
 
 	TileMap(TileMap&) = delete;
 	TileMap& operator=(const TileMap&) = delete;
 
-	inline unsigned short	GetWidth()										const	{ return m_width; }
-	inline unsigned short	GetHeight()										const	{ return m_height; }
-	inline unsigned short	GetArea()										const	{ return m_width * m_height; }
+	inline uint16_t	GetWidth()										const	{ return m_width; }
+	inline uint16_t	GetHeight()										const	{ return m_height; }
+	inline uint16_t	GetArea()										const	{ return m_width * m_height; }
 
 	inline Tile				GetTileAt(const Point _position)				const	{ return m_data[_position.x][_position.y]; }
-	inline unsigned char	GetTileIDAt(const Point _position)				const	{ return m_data[_position.x][_position.y].m_prosperity; }
-	inline unsigned char	GetTileProsperityAt(const Point _position)		const	{ return m_data[_position.x][_position.y].m_prosperity; }
+	inline uint8_t	GetTileIDAt(const Point _position)				const	{ return m_data[_position.x][_position.y].m_prosperity; }
+	inline uint8_t	GetTileProsperityAt(const Point _position)		const	{ return m_data[_position.x][_position.y].m_prosperity; }
 
 	inline bool				CellInRange(const Point _position)				const	{ return _position.x >= 0 && _position.x < m_width && _position.y >= 0 && _position.y < m_height; }
 
@@ -37,15 +37,15 @@ public:
 	bool					AreaIsClear(Point, Point);
 	bool					AreaIsBlocked(Point, Point);
 
-	void					FillCell(Point, unsigned short);
+	void					FillCell(Point, uint16_t);
 	inline void				FillCellWithRandomFloor(const Point _position)			{ FillCell(_position, SpriteData::GetRandomFloor()); }
 	inline void				FillCellWithRandomWall(const Point _position)			{ FillCell(_position, SpriteData::GetRandomPlainWall()); }
 
-	void					SetCellProsperity(Point, unsigned char);
+	void					SetCellProsperity(Point, uint8_t);
 
 	void					SetCellVisiblity(Point, bool);
 
-	void					FillArea(Point, Point, unsigned short);
+	void					FillArea(Point, Point, uint16_t);
 	void					FillAreaWithRandomFloor(Point, Point);
 	void					FillAreaWithRandomWall(Point, Point);
 
@@ -55,9 +55,9 @@ private:
 	std::vector<std::vector<Tile>>	m_data;
 
 	/// <summary> The width of the tile data. </summary>
-	unsigned short					m_width;
+	uint16_t					m_width;
 
 	/// <summary> The height of the tile data. </summary>
-	unsigned short					m_height;
+	uint16_t					m_height;
 };
 #endif

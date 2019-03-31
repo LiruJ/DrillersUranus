@@ -25,7 +25,7 @@ namespace UserInterface
 		UserEvent m_eventID;
 
 		/// <summary> The data of this button. </summary>
-		/// <remarks> To avoid messing around with void pointers, this is just an int. This int may refer to many things, indices, sizes, booleans, etc., so a void pointer should not be required. </remarks>
+		/// <remarks> To avoid messing around with void pointers, this is just an int32_t. This int32_t may refer to many things, indices, sizes, booleans, etc., so a void pointer should not be required. </remarks>
 		int32_t m_data;
 
 		void handleClick(void*, void*);

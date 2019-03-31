@@ -21,23 +21,23 @@ void MapGeneration::DungeonGenerator::Generate(TileMap& _map, MapObject& _start,
 	generateGems();
 }
 
-void MapGeneration::DungeonGenerator::placeRooms(const unsigned char _numberOfRooms, MapObject& _end)
+void MapGeneration::DungeonGenerator::placeRooms(const uint8_t _numberOfRooms, MapObject& _end)
 {
 	// Place the given amount of rooms.
-	for (int room = 0; room < _numberOfRooms; room++)
+	for (int32_t room = 0; room < _numberOfRooms; room++)
 	{
 		// Keep trying to place the room until no more attempts can be made.
-		for (int attempt = 0; attempt < c_maxRoomAttempts; attempt++)
+		for (int32_t attempt = 0; attempt < c_maxRoomAttempts; attempt++)
 		{
 			// Randomise the width and height of the room, ensuring they are odd.
-			int width = Random::RandomBetween(c_minRoomWidth, c_maxRoomWidth);
-			int height = Random::RandomBetween(c_minRoomHeight, c_maxRoomHeight);
+			int32_t width = Random::RandomBetween(c_minRoomWidth, c_maxRoomWidth);
+			int32_t height = Random::RandomBetween(c_minRoomHeight, c_maxRoomHeight);
 			if (width % 2 == 0)		{ width--; }
 			if (height % 2 == 0)	{ height--; }
 
 			// Randomises the position, ensuring there are at least 3 cells between the room and the sides of the map and are odd.
-			int x = Random::RandomBetween(3, m_map->GetWidth() - width - 3);
-			int y = Random::RandomBetween(3, m_map->GetHeight() - height - 3);
+			int32_t x = Random::RandomBetween(3, m_map->GetWidth() - width - 3);
+			int32_t y = Random::RandomBetween(3, m_map->GetHeight() - height - 3);
 			if (x % 2 == 0)			{ x--; }
 			if (y % 2 == 0)			{ y--; }
 			
@@ -63,7 +63,7 @@ void MapGeneration::DungeonGenerator::generateMaze(MapObject& _start)
 	Direction startingDirection = Direction::GetRandom();
 
 	// The position whence the maze starts.
-	int spawnX, spawnY;
+	int32_t spawnX, spawnY;
 
 	// If the side is left or right.
 	if (startingDirection == Directions::Left || startingDirection == Directions::Right)
@@ -98,9 +98,9 @@ void MapGeneration::DungeonGenerator::removeDeadEnds(MapObject& _spawn)
 	std::vector<Point> deadEnds(0);
 
 	// Go over every cell and add every dead end to the vector.
-	for (int x = 0; x < m_map->GetWidth(); x++)
+	for (int32_t x = 0; x < m_map->GetWidth(); x++)
 	{
-		for (int y = 0; y < m_map->GetHeight(); y++)
+		for (int32_t y = 0; y < m_map->GetHeight(); y++)
 		{
 			if (cellIsDeadEnd(Point(x, y), _spawn)) { deadEnds.push_back(Point(x, y)); }
 		}
@@ -110,7 +110,7 @@ void MapGeneration::DungeonGenerator::removeDeadEnds(MapObject& _spawn)
 	std::random_shuffle(deadEnds.begin(), deadEnds.end());
 
 	// Calculate how many corridors must be left.
-	unsigned int corridorsToLeave = m_corridorAmount * c_percentageOfCorridorsToLeave;
+	uint32_t corridorsToLeave = m_corridorAmount * c_percentageOfCorridorsToLeave;
 
 	// Keep adding walls until there are no dead ends left or the desired amount of corridors are left.
 	while (m_corridorAmount > corridorsToLeave && !deadEnds.empty())
@@ -137,9 +137,9 @@ void MapGeneration::DungeonGenerator::breakWalls()
 	std::vector<Point> breakableWalls(0);
 
 	// Go over every cell, leaving a 1 thick border, and add every breakable wall to the vector.
-	for (int x = 1; x < m_map->GetWidth() - 1; x++)
+	for (int32_t x = 1; x < m_map->GetWidth() - 1; x++)
 	{
-		for (int y = 1; y < m_map->GetHeight() -1; y++)
+		for (int32_t y = 1; y < m_map->GetHeight() -1; y++)
 		{
 			if (getAdjacentFloorCellsAmount(Point(x, y)) > 1) { breakableWalls.push_back(Point(x, y)); }
 		}
@@ -149,8 +149,8 @@ void MapGeneration::DungeonGenerator::breakWalls()
 	std::random_shuffle(breakableWalls.begin(), breakableWalls.end());
 
 	// Calculate how many walls to break.
-	int wallsToBreak = breakableWalls.size() * c_percentageOfWallsToBreak;
-	int brokenWalls = 0;
+	int32_t wallsToBreak = breakableWalls.size() * c_percentageOfWallsToBreak;
+	int32_t brokenWalls = 0;
 
 	// Keeps breaking walls until the limit is reached or no more breakable walls are left.
 	while (wallsToBreak > brokenWalls && !breakableWalls.empty())
@@ -168,7 +168,7 @@ void MapGeneration::DungeonGenerator::breakWalls()
 void MapGeneration::DungeonGenerator::generateGems()
 {
 	// Set the remaining prosperity based on the area of the map and average prosperity per cell.
-	int remainingProsperity = m_map->GetArea() * c_averageProsperityPerCell;
+	int32_t remainingProsperity = m_map->GetArea() * c_averageProsperityPerCell;
 
 	// Repeat until the remaining prosperity is 0.
 	while (remainingProsperity > 0)
@@ -180,7 +180,7 @@ void MapGeneration::DungeonGenerator::generateGems()
 		if (m_map->CellIsBlockedAndInRange(randomCell)) 
 		{
 			// Make sure the prosperity doesn't overflow.
-			int prosperityToAdd = Random::RandomBetween(0, UCHAR_MAX - m_map->GetTileProsperityAt(randomCell));
+			int32_t prosperityToAdd = Random::RandomBetween(0, UCHAR_MAX - m_map->GetTileProsperityAt(randomCell));
 
 			// Add the prosperity to the cell, then subtract that prosperity from the remaining prosperity.
 			m_map->SetCellProsperity(randomCell, prosperityToAdd);
@@ -240,10 +240,10 @@ bool MapGeneration::DungeonGenerator::isCellValidMazeNode(const Point _position)
 			|| m_map->CellIsClearAndInRange(_position + Direction(Directions::Down).GetNormal()) || m_map->CellIsClearAndInRange(_position + Direction(Directions::Up).GetNormal()));
 }
 
-int MapGeneration::DungeonGenerator::getAdjacentFloorCellsAmount(const Point _position)
+int32_t MapGeneration::DungeonGenerator::getAdjacentFloorCellsAmount(const Point _position)
 {
 	// Keep track of the amount of empty sides.
-	unsigned char emptySideAmount = 0;
+	uint8_t emptySideAmount = 0;
 
 	// For each empty side, increase the counter by 1.
 	if (m_map->CellIsClearAndInRange(_position + Direction(Directions::Left).GetNormal()))	{ emptySideAmount++; }
