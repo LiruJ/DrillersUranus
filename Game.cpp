@@ -7,7 +7,7 @@
 #include "LetterBoxScreen.h"
 
 /// <summary> Draws the game. </summary>
-void Game::draw()
+void MainGame::Game::draw()
 {
 	// Get the graphics service.
 	Graphics::Graphics& graphics = GetService().GetGraphics();
@@ -30,7 +30,7 @@ void Game::draw()
 
 /// <summary> Updates the game. </summary>
 /// <returns> <c>0</c> if the update loop ran successfully, anything else otherwise. </returns>
-int32_t Game::update()
+int32_t MainGame::Game::update()
 {
 	// Pump the events service.
 	m_events->PumpEvents();
@@ -39,7 +39,7 @@ int32_t Game::update()
 	return m_world.Update();
 }
 
-Game::Game()
+MainGame::Game::Game()
 {
 	initialiseServices();
 
@@ -51,10 +51,10 @@ Game::Game()
 }
 
 /// <summary> Create and initialise each service. </summary>
-void Game::initialiseServices()
+void MainGame::Game::initialiseServices()
 {
 	// Initialise events.
-	m_events = new SDLEvents();
+	m_events = new Events::SDLEvents();
 	s_serviceProvider.SetEvents(*m_events);
 
 	// Initialise and add the logger.
@@ -72,20 +72,21 @@ void Game::initialiseServices()
 	s_serviceProvider.SetControls(*keyboardControls);
 
 	// Initialise the screen.
-	s_serviceProvider.SetScreen(*new LetterBoxScreen());
+	m_letterBoxScreen = new Screens::LetterBoxScreen();
+	s_serviceProvider.SetScreen(*m_letterBoxScreen);
 }
 
-void Game::initialiseBindings()
+void MainGame::Game::initialiseBindings()
 {
 	// Bind the minigame start and end.
-	m_events->AddUserListener(UserEvent::StartMinigame, std::bind(&Game::startMinigame, this, std::placeholders::_1, std::placeholders::_2));
-	m_events->AddUserListener(UserEvent::StopMinigame, std::bind(&Game::stopMinigame, this, std::placeholders::_1, std::placeholders::_2));
+	m_events->AddUserListener(Events::UserEvent::StartMinigame, std::bind(&Game::startMinigame, this, std::placeholders::_1, std::placeholders::_2));
+	m_events->AddUserListener(Events::UserEvent::StopMinigame, std::bind(&Game::stopMinigame, this, std::placeholders::_1, std::placeholders::_2));
 
 	// Bind the window resizing.
 	m_events->AddFrameworkListener(SDL_WINDOWEVENT, std::bind(&Game::resizeScreen, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-void Game::initialiseGameObjects()
+void MainGame::Game::initialiseGameObjects()
 {
 	// Initialise the minigame and world.
 	m_miningMinigame.Initialise();
@@ -96,7 +97,7 @@ void Game::initialiseGameObjects()
 }
 
 /// <summary> Loads all textures to the graphics service. </summary>
-void Game::loadTextures()
+void MainGame::Game::loadTextures()
 {
 	// Load the tileable sprites.
 	m_SDLGraphics->LoadSheetToID(c_contentFolder + '\\' + "Tiles.png", SpriteData::SheetID::Tiles, SpriteData::c_tileSize);
@@ -115,7 +116,7 @@ void Game::loadTextures()
 	});
 }
 
-void Game::startMinigame(void* _tilePosition, void* _tileProsperity)
+void MainGame::Game::startMinigame(void* _tilePosition, void* _tileProsperity)
 {
 	// Cast the data.
 	Point tilePosition = *static_cast<Point*>(_tilePosition);
@@ -126,7 +127,7 @@ void Game::startMinigame(void* _tilePosition, void* _tileProsperity)
 	m_miningMinigame.Generate(tilePosition, cellProsperity);
 }
 
-void Game::stopMinigame(void* _tilePosition, void* _unused)
+void MainGame::Game::stopMinigame(void* _tilePosition, void* _unused)
 {
 	// Set the current game state to map.
 	s_currentGameState = GameState::Map;
@@ -134,7 +135,7 @@ void Game::stopMinigame(void* _tilePosition, void* _unused)
 
 /// <summary> Runs the game, starting the update and draw loop. </summary>
 /// <returns> <c>0</c> if the game ran correctly, anything else otherwise. </returns>
-int32_t Game::Run()
+int32_t MainGame::Game::Run()
 {
 	// Update first, if the update fails, fall out to the return, otherwise draw.
 	while (!update()) 
@@ -148,7 +149,7 @@ int32_t Game::Run()
 }
 
 // Initialise the service provider statically.
-ServiceProvider Game::s_serviceProvider = ServiceProvider();
+ServiceProvider MainGame::Game::s_serviceProvider = ServiceProvider();
 
 // Initialise the game state to the map.
-GameState Game::s_currentGameState = GameState::Map;
+MainGame::GameState MainGame::Game::s_currentGameState = MainGame::GameState::Map;

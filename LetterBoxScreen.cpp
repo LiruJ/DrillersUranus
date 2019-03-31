@@ -1,6 +1,9 @@
 #include "LetterBoxScreen.h"
 
-void LetterBoxScreen::Resize(const int32_t _newX, const int32_t _newY)
+/// <summary> Changes the size of the <see cref="Screen"/> based on the new size of the window. </summary>
+/// <param name="_newX"> The new width of the window. </param>
+/// <param name="_newY"> The new height of the window. </param>
+void Screens::LetterBoxScreen::Resize(const int32_t _newX, const int32_t _newY)
 {
 	// Divide the new screen size by the aspect ratio.
 	float ratioX = _newX / (float)c_aspectRatio.x;

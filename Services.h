@@ -12,10 +12,10 @@ class Services
 public:
 	virtual ~Services() {}
 
-	virtual Logging::Logger&				GetLogger() = 0;
-	virtual Graphics::Graphics&				GetGraphics() = 0;
-	virtual Controls::Controls&				GetControls() = 0;
-	virtual Screen&							GetScreen() = 0;
-	virtual Events&							GetEvents() = 0;
+	virtual Logging::Logger&	GetLogger() = 0;
+	virtual Graphics::Graphics&	GetGraphics() = 0;
+	virtual Controls::Controls&	GetControls() = 0;
+	virtual Screens::Screen&	GetScreen() = 0;
+	virtual Events::Events&		GetEvents() = 0;
 };
 #endif

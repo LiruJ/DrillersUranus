@@ -14,13 +14,13 @@
 void Minigames::MiningMinigame::Initialise()
 {
 	// Get the events service.
-	Events& events = Game::GetService().GetEvents();
+	Events::Events& events = MainGame::Game::GetService().GetEvents();
 
 	// Bind click to handle mining.
 	events.AddFrameworkListener(SDL_MOUSEBUTTONDOWN, std::bind(&Minigames::MiningMinigame::mineAt, this, std::placeholders::_1, std::placeholders::_2));
 
 	// Bind the tool buttons to change the tool.
-	events.AddUserListener(UserEvent::ChangeTool, std::bind(&Minigames::MiningMinigame::changeTool, this, std::placeholders::_1, std::placeholders::_2));
+	events.AddUserListener(Events::UserEvent::ChangeTool, std::bind(&Minigames::MiningMinigame::changeTool, this, std::placeholders::_1, std::placeholders::_2));
 
 	// Initialise the GUI.
 	initialiseGui();
@@ -29,16 +29,16 @@ void Minigames::MiningMinigame::Initialise()
 void Minigames::MiningMinigame::Draw()
 {
 	// Get the graphics and screen services.
-	Graphics::Graphics& graphics = Game::GetService().GetGraphics();
-	Screen& screen = Game::GetService().GetScreen();
+	Graphics::Graphics& graphics = MainGame::Game::GetService().GetGraphics();
+	Screens::Screen& screen = MainGame::Game::GetService().GetScreen();
 
 	for (int32_t x = 0; x < c_wallWidth; x++)
 	{
 		for (int32_t y = 0; y < c_wallHeight; y++)
 		{
 			// Calculate the screen position and draw.
-			Point screenPosition = screen.WindowToScreenSpace(Point(x, y) * SpriteData::c_wallSize);
-			graphics.Draw(SpriteData::SheetID::MineWalls, m_wallData[x][y], Rectangle(screenPosition, screen.WindowToScreenSize(Point(SpriteData::c_wallSize))));
+			Point screenPosition = screen.ScreenToWindowSpace(Point(x, y) * SpriteData::c_wallSize);
+			graphics.Draw(SpriteData::SheetID::MineWalls, m_wallData[x][y], Rectangle(screenPosition, screen.ScreenToWindowSize(Point(SpriteData::c_wallSize))));
 		}
 	}
 
@@ -66,7 +66,7 @@ void Minigames::MiningMinigame::Generate(const Point _tilePosition, const uint8_
 void Minigames::MiningMinigame::changeTool(void * _toolID, void * _unused)
 {
 	// Do nothing if the game state is not minigame.
-	if (Game::GetGameState() != GameState::Minigame) { return; }
+	if (MainGame::Game::GetGameState() != MainGame::GameState::Minigame) { return; }
 
 	// Set the current tool ID to the given ID.
 	m_currentToolID = *static_cast<uint8_t*>(_toolID);
@@ -75,13 +75,13 @@ void Minigames::MiningMinigame::changeTool(void * _toolID, void * _unused)
 void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
 {
 	// Do nothing if the game state is not minigame.
-	if (Game::GetGameState() != GameState::Minigame) { return; }
+	if (MainGame::Game::GetGameState() != MainGame::GameState::Minigame) { return; }
 
 	// Get the screen service.
-	Screen& screen = Game::GetService().GetScreen();
+	Screens::Screen& screen = MainGame::Game::GetService().GetScreen();
 
 	// Convert the screen position to a tile position.
-	Point tilePosition = screen.ScreenToWindowSpace(Point(*static_cast<int32_t*>(_windowX), *static_cast<int32_t*>(_windowY))) / SpriteData::c_wallSize;
+	Point tilePosition = screen.WindowToScreenSpace(Point(*static_cast<int32_t*>(_windowX), *static_cast<int32_t*>(_windowY))) / SpriteData::c_wallSize;
 
 	// If the tile position is not in range, do nothing.
 	if (!isInRange(tilePosition)) { return; }
@@ -122,10 +122,10 @@ void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
 	if (m_collapseTimer == 0)
 	{
 		// Get the events service.
-		Events& events = Game::GetService().GetEvents();
+		Events::Events& events = MainGame::Game::GetService().GetEvents();
 
 		// Push the collapse event.
-		events.PushEvent(UserEvent::StopMinigame, new Point(m_tilePosition), NULL);
+		events.PushEvent(Events::UserEvent::StopMinigame, new Point(m_tilePosition), NULL);
 	}
 }
 
@@ -143,7 +143,7 @@ void Minigames::MiningMinigame::initialiseGui()
 	for (int32_t i = 0; i < 3; i++)
 	{
 		m_toolButtons[i] = UserInterface::Button(Point(i * 32, 480), Point(32, 32), SpriteData::UIID::Pickaxe + i);
-		m_toolButtons[i].SetEvent(UserEvent::ChangeTool, i);
+		m_toolButtons[i].SetEvent(Events::UserEvent::ChangeTool, i);
 		m_toolButtons[i].Initialise();
 	}
 }

@@ -70,6 +70,9 @@
     <Filter Include="Header Files\Services\Events">
       <UniqueIdentifier>{19264c25-40fd-4219-95ca-dc9f1621725b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\World">
+      <UniqueIdentifier>{be47a609-d444-4eb8-95d2-07abaafb419b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -83,12 +86,6 @@
     </ClCompile>
     <ClCompile Include="SDLGraphics.cpp">
       <Filter>Source Files\Services</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="World.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MapObject.cpp">
       <Filter>Source Files\GameObjects</Filter>
@@ -131,6 +128,12 @@
     </ClCompile>
     <ClCompile Include="SDLEvents.cpp">
       <Filter>Source Files\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\World</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

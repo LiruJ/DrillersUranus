@@ -5,15 +5,13 @@
 #include "Graphics.h"
 #include "Screen.h"
 
-// Data includes.
-#include "Rectangle.h"
-
+/// <summary> Draws this <see cref="Frame"/> onto the screen. </summary>
 void UserInterface::Frame::Draw()
 {
 	// Get the graphics and screen services.
-	Graphics::Graphics& graphics = Game::GetService().GetGraphics();
-	Screen& screen = Game::GetService().GetScreen();
+	Graphics::Graphics& graphics = MainGame::Game::GetService().GetGraphics();
+	Screens::Screen& screen = MainGame::Game::GetService().GetScreen();
 
 	// Calculate the screen position and draw.
-	graphics.Draw(SpriteData::SheetID::UI, m_spriteID, Rectangle(screen.WindowToScreenSpace(m_windowPosition), screen.WindowToScreenSize(m_windowSize)));
+	graphics.Draw(SpriteData::SheetID::UI, m_spriteID, screen.ScreenToWindowBounds(m_screenBounds));
 }

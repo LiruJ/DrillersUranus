@@ -4,8 +4,8 @@
 void Tile::Draw(const Point _tilePosition, const Point _cameraPosition)
 {
 	// Get the graphics and screen services.
-	Graphics::Graphics& graphics = Game::GetService().GetGraphics();
-	Screen& screen = Game::GetService().GetScreen();
+	Graphics::Graphics& graphics = MainGame::Game::GetService().GetGraphics();
+	Screens::Screen& screen = MainGame::Game::GetService().GetScreen();
 
 	uint16_t spriteID = m_ID;
 
@@ -14,7 +14,7 @@ void Tile::Draw(const Point _tilePosition, const Point _cameraPosition)
 	else if (m_prosperity > 129 && m_prosperity <= 192) { spriteID = SpriteData::HighGems; }
 	else if (m_prosperity > 193) { spriteID = SpriteData::MaxGems; }
 
-	// Calculate the screen position and draw.
-	Point screenPosition = screen.WindowToScreenSpace((_tilePosition * SpriteData::c_tileSize) - _cameraPosition);
-	graphics.Draw(SpriteData::Tiles, spriteID, Rectangle(screenPosition, screen.WindowToScreenSize(SpriteData::c_tileSize)));
+	// Calculate the window position and draw.
+	Point windowPosition = screen.ScreenToWindowSpace((_tilePosition * SpriteData::c_tileSize) - _cameraPosition);
+	graphics.Draw(SpriteData::Tiles, spriteID, Rectangle(windowPosition, screen.ScreenToWindowSize(SpriteData::c_tileSize)));
 }

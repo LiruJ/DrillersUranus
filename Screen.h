@@ -3,22 +3,58 @@
 
 // Data includes.
 #include "Point.h"
+#include "Rectangle.h"
 
 // Typedef includes.
 #include <stdint.h>
 
-class Screen
+namespace Screens
 {
-public:
-	virtual ~Screen() {};
+	/// <summary> Represents the area within the window where the game is actually drawn and played. </summary>
+	class Screen
+	{
+	public:
+		virtual ~Screen() {};
 
-	virtual Point	WindowToScreenSpace(Point) = 0;
-	virtual Point	ScreenToWindowSpace(Point) = 0;
+		/// <summary> Converts a screen-space position to a window-space position. </summary>
+		/// <param name="_screenPosition"> The position within the screen. </param>
+		/// <returns> The converted window-space position. </returns>
+		virtual Point		ScreenToWindowSpace(const Point _screenPosition) = 0;
 
-	virtual Point	WindowToScreenSize(Point) = 0;
-	virtual int32_t		WindowToScreenSize(int32_t) = 0;
+		/// <summary> Converts a window-space position to a screen-space position. </summary>
+		/// <param name="_windowPosition"> The position within the window. </param>
+		/// <returns> The converted screen-space position. </returns>
+		virtual Point		WindowToScreenSpace(const Point _windowPosition) = 0;
+		
+		/// <summary> Converts a screen-space size to a window-space size. </summary>
+		/// <param name="_screenSize"> The screen-space size. </param>
+		/// <returns> The converted window-space size. </returns>
+		virtual Point		ScreenToWindowSize(const Point _screenSize) = 0;
 
-	virtual void	Resize(int32_t, int32_t) = 0;
-};
+		/// <summary> Converts a screen-space size to a window-space size. </summary>
+		/// <param name="_screenSize"> The screen-space size. </param>
+		/// <returns> The converted window-space size. </returns>
+		virtual int32_t		ScreenToWindowSize(const int32_t _screenSize) = 0;
 
+		/// <summary> Converts a window-space size to a screen-space size. </summary>
+		/// <param name="_windowSize"> The window-space size. </param>
+		/// <returns> The converted screen-space size. </returns>
+		virtual Point		WindowToScreenSize(const Point _windowSize) = 0;
+
+		/// <summary> Converts a window-space size to a screen-space size. </summary>
+		/// <param name="_windowSize"> The window-space size. </param>
+		/// <returns> The converted screen-space size. </returns>
+		virtual int32_t		WindowToScreenSize(const int32_t _windowSize) = 0;
+
+		/// <summary> Converts a screen-space boudns to a window-space bounds. </summary>
+		/// <param name="_screenBounds"> The screen-space bounds. </param>
+		/// <returns> The converted window-space bounds. </returns>
+		virtual Rectangle	ScreenToWindowBounds(const Rectangle _screenBounds) = 0;
+
+		/// <summary> Converts a window-space bounds to a screen-space bounds. </summary>
+		/// <param name="_windowBounds"> The window-space bounds. </param>
+		/// <returns> The converted screen-space bounds. </returns>
+		virtual Rectangle	WindowToScreenBounds(const Rectangle _windowBounds) = 0;
+	};
+}
 #endif

@@ -1,44 +1,52 @@
 #ifndef LETTERBOXSCREEN_H
 #define LETTERBOXSCREEN_H
 
-// Graphical includes.
+// Derived includes.
 #include "Screen.h"
 
-// Data includes.
-#include "Point.h"
+// Utility includes.
 #include <math.h>
 
-class LetterBoxScreen : public Screen
+namespace Screens
 {
-public:
-	LetterBoxScreen() { Resize(c_designDimensions.x, c_designDimensions.y); }
-	
-	/// <summary> Converts a window-space position to a screen-space position. </summary>
-	/// <param name="_windowPosition"> The position within the window. </param>
-	/// <returns> The converted screen-space position. </returns>
-	virtual Point WindowToScreenSpace(const Point _windowPosition)	{ return m_position + _windowPosition * m_scale; }
+	/// <summary> Represents a forced 16:9 aspect ratio screen at 960x540. </summary>
+	class LetterBoxScreen : public Screen
+	{
+	public:
+		LetterBoxScreen() { Resize(c_designDimensions.x, c_designDimensions.y); }
 
-	virtual Point ScreenToWindowSpace(const Point _screenPosition)	{ return (_screenPosition - m_position) / m_scale; }
+		virtual Point		ScreenToWindowSpace(const Point _screenPosition) { return m_position + _screenPosition * m_scale; }
 
-	virtual Point	WindowToScreenSize(const Point _size)			{ return Point(ceil((float_t)_size.x * m_scale), ceil((float_t)_size.y * m_scale)); }
-	virtual int32_t		WindowToScreenSize(const int32_t _size)			{ return (int32_t)ceil(_size * m_scale); }
+		virtual Point		WindowToScreenSpace(const Point _windowPosition) { return (_windowPosition - m_position) / m_scale; }
 
-	virtual void Resize(int32_t, int32_t);
-private:
-	/// <summary> The dimensions of the screen the game was designed for. </summary>
-	const Point c_designDimensions = Point(960, 540);
+		virtual Point		ScreenToWindowSize(const Point _screenSize) { return Point(ceil((float_t)_screenSize.x * m_scale), ceil((float_t)_screenSize.y * m_scale)); }
 
-	/// <summary> The aspect ratio of the screen the game was designed for. </summary>
-	const Point c_aspectRatio = Point(16, 9);
+		virtual int32_t		ScreenToWindowSize(const int32_t _screenSize) { return (int32_t)ceil(_screenSize * m_scale); }
 
-	/// <summary> The position of the screen. </summary>
-	Point			m_position;
+		virtual Point		WindowToScreenSize(const Point _windowSize) { return Point(ceil((float_t)_windowSize.x / m_scale), ceil((float_t)_windowSize.y / m_scale)); }
 
-	/// <summary> The size of the screen. </summary>
-	Point			m_size;
+		virtual int32_t		WindowToScreenSize(const int32_t _windowSize) { return (int32_t)ceil(_windowSize / m_scale); }
 
-	/// <summary> The scale from the original design dimensions to the actual screen size. </summary>
-	float			m_scale;
-};
+		virtual Rectangle	ScreenToWindowBounds(const Rectangle _screenBounds) { return Rectangle(ScreenToWindowSpace(Point(_screenBounds.x, _screenBounds.y)), ScreenToWindowSize(Point(_screenBounds.w, _screenBounds.h))); }
 
+		virtual Rectangle	WindowToScreenBounds(const Rectangle _windowBounds) { return Rectangle(WindowToScreenSpace(Point(_windowBounds.x, _windowBounds.y)), WindowToScreenSize(Point(_windowBounds.w, _windowBounds.h))); }
+
+		void				Resize(int32_t, int32_t);
+	private:
+		/// <summary> The dimensions of the screen the game was designed for. </summary>
+		const Point		c_designDimensions = Point(960, 540);
+
+		/// <summary> The aspect ratio of the screen the game was designed for. </summary>
+		const Point		c_aspectRatio = Point(16, 9);
+
+		/// <summary> The position of the screen. </summary>
+		Point			m_position;
+
+		/// <summary> The size of the screen. </summary>
+		Point			m_size;
+
+		/// <summary> The scale from the original design dimensions to the actual screen size. </summary>
+		float			m_scale;
+	};
+}
 #endif

@@ -29,13 +29,13 @@ int32_t World::Update()
 void World::Initialise()
 {
 	// Get the event service.
-	Events& events = Game::GetService().GetEvents();
+	Events::Events& events = MainGame::Game::GetService().GetEvents();
 
 	// Bind the keydown event.
 	events.AddFrameworkListener(SDL_KEYDOWN, std::bind(&World::handleKeyDown, this, std::placeholders::_1, std::placeholders::_2));
 
 	// Bind the minigame stop event.
-	events.AddUserListener(UserEvent::StopMinigame, std::bind(&World::stopMinigame, this, std::placeholders::_1, std::placeholders::_2));
+	events.AddUserListener(Events::UserEvent::StopMinigame, std::bind(&World::stopMinigame, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 void World::GenerateRandomMap()
@@ -66,10 +66,10 @@ void World::GenerateRandomMap()
 void World::handleKeyDown(void* _scancode, void* _mod)
 {
 	// If the game state is not map, do nothing.
-	if (Game::GetGameState() != GameState::Map) { return; }
+	if (MainGame::Game::GetGameState() != MainGame::GameState::Map) { return; }
 
 	// Get the controls service.
-	Controls::Controls& controls = Game::GetService().GetControls();
+	Controls::Controls& controls = MainGame::Game::GetService().GetControls();
 
 	// Cast the scancode and mod.
 	SDL_Scancode scancode = *static_cast<SDL_Scancode*>(_scancode);
@@ -125,8 +125,8 @@ void World::handleSwinging()
 	else
 	{
 		// Get the events service then push the event.
-		Events& events = Game::GetService().GetEvents();
-		events.PushEvent(UserEvent::StartMinigame, new Point(minePosition), new uint8_t(m_tileData.GetTileProsperityAt(minePosition)));
+		Events::Events& events = MainGame::Game::GetService().GetEvents();
+		events.PushEvent(Events::UserEvent::StartMinigame, new Point(minePosition), new uint8_t(m_tileData.GetTileProsperityAt(minePosition)));
 	}
 }
 

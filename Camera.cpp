@@ -6,8 +6,8 @@
 void Camera::Draw(World& _world)
 {
 	// Get the graphics and screen services.
-	Graphics::Graphics& graphics = Game::GetService().GetGraphics();
-	Screen& screen = Game::GetService().GetScreen();
+	Graphics::Graphics& graphics = MainGame::Game::GetService().GetGraphics();
+	Screens::Screen& screen = MainGame::Game::GetService().GetScreen();
 
 	// Get the tiledata.
 	TileMap& tileMap = _world.GetTileMap();

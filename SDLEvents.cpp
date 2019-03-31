@@ -1,6 +1,6 @@
 #include "SDLEvents.h"
 
-void SDLEvents::PumpEvents()
+void Events::SDLEvents::PumpEvents()
 {
 	SDL_Event currentEvent;
 
@@ -48,7 +48,7 @@ void SDLEvents::PumpEvents()
 /// <param name="_data1"> The first data to be put into the event. </param>
 /// <param name="_data2"> The second data to be put into the event. </param>
 /// <remarks> Data is not copied and is used as-is, and will be deleted when the event is read. Due to this, is it recommended to pass a copy of the data in. </remarks>
-void SDLEvents::PushEvent(const UserEvent _eventID, void* _data1, void* _data2)
+void Events::SDLEvents::PushEvent(const UserEvent _eventID, void* _data1, void* _data2)
 {
 	// Create a new event and clear its memory to 0.
 	SDL_Event newEvent;
@@ -63,7 +63,7 @@ void SDLEvents::PushEvent(const UserEvent _eventID, void* _data1, void* _data2)
 	SDL_PushEvent(&newEvent);
 }
 
-void SDLEvents::AddFrameworkListener(uint32_t _sdlEventID, std::function<void(void*, void*)> _function)
+void Events::SDLEvents::AddFrameworkListener(uint32_t _sdlEventID, std::function<void(void*, void*)> _function)
 {
 	// If the given SDL Event ID does not have any bound functions, initialise the vector with the function.
 	if (m_functionsBySDLEventID.count(_sdlEventID) == 0) { m_functionsBySDLEventID.emplace(_sdlEventID, std::vector<std::function<void(void*, void*)>>(1, _function)); }
@@ -72,7 +72,7 @@ void SDLEvents::AddFrameworkListener(uint32_t _sdlEventID, std::function<void(vo
 	else { m_functionsBySDLEventID[(SDL_EventType)_sdlEventID].push_back(_function); }
 }
 
-void SDLEvents::fireEvents(std::vector<std::function<void(void*, void*)>>& _eventFunctions, void* _data1, void* _data2)
+void Events::SDLEvents::fireEvents(std::vector<std::function<void(void*, void*)>>& _eventFunctions, void* _data1, void* _data2)
 {
 	for (uint32_t i = 0; i < _eventFunctions.size(); i++) { _eventFunctions[i](_data1, _data2); }
 }
