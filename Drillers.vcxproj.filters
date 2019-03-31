@@ -28,9 +28,6 @@
     <Filter Include="Header Files\Structures">
       <UniqueIdentifier>{e85adf82-1bfe-44e4-9282-588b882d7a6d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Structures">
-      <UniqueIdentifier>{617548f2-317f-427b-96ba-658533d7acb6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\MapGenerators">
       <UniqueIdentifier>{4f8d8511-fd06-4d1d-94d1-3a7c2c8fe69b}</UniqueIdentifier>
     </Filter>
@@ -55,9 +52,6 @@
     <Filter Include="Header Files\Minigames">
       <UniqueIdentifier>{1b61aa2b-62fd-4f4f-a015-1bd3f16edf4d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Interfaces">
-      <UniqueIdentifier>{e0a99fe0-2e92-41f8-ab6f-3ade3eb5db9c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Services\Screen">
       <UniqueIdentifier>{1cc0136c-d49e-456a-9dff-8a945f745c62}</UniqueIdentifier>
     </Filter>
@@ -72,6 +66,9 @@
     </Filter>
     <Filter Include="Source Files\World">
       <UniqueIdentifier>{be47a609-d444-4eb8-95d2-07abaafb419b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\World">
+      <UniqueIdentifier>{076434d1-9cc3-4a02-9169-3659a582ff5e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -99,20 +96,11 @@
     <ClCompile Include="Player.cpp">
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="TileMap.cpp">
-      <Filter>Source Files\Structures</Filter>
-    </ClCompile>
     <ClCompile Include="KeyboardControls.cpp">
       <Filter>Source Files\Services</Filter>
     </ClCompile>
     <ClCompile Include="MiningMinigame.cpp">
       <Filter>Source Files\Minigames</Filter>
-    </ClCompile>
-    <ClCompile Include="Tool.cpp">
-      <Filter>Source Files\Minigames</Filter>
-    </ClCompile>
-    <ClCompile Include="Tile.cpp">
-      <Filter>Source Files\Structures</Filter>
     </ClCompile>
     <ClCompile Include="LetterBoxScreen.cpp">
       <Filter>Source Files\Services</Filter>
@@ -135,6 +123,9 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\World</Filter>
     </ClCompile>
+    <ClCompile Include="TileMap.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -145,12 +136,6 @@
     </ClInclude>
     <ClInclude Include="Services.h">
       <Filter>Header Files\Services</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="World.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Point.h">
       <Filter>Header Files\Structures</Filter>
@@ -179,9 +164,6 @@
     <ClInclude Include="Player.h">
       <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="TileMap.h">
-      <Filter>Header Files\Structures</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics.h">
       <Filter>Header Files\Services\Graphics</Filter>
     </ClInclude>
@@ -206,17 +188,8 @@
     <ClInclude Include="Tool.h">
       <Filter>Header Files\Minigames</Filter>
     </ClInclude>
-    <ClInclude Include="TextureBound.h">
-      <Filter>Header Files\Services\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Tile.h">
-      <Filter>Header Files\Structures</Filter>
-    </ClInclude>
     <ClInclude Include="Vector2.h">
       <Filter>Header Files\Structures</Filter>
-    </ClInclude>
-    <ClInclude Include="IReadOnlyMapObject.h">
-      <Filter>Header Files\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="LetterBoxScreen.h">
       <Filter>Header Files\Services\Screen</Filter>
@@ -241,6 +214,24 @@
     </ClInclude>
     <ClInclude Include="Rectangle.h">
       <Filter>Header Files\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMap.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="IReadOnlyMapObject.h">
+      <Filter>Header Files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="IReadOnlyTileMap.h">
+      <Filter>Header Files\World</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

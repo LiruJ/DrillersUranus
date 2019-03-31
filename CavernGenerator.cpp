@@ -1,8 +1,16 @@
 #include "CavernGenerator.h"
-#include "Random.h"
+
+// Data includes.
 #include "Direction.h"
 
-void MapGeneration::CavernGenerator::Generate(TileMap& _map, MapObject& _start, MapObject& _end)
+// Utility includes.
+#include "Random.h"
+
+/// <summary> Generates a cavern on the given map and sets the given start and end positions. </summary>
+/// <param name="_map"> The map on which to generate. </param>
+/// <param name="_start"> The spawn point game object. </param>
+/// <param name="_end"> The exit point game object. </param>
+void MapGeneration::CavernGenerator::Generate(WorldObjects::TileMap& _map, MapObject& _start, MapObject& _end)
 {
 	// Reset the map.
 	_map.Reset();
@@ -23,7 +31,7 @@ void MapGeneration::CavernGenerator::Generate(TileMap& _map, MapObject& _start, 
 	while (desiredFloors > currentFloors)
 	{
 		// If this cell is a wall, turn it into a random floor and increase the floor counter.
-		if (_map.CellIsBlockedAndInRange(position)) { _map.FillCell(position, SpriteData::GetRandomFloor()); currentFloors++; }
+		if (_map.IsCellBlockedAndInRange(position)) { _map.FillCell(position, SpriteData::GetRandomFloor()); currentFloors++; }
 
 		// Calculate the distance from the centre of the map, and scale the weight accordingly.
 		Point distanceFromCentre = position - mapCentre;
@@ -37,7 +45,7 @@ void MapGeneration::CavernGenerator::Generate(TileMap& _map, MapObject& _start, 
 
 			// Otherwise go in a random direction.
 			else { nextPosition = position + Direction::GetRandom().GetNormal(); }
-		} while (!_map.CellInPlayableArea(nextPosition));
+		} while (!_map.IsCellInPlayableArea(nextPosition));
 
 		// Move to the next position.
 		position = nextPosition;
@@ -51,7 +59,9 @@ void MapGeneration::CavernGenerator::Generate(TileMap& _map, MapObject& _start, 
 	_map.FillCellWithRandomFloor(position);
 }
 
-void MapGeneration::CavernGenerator::generateGems(TileMap& _map)
+/// <summary> Fills the map with random gems. </summary>
+/// <param name="_map"> The map to fill. </param>
+void MapGeneration::CavernGenerator::generateGems(WorldObjects::TileMap& _map)
 {
 	// Set the remaining prosperity based on the area of the map and average prosperity per cell.
 	int32_t remainingProsperity = _map.GetArea() * c_averageProsperityPerCell;
@@ -63,10 +73,10 @@ void MapGeneration::CavernGenerator::generateGems(TileMap& _map)
 		Point randomCell = Point(Random::RandomBetween(1, _map.GetWidth() - 2), Random::RandomBetween(1, _map.GetHeight() - 2));
 
 		// If the cell has a wall, add some random prosperity to it.
-		if (_map.CellIsBlockedAndInRange(randomCell))
+		if (_map.IsCellBlockedAndInRange(randomCell))
 		{
 			// Make sure the prosperity doesn't overflow.
-			int32_t prosperityToAdd = Random::RandomBetween(0, UCHAR_MAX - _map.GetTileProsperityAt(randomCell));
+			int32_t prosperityToAdd = Random::RandomBetween(0, UCHAR_MAX - _map.GetTileAt(randomCell).m_prosperity);
 
 			// Add the prosperity to the cell, then subtract that prosperity from the remaining prosperity.
 			_map.SetCellProsperity(randomCell, prosperityToAdd);

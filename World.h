@@ -1,75 +1,91 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-// Map object includes.
-#include "MapObject.h"
-#include "IReadOnlyMapObject.h"
-#include "Player.h"
-
-// Graphical includes.
-#include "Graphics.h"
-#include "Camera.h"
-#include "SpriteData.h"
-
 // Data includes.
 #include "TileMap.h"
+#include "IReadOnlyTileMap.h"
 #include "Direction.h"
 
-class World
+// Game object includes.
+#include "IReadOnlyMapObject.h"
+#include "Player.h"
+#include "Camera.h"
+
+// Service includes.
+#include "Graphics.h"
+
+// Utility includes.
+#include "SpriteData.h"
+
+namespace WorldObjects
 {
-public:
-	World() : m_spawnPoint(SpriteData::ObjectID::Spawn), m_exitPoint(SpriteData::ObjectID::Exit), m_tileData(55, 55) {}
+	/// <summary> Represents the world data and everything in it. </summary>
+	class World
+	{
+	public:
+		/// <summary> Create an empty world. </summary>
+		World() : m_spawnPoint(SpriteData::ObjectID::Spawn), m_exitPoint(SpriteData::ObjectID::Exit), m_tileData(55, 55) {}
 
-	World(World&) = delete;
-	World& operator=(const World&) = delete;
+		// Prevent copies.
+		World(World&) = delete;
+		World& operator=(const World&) = delete;
 
-	void Initialise();
+		void Initialise();
 
-	void GenerateRandomMap();
-	void Draw();
-	int32_t Update();
+		void GenerateRandomMap();
 
-	inline IReadOnlyMapObject& GetPlayer()	{ return m_player; }
-	inline IReadOnlyMapObject& GetSpawn()	{ return m_spawnPoint; }
-	inline IReadOnlyMapObject& GetExit()	{ return m_exitPoint; }
+		void Draw();
 
-	// TODO: Replace TileMap object with IReadOnlyTileMap
-	inline TileMap& GetTileMap() { return m_tileData; }
-private:
-	/// <summary> The tile map data. </summary>
-	TileMap						m_tileData;
+		int32_t Update();
 
-	/// <summary> The player. </summary>
-	Player						m_player;
+		/// <summary> Gets the player. </summary>
+		/// <returns> An <see cref="IReadOnlyMapObject"/> form of the <see cref="Player"/>. </returns>
+		inline IReadOnlyMapObject& GetPlayer() { return m_player; }
 
-	/// <summary> The entry point of the map. </summary>
-	MapObject					m_spawnPoint;
+		/// <summary> Gets the spawn object. </summary>
+		/// <returns> An <see cref="IReadOnlyMapObject"/> form of the spawn. </returns>
+		inline IReadOnlyMapObject& GetSpawn() { return m_spawnPoint; }
 
-	/// <summary> The exit point of the map. </summary>
-	MapObject					m_exitPoint;
+		/// <summary> Gets the spawn object. </summary>
+		/// <returns> An <see cref="IReadOnlyMapObject"/> form of the end. </returns>
+		inline IReadOnlyMapObject& GetExit() { return m_exitPoint; }
 
-	/// <summary> The camera used to render the world. </summary>
-	Camera						m_camera;
+		/// <summary> Gets a read only version of the <see cref="TileData"/>. </summary>
+		/// <returns> A <see cref="IReadOnlyTileMap"/> form of the data. </returns>
+		inline IReadOnlyTileMap& GetTileMap() { return m_tileData; }
+	private:
+		/// <summary> The tile map data. </summary>
+		TileMap		m_tileData;
 
-	/// <summary> The number of floors that the player has explored. </summary>
-	uint16_t				m_floorCount = 0;
+		/// <summary> The player. </summary>
+		Player		m_player;
 
-	/// <summary> How many turns the player can make before they lose. </summary>
-	uint16_t				m_turnsUntilCollapse;
+		/// <summary> The entry point of the map. </summary>
+		MapObject	m_spawnPoint;
 
-	void handleKeyDown(void*, void*);
+		/// <summary> The exit point of the map. </summary>
+		MapObject	m_exitPoint;
 
-	void handleMovement(Directions, bool);
+		/// <summary> The camera used to render the world. </summary>
+		Camera		m_camera;
 
-	void handleSwinging();
+		/// <summary> The number of floors that the player has explored. </summary>
+		uint16_t	m_floorCount = 0;
 
-	void handleInteraction();
+		/// <summary> How many turns the player can make before they lose. </summary>
+		uint16_t	m_turnsUntilCollapse;
 
-	void stopMinigame(void*, void*);
+		void handleKeyDown(void*, void*);
 
-	void doTurn();
+		void handleMovement(Directions, bool);
 
+		void handleSwinging();
 
-};
+		void handleInteraction();
 
+		void stopMinigame(void*, void*);
+
+		void doTurn();
+	};
+}
 #endif

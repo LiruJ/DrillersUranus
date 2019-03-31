@@ -15,18 +15,21 @@
 #include "Point.h"
 #include "Game.h"
 
-void World::Draw()
+/// <summary> Draws this <see cref="World"/>. </summary>
+void WorldObjects::World::Draw()
 {
-	// Tell the camera to draw.
+	// Tell the camera to draw the world.
 	m_camera.Draw(*this);
 }
 
-int32_t World::Update()
+/// <summary> Updates this <see cref="World"/>. </summary>
+int32_t WorldObjects::World::Update()
 {
 	return 0;
 }
 
-void World::Initialise()
+/// <summary> Binds this <see cref="World"/> to certain events. </summary>
+void WorldObjects::World::Initialise()
 {
 	// Get the event service.
 	Events::Events& events = MainGame::Game::GetService().GetEvents();
@@ -38,7 +41,8 @@ void World::Initialise()
 	events.AddUserListener(Events::UserEvent::StopMinigame, std::bind(&World::stopMinigame, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-void World::GenerateRandomMap()
+/// <summary> Generates a random map and places the player on the spawn. </summary>
+void WorldObjects::World::GenerateRandomMap()
 {
 	// Initialise the start and end points.
 	m_spawnPoint.SetTilePosition(Point(0, 0));
@@ -63,7 +67,10 @@ void World::GenerateRandomMap()
 	m_player.SetTilePosition(m_spawnPoint.GetTilePosition());
 }
 
-void World::handleKeyDown(void* _scancode, void* _mod)
+/// <summary> Handles the player pressing a key to move/ </summary>
+/// <param name="_scancode"> The scan code of the pressed key. </param>
+/// <param name="_mod"> The modifier key that the player was holding on the key press. </param>
+void WorldObjects::World::handleKeyDown(void* _scancode, void* _mod)
 {
 	// If the game state is not map, do nothing.
 	if (MainGame::Game::GetGameState() != MainGame::GameState::Map) { return; }
@@ -95,42 +102,48 @@ void World::handleKeyDown(void* _scancode, void* _mod)
 	}
 }
 
-void World::doTurn()
+/// <summary> Handle turn-based logic. </summary>
+void WorldObjects::World::doTurn()
 {
 }
 
-void World::handleMovement(const Directions _direction, const bool _noMovement)
+/// <summary> Handles player movement. </summary>
+/// <param name="_direction"> The direction in which the player wants to move. </param>
+/// <param name="_noMovement"> Is <c>true</c> if the player just wants to face in the direction; otherwise, <c>false</c>. </param>
+void WorldObjects::World::handleMovement(const Directions _direction, const bool _noMovement)
 {
 	// Create a direction object of the wanted move.
 	Direction desiredDirection = Direction(_direction);
 
 	// If the cell is clear and movement is wanted, move towards it, otherwise just face towards it.
-	if (!_noMovement && m_tileData.CellIsClearAndInRange(m_player.GetTilePosition() + desiredDirection.GetNormal())) { m_player.MoveInDirection(_direction); }
+	if (!_noMovement && m_tileData.IsCellClearAndInRange(m_player.GetTilePosition() + desiredDirection.GetNormal())) { m_player.MoveInDirection(_direction); }
 	else { m_player.SetFacing(_direction); }
 
 	// Do a turn since a movement was made.
 	doTurn();
 }
 
-void World::handleSwinging()
+/// <summary> Handles the player swinging their pickaxe to mine the cell in front of them. </summary>
+void WorldObjects::World::handleSwinging()
 {	
 	// Get the position of the cell to be mined.
 	Point minePosition = m_player.GetTilePosition() + m_player.GetFacing().GetNormal();
 
 	// If the cell is empty or outside of the playable area, do nothing.
-	if (m_tileData.CellIsClear(minePosition) || !m_tileData.CellInPlayableArea(minePosition)) { return; }
+	if (m_tileData.IsCellClear(minePosition) || !m_tileData.IsCellInPlayableArea(minePosition)) { return; }
 
 	// If the cell has no prosperity, destroy it and do a turn, otherwise put the minigame start event onto the event bus.
-	if (m_tileData.GetTileProsperityAt(minePosition) == 0) { m_tileData.FillCellWithRandomFloor(minePosition); doTurn(); }
+	if (m_tileData.GetTileAt(minePosition).m_prosperity == 0) { m_tileData.FillCellWithRandomFloor(minePosition); doTurn(); }
 	else
 	{
 		// Get the events service then push the event.
 		Events::Events& events = MainGame::Game::GetService().GetEvents();
-		events.PushEvent(Events::UserEvent::StartMinigame, new Point(minePosition), new uint8_t(m_tileData.GetTileProsperityAt(minePosition)));
+		events.PushEvent(Events::UserEvent::StartMinigame, new Point(minePosition), new uint8_t(m_tileData.GetTileAt(minePosition).m_prosperity));
 	}
 }
 
-void World::handleInteraction()
+/// <summary> Handles the player interacting with the object on which they are standing. </summary>
+void WorldObjects::World::handleInteraction()
 {
 	// If the player is standing on the exit point, take them to a new floor.
 	if (m_player.GetTilePosition() == m_exitPoint.GetTilePosition()) 
@@ -140,7 +153,10 @@ void World::handleInteraction()
 	}
 }
 
-void World::stopMinigame(void* _tilePosition, void* _unused)
+/// <summary> Handles breaking the gem wall after the player has finished mining it. </summary>
+/// <param name="_tilePosition"> The position of the tile. </param>
+/// <param name="_unused"> Unused. </param>
+void WorldObjects::World::stopMinigame(void* _tilePosition, void* _unused)
 {
 	// Cast the data.
 	Point tilePosition = *static_cast<Point*>(_tilePosition);

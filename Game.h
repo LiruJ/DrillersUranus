@@ -52,7 +52,7 @@ namespace MainGame
 		Events::SDLEvents*			m_events;
 
 		/// <summary> The map world. </summary>
-		World						m_world;
+		WorldObjects::World			m_world;
 
 		/// <summary> The mining minigame. </summary>
 		Minigames::MiningMinigame	m_miningMinigame;

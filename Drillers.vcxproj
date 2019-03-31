@@ -35,9 +35,7 @@
     <ClCompile Include="ProgressBar.cpp" />
     <ClCompile Include="SDLEvents.cpp" />
     <ClCompile Include="SDLGraphics.cpp" />
-    <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TileMap.cpp" />
-    <ClCompile Include="Tool.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -45,6 +43,7 @@
     <ClInclude Include="Events.h" />
     <ClInclude Include="Frame.h" />
     <ClInclude Include="IReadOnlyMapObject.h" />
+    <ClInclude Include="IReadOnlyTileMap.h" />
     <ClInclude Include="LetterBoxScreen.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CavernGenerator.h" />
@@ -70,7 +69,6 @@
     <ClInclude Include="ServiceProvider.h" />
     <ClInclude Include="Services.h" />
     <ClInclude Include="SpriteData.h" />
-    <ClInclude Include="TextureBound.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TileMap.h" />
     <ClInclude Include="Tool.h" />

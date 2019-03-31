@@ -7,6 +7,7 @@
 // Typedef includes.
 #include <stdint.h>
 
+/// <summary> Represents a rectangle. </summary>
 struct Rectangle
 {
 	/// <summary> The x position. </summary>
@@ -36,7 +37,15 @@ struct Rectangle
 	/// <summary> Finds if the given position is within this <see cref="Rectangle"/>. </summary>
 	/// <param name="_position"> The position to check. </param>
 	/// <returns> <c>true</c> if the point is inside this <see cref="Rectangle"/>, <c>false</c> otherwise. </returns>
-	bool IsPointInside(const Point _position) const { return _position.x >= x && _position.x < x + w && _position.y >= y && _position.y < y + h; }
+	bool IsPointInside(const Point _position) const { return _position.x >= x && _position.x < GetMaxX() && _position.y >= y && _position.y < GetMaxY(); }
+
+	/// <summary> Gets the x position of the right side of this <see cref="Rectangle"/>. </summary>
+	/// <returns> The right hand side x position. </returns>
+	inline int32_t GetMaxX() const { return x + w; }
+
+	/// <summary> Gets the y position of the bottom side of this <see cref="Rectangle"/>. </summary>
+	/// <returns> The bottom side y position. </returns>
+	inline int32_t GetMaxY() const { return y + h; }
 };
 
 #endif

@@ -1,26 +1,33 @@
 #include "DungeonGenerator.h"
-#include "Random.h"
 
+// Data includes.
+#include "Rectangle.h"
+
+// Utility includes.
+#include "Random.h"
 #include <queue>
 
-void MapGeneration::DungeonGenerator::Generate(TileMap& _map, MapObject& _start, MapObject& _end)
+/// <summary> Generates a dungeno on the given map and sets the given start and end positions. </summary>
+/// <param name="_map"> The map on which to generate. </param>
+/// <param name="_start"> The spawn point game object. </param>
+/// <param name="_end"> The exit point game object. </param>
+void MapGeneration::DungeonGenerator::Generate(WorldObjects::TileMap& _map, MapObject& _start, MapObject& _end)
 {
-	// Set the map to the given map.
+	// Set the map reference to the given map and reset it.
 	m_map = &_map;
-
 	m_map->Reset();
 
+	// These functions are pretty self-explanatory.
 	placeRooms(c_roomAmount, _end);
-
 	generateMaze(_start);
-
 	breakWalls();
-
-	removeDeadEnds(_start);
-
+	removeDeadEnds(_start.GetTilePosition());
 	generateGems();
 }
 
+/// <summary> Places the given amount of rooms, and the given exit point in one of them. </summary>
+/// <param name="_numberOfRooms"> The amount of rooms to place. </param>
+/// <param name="_end"> The exit point. </param>
 void MapGeneration::DungeonGenerator::placeRooms(const uint8_t _numberOfRooms, MapObject& _end)
 {
 	// Place the given amount of rooms.
@@ -42,10 +49,10 @@ void MapGeneration::DungeonGenerator::placeRooms(const uint8_t _numberOfRooms, M
 			if (y % 2 == 0)			{ y--; }
 			
 			// If the area is clear, create a room here.
-			if (m_map->AreaIsBlocked(Point(x - 1, y - 1), Point(width + 1, height + 1)))
+			if (m_map->AreaIsBlocked(Rectangle(x - 1, y - 1, width + 1, height + 1)))
 			{
 				// Fill the area with a floor.
-				m_map->FillAreaWithRandomFloor(Point(x, y), Point(width, height));
+				m_map->FillAreaWithRandomFloor(Rectangle(x, y, width, height));
 
 				// If the exit point has not been set yet, set it to a random point within the room, away from any walls.
 				if (_end.GetTilePosition() == Point(0, 0)) { _end.SetTilePosition(Point(Random::RandomBetween(x + 1, x + width - 1), Random::RandomBetween(y + 1, y + height - 1))); }
@@ -57,6 +64,8 @@ void MapGeneration::DungeonGenerator::placeRooms(const uint8_t _numberOfRooms, M
 	}
 }
 
+/// <summary> Generates a maze that fills the map from the given start. </summary>
+/// <param name="_start"> The spawn game object. </param>
 void MapGeneration::DungeonGenerator::generateMaze(MapObject& _start)
 {
 	// Start at a random side of the map.
@@ -92,7 +101,9 @@ void MapGeneration::DungeonGenerator::generateMaze(MapObject& _start)
 	visitCell(Point(spawnX, spawnY) + startingDirection.GetOpposite().GetNormal(), startingDirection);
 }
 
-void MapGeneration::DungeonGenerator::removeDeadEnds(MapObject& _spawn)
+/// <summary> Removes a certain amount of dead ends from the map, excluding the spawn. </summary>
+/// <param name="_spawn"> The spawn position. </param>
+void MapGeneration::DungeonGenerator::removeDeadEnds(const Point _spawnPosition)
 {
 	// Create a vector to store the positions of the dead ends.
 	std::vector<Point> deadEnds(0);
@@ -102,7 +113,7 @@ void MapGeneration::DungeonGenerator::removeDeadEnds(MapObject& _spawn)
 	{
 		for (int32_t y = 0; y < m_map->GetHeight(); y++)
 		{
-			if (cellIsDeadEnd(Point(x, y), _spawn)) { deadEnds.push_back(Point(x, y)); }
+			if (isCellDeadEnd(Point(x, y), _spawnPosition)) { deadEnds.push_back(Point(x, y)); }
 		}
 	}
 
@@ -124,13 +135,14 @@ void MapGeneration::DungeonGenerator::removeDeadEnds(MapObject& _spawn)
 		m_corridorAmount--;
 		
 		// Check to see if the removal of this dead end created any more, and add them to the vector.
-		if (cellIsDeadEnd(deadEnd + Direction(Directions::Left).GetNormal(), _spawn))	deadEnds.push_back(deadEnd + Direction(Directions::Left).GetNormal());
-		if (cellIsDeadEnd(deadEnd + Direction(Directions::Up).GetNormal(), _spawn))		deadEnds.push_back(deadEnd + Direction(Directions::Up).GetNormal());
-		if (cellIsDeadEnd(deadEnd + Direction(Directions::Right).GetNormal(), _spawn))	deadEnds.push_back(deadEnd + Direction(Directions::Right).GetNormal());
-		if (cellIsDeadEnd(deadEnd + Direction(Directions::Down).GetNormal(), _spawn))	deadEnds.push_back(deadEnd + Direction(Directions::Down).GetNormal());
+		if (isCellDeadEnd(deadEnd + Direction(Directions::Left).GetNormal(),	_spawnPosition)) deadEnds.push_back(deadEnd + Direction(Directions::Left).GetNormal());
+		if (isCellDeadEnd(deadEnd + Direction(Directions::Up).GetNormal(),		_spawnPosition)) deadEnds.push_back(deadEnd + Direction(Directions::Up).GetNormal());
+		if (isCellDeadEnd(deadEnd + Direction(Directions::Right).GetNormal(),	_spawnPosition)) deadEnds.push_back(deadEnd + Direction(Directions::Right).GetNormal());
+		if (isCellDeadEnd(deadEnd + Direction(Directions::Down).GetNormal(),	_spawnPosition)) deadEnds.push_back(deadEnd + Direction(Directions::Down).GetNormal());
 	}
 }
 
+/// <summary> Breaks a certain amount of walls that have at least one empty side. </summary>
 void MapGeneration::DungeonGenerator::breakWalls()
 {
 	// Create a vector to store the breakable walls.
@@ -165,6 +177,7 @@ void MapGeneration::DungeonGenerator::breakWalls()
 	}
 }
 
+/// <summary> Fills the map with random gems. </summary>
 void MapGeneration::DungeonGenerator::generateGems()
 {
 	// Set the remaining prosperity based on the area of the map and average prosperity per cell.
@@ -177,10 +190,10 @@ void MapGeneration::DungeonGenerator::generateGems()
 		Point randomCell = Point(Random::RandomBetween(1, m_map->GetWidth() - 2), Random::RandomBetween(1, m_map->GetHeight() - 2));
 
 		// If the cell has a wall, add some random prosperity to it.
-		if (m_map->CellIsBlockedAndInRange(randomCell)) 
+		if (m_map->IsCellBlockedAndInRange(randomCell)) 
 		{
 			// Make sure the prosperity doesn't overflow.
-			int32_t prosperityToAdd = Random::RandomBetween(0, UCHAR_MAX - m_map->GetTileProsperityAt(randomCell));
+			int32_t prosperityToAdd = Random::RandomBetween(0, UCHAR_MAX - m_map->GetTileAt(randomCell).m_prosperity);
 
 			// Add the prosperity to the cell, then subtract that prosperity from the remaining prosperity.
 			m_map->SetCellProsperity(randomCell, prosperityToAdd);
@@ -189,6 +202,9 @@ void MapGeneration::DungeonGenerator::generateGems()
 	}
 }
 
+/// <summary> Visits the given cell from the given direction in order to carve it out as a cave corridor. </summary>
+/// <param name="_position"> The position to visit. </param>
+/// <param name="_from"> The direction whence the visit came. </param>
 void MapGeneration::DungeonGenerator::visitCell(const Point _position, const Direction _from)
 {
 	// If this cell is invalid, return straight away.
@@ -230,26 +246,32 @@ void MapGeneration::DungeonGenerator::visitCell(const Point _position, const Dir
 	}
 }
 
+/// <summary> Finds if the given position is valid for the maze. </summary>
+/// <param name="_position"> The position to check. </param>
+/// <returns> <c>true</c> if the maze can use this cell; otherwise, <c>false</c>. </returns>
 bool MapGeneration::DungeonGenerator::isCellValidMazeNode(const Point _position)
 {
 	// If the cell is out of range, it is invalid, so return false.
-	if (!m_map->CellInRange(_position)) { return false; }
+	if (!m_map->IsCellInRange(_position)) { return false; }
 
 	// If any of the adjacent cells are clear, this cell is invalid, so return false; otherwise return true.
-	return	!(m_map->CellIsClearAndInRange(_position + Direction(Directions::Left).GetNormal()) || m_map->CellIsClearAndInRange(_position + Direction(Directions::Right).GetNormal())
-			|| m_map->CellIsClearAndInRange(_position + Direction(Directions::Down).GetNormal()) || m_map->CellIsClearAndInRange(_position + Direction(Directions::Up).GetNormal()));
+	return	!(m_map->IsCellClearAndInRange(_position + Direction(Directions::Left).GetNormal()) || m_map->IsCellClearAndInRange(_position + Direction(Directions::Right).GetNormal())
+			|| m_map->IsCellClearAndInRange(_position + Direction(Directions::Down).GetNormal()) || m_map->IsCellClearAndInRange(_position + Direction(Directions::Up).GetNormal()));
 }
 
+/// <summary> Gets the amount of floors adjacent to the given position. </summary>
+/// <param name="_position"> The position to check. </param>
+/// <returns> The number of adjacent floors to the given position. </returns>
 int32_t MapGeneration::DungeonGenerator::getAdjacentFloorCellsAmount(const Point _position)
 {
 	// Keep track of the amount of empty sides.
 	uint8_t emptySideAmount = 0;
 
 	// For each empty side, increase the counter by 1.
-	if (m_map->CellIsClearAndInRange(_position + Direction(Directions::Left).GetNormal()))	{ emptySideAmount++; }
-	if (m_map->CellIsClearAndInRange(_position + Direction(Directions::Up).GetNormal()))		{ emptySideAmount++; }
-	if (m_map->CellIsClearAndInRange(_position + Direction(Directions::Right).GetNormal()))	{ emptySideAmount++; }
-	if (m_map->CellIsClearAndInRange(_position + Direction(Directions::Down).GetNormal()))	{ emptySideAmount++; }
+	if (m_map->IsCellClearAndInRange(_position + Direction(Directions::Left).GetNormal()))	{ emptySideAmount++; }
+	if (m_map->IsCellClearAndInRange(_position + Direction(Directions::Up).GetNormal()))		{ emptySideAmount++; }
+	if (m_map->IsCellClearAndInRange(_position + Direction(Directions::Right).GetNormal()))	{ emptySideAmount++; }
+	if (m_map->IsCellClearAndInRange(_position + Direction(Directions::Down).GetNormal()))	{ emptySideAmount++; }
 
 	// return the amount of empty sides.
 	return emptySideAmount;
