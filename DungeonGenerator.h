@@ -16,7 +16,7 @@ namespace MapGeneration
 	public:
 		DungeonGenerator() : m_map(NULL) {}
 
-		virtual void Generate(WorldObjects::TileMap&, MapObject&, MapObject&);
+		virtual void Generate(WorldObjects::TileMap&, GameObjects::MapObject&, GameObjects::MapObject&);
 	private:
 		/// <summary> The amount of rooms to attempt to place. </summary>
 		const uint8_t			c_roomAmount = 20;
@@ -58,9 +58,9 @@ namespace MapGeneration
 		/// <summary> The amount of corridors on the map. </summary>
 		uint32_t				m_corridorAmount = 0;
 
-		void	placeRooms(uint8_t, MapObject&);
+		void	placeRooms(uint8_t, GameObjects::MapObject&);
 
-		void	generateMaze(MapObject&);
+		void	generateMaze(GameObjects::MapObject&);
 
 		void	removeDeadEnds(Point);
 

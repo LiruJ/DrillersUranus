@@ -12,7 +12,7 @@ namespace MapGeneration
 	public:
 		CavernGenerator() {}
 
-		virtual void Generate(WorldObjects::TileMap&, MapObject&, MapObject&);
+		virtual void Generate(WorldObjects::TileMap&, GameObjects::MapObject&, GameObjects::MapObject&);
 	private:
 		/// <summary> The min percentage of all tiles on the map to turn into floors. <c>0</c> for none, <c>100</c> for all. </summary>
 		float				c_minPercentageOfMapToCarve = 0.5f;

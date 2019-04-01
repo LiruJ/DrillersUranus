@@ -1,26 +1,46 @@
 #ifndef MAPOBJECT_H
 #define MAPOBJECT_H
 
-// Graphical includes.
-#include "SpriteData.h"
-
-// Interface includes.
+// Derived includes.
 #include "IReadOnlyMapObject.h"
 
-class MapObject : public IReadOnlyMapObject
+// Data includes.
+#include "Point.h"
+
+// Utility includes.
+#include "SpriteData.h"
+
+// Typedef includes.
+#include <stdint.h>
+
+namespace GameObjects
 {
-public:
-	MapObject() : m_tilePosition(Point(0, 0)) {}
-	MapObject(const uint8_t _spriteID) : m_tilePosition(Point(0, 0)), m_spriteID(_spriteID) {}
-	~MapObject() {}
+	/// <summary> Represents an object on the map. </summary>
+	class MapObject : public IReadOnlyMapObject
+	{
+	public:
+		/// <summary> Creates an empty <see cref="MapObject"/>. </summary>
+		MapObject() : m_tilePosition(Point(0, 0)) {}
 
-	virtual Point GetTilePosition()										{ return m_tilePosition; }
-	virtual void inline SetTilePosition(const Point _position)			{ m_tilePosition = _position; }
+		/// <summary> Creates a <see cref="MapObject"/> with the given sprite ID. </summary>
+		/// <param name="_spriteID"></param>
+		MapObject(const uint8_t _spriteID) : m_tilePosition(Point(0, 0)), m_spriteID(_spriteID) {}
 
-	virtual void Draw(Point);
+		/// <summary> Gets the tile position of this object on the map. </summary>
+		/// <returns> The tile position of this object on the map. </returns>
+		inline Point GetTilePosition()						const	{ return m_tilePosition; }
 
-protected:
-	Point			m_tilePosition;
-	uint8_t	m_spriteID = 0;
-};
+		/// <summary> Gets the tile position of this object on the map. </summary>
+		/// <param name="_position"> The new tile position. </param>
+		inline void SetTilePosition(const Point _position)			{ m_tilePosition = _position; }
+
+		virtual void Draw(Point);
+	protected:
+		/// <summary> The position of this object on the map. </summary>
+		Point	m_tilePosition;
+
+		/// <summary> The ID of this object's sprite. </summary>
+		uint8_t	m_spriteID = 0;
+	};
+}
 #endif

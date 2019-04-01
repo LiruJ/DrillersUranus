@@ -11,7 +11,7 @@
 /// <param name="_map"> The map on which to generate. </param>
 /// <param name="_start"> The spawn point game object. </param>
 /// <param name="_end"> The exit point game object. </param>
-void MapGeneration::DungeonGenerator::Generate(WorldObjects::TileMap& _map, MapObject& _start, MapObject& _end)
+void MapGeneration::DungeonGenerator::Generate(WorldObjects::TileMap& _map, GameObjects::MapObject& _start, GameObjects::MapObject& _end)
 {
 	// Set the map reference to the given map and reset it.
 	m_map = &_map;
@@ -28,7 +28,7 @@ void MapGeneration::DungeonGenerator::Generate(WorldObjects::TileMap& _map, MapO
 /// <summary> Places the given amount of rooms, and the given exit point in one of them. </summary>
 /// <param name="_numberOfRooms"> The amount of rooms to place. </param>
 /// <param name="_end"> The exit point. </param>
-void MapGeneration::DungeonGenerator::placeRooms(const uint8_t _numberOfRooms, MapObject& _end)
+void MapGeneration::DungeonGenerator::placeRooms(const uint8_t _numberOfRooms, GameObjects::MapObject& _end)
 {
 	// Place the given amount of rooms.
 	for (int32_t room = 0; room < _numberOfRooms; room++)
@@ -66,7 +66,7 @@ void MapGeneration::DungeonGenerator::placeRooms(const uint8_t _numberOfRooms, M
 
 /// <summary> Generates a maze that fills the map from the given start. </summary>
 /// <param name="_start"> The spawn game object. </param>
-void MapGeneration::DungeonGenerator::generateMaze(MapObject& _start)
+void MapGeneration::DungeonGenerator::generateMaze(GameObjects::MapObject& _start)
 {
 	// Start at a random side of the map.
 	Direction startingDirection = Direction::GetRandom();

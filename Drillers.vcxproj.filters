@@ -93,9 +93,6 @@
     <ClCompile Include="CavernGenerator.cpp">
       <Filter>Source Files\MapGenerators</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files\GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="KeyboardControls.cpp">
       <Filter>Source Files\Services</Filter>
     </ClCompile>

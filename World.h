@@ -40,40 +40,40 @@ namespace WorldObjects
 
 		/// <summary> Gets the player. </summary>
 		/// <returns> An <see cref="IReadOnlyMapObject"/> form of the <see cref="Player"/>. </returns>
-		inline IReadOnlyMapObject& GetPlayer() { return m_player; }
+		inline GameObjects::IReadOnlyMapObject& GetPlayer()	{ return m_player; }
 
 		/// <summary> Gets the spawn object. </summary>
 		/// <returns> An <see cref="IReadOnlyMapObject"/> form of the spawn. </returns>
-		inline IReadOnlyMapObject& GetSpawn() { return m_spawnPoint; }
+		inline GameObjects::IReadOnlyMapObject& GetSpawn()	{ return m_spawnPoint; }
 
 		/// <summary> Gets the spawn object. </summary>
 		/// <returns> An <see cref="IReadOnlyMapObject"/> form of the end. </returns>
-		inline IReadOnlyMapObject& GetExit() { return m_exitPoint; }
+		inline GameObjects::IReadOnlyMapObject& GetExit()	{ return m_exitPoint; }
 
 		/// <summary> Gets a read only version of the <see cref="TileData"/>. </summary>
 		/// <returns> A <see cref="IReadOnlyTileMap"/> form of the data. </returns>
-		inline IReadOnlyTileMap& GetTileMap() { return m_tileData; }
+		inline IReadOnlyTileMap& GetTileMap()				{ return m_tileData; }
 	private:
 		/// <summary> The tile map data. </summary>
-		TileMap		m_tileData;
+		TileMap					m_tileData;
 
 		/// <summary> The player. </summary>
-		Player		m_player;
+		GameObjects::Player		m_player;
 
 		/// <summary> The entry point of the map. </summary>
-		MapObject	m_spawnPoint;
+		GameObjects::MapObject	m_spawnPoint;
 
 		/// <summary> The exit point of the map. </summary>
-		MapObject	m_exitPoint;
+		GameObjects::MapObject	m_exitPoint;
 
 		/// <summary> The camera used to render the world. </summary>
-		Camera		m_camera;
+		Camera					m_camera;
 
 		/// <summary> The number of floors that the player has explored. </summary>
-		uint16_t	m_floorCount = 0;
+		uint16_t				m_floorCount = 0;
 
 		/// <summary> How many turns the player can make before they lose. </summary>
-		uint16_t	m_turnsUntilCollapse;
+		uint16_t				m_turnsUntilCollapse;
 
 		void handleKeyDown(void*, void*);
 

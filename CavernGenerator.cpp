@@ -10,7 +10,7 @@
 /// <param name="_map"> The map on which to generate. </param>
 /// <param name="_start"> The spawn point game object. </param>
 /// <param name="_end"> The exit point game object. </param>
-void MapGeneration::CavernGenerator::Generate(WorldObjects::TileMap& _map, MapObject& _start, MapObject& _end)
+void MapGeneration::CavernGenerator::Generate(WorldObjects::TileMap& _map, GameObjects::MapObject& _start, GameObjects::MapObject& _end)
 {
 	// Reset the map.
 	_map.Reset();

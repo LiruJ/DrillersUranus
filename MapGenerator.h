@@ -13,10 +13,13 @@ namespace MapGeneration
 	class MapGenerator
 	{
 	public:
-
 		virtual ~MapGenerator() {}
 
-		virtual void Generate(WorldObjects::TileMap&, MapObject&, MapObject&) = 0;
+		/// <summary> Generates a map on the given tile map, using the given spawn and exit game objects as part of the map. </summary>
+		/// <param name="_map"> The map data. </param>
+		/// <param name="_spawn"> The spawn object. </param>
+		/// <param name="_exit"> The exit object. </param>
+		virtual void Generate(WorldObjects::TileMap& _map, GameObjects::MapObject& _spawn, GameObjects::MapObject& _exit) = 0;
 	};
 }
 #endif
