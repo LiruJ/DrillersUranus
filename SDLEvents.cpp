@@ -1,9 +1,10 @@
 #include "SDLEvents.h"
 
+/// <summary> Pumps every event in the queue and fires any bound events. </summary>
 void Events::SDLEvents::PumpEvents()
 {
+	// Go through every event in the queue.
 	SDL_Event currentEvent;
-
 	while (SDL_PollEvent(&currentEvent))
 	{
 		// If no functions are bound to this event, skip it.
@@ -63,6 +64,9 @@ void Events::SDLEvents::PushEvent(const UserEvent _eventID, void* _data1, void* 
 	SDL_PushEvent(&newEvent);
 }
 
+/// <summary> Adds a function that will be called when the given SDL event is fired. </summary>
+/// <param name="_sdlEventID"> The ID of the SDL event. </param>
+/// <param name="_function"> The function to be called. </param>
 void Events::SDLEvents::AddFrameworkListener(uint32_t _sdlEventID, std::function<void(void*, void*)> _function)
 {
 	// If the given SDL Event ID does not have any bound functions, initialise the vector with the function.
@@ -72,7 +76,8 @@ void Events::SDLEvents::AddFrameworkListener(uint32_t _sdlEventID, std::function
 	else { m_functionsBySDLEventID[(SDL_EventType)_sdlEventID].push_back(_function); }
 }
 
-void Events::SDLEvents::fireEvents(std::vector<std::function<void(void*, void*)>>& _eventFunctions, void* _data1, void* _data2)
-{
-	for (uint32_t i = 0; i < _eventFunctions.size(); i++) { _eventFunctions[i](_data1, _data2); }
-}
+/// <summary> Fires every function bound an event with the given data. </summary>
+/// <param name="_eventFunctions"> The functions bound to the event. </param>
+/// <param name="_data1"> The first data. </param>
+/// <param name="_data2"> The second data. </param>
+void Events::SDLEvents::fireEvents(std::vector<std::function<void(void*, void*)>>& _eventFunctions, void* _data1, void* _data2) { for (uint32_t i = 0; i < _eventFunctions.size(); i++) { _eventFunctions[i](_data1, _data2); } }

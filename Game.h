@@ -4,7 +4,6 @@
 // Data includes.
 #include "World.h"
 #include "MiningMinigame.h"
-#include <string>
 
 //Service includes.
 #include "ServiceProvider.h"
@@ -12,11 +11,15 @@
 #include "SDLEvents.h"
 #include "LetterBoxScreen.h"
 
+// Utility includes.
+#include <string>
+
 namespace MainGame
 {
 	/// <summary> Represents the current state of the <see cref="Game"/>. </summary>
-	enum GameState { MainMenu, Map, Minigame };
+	enum GameState { MainMenu, Map, Minigame, Exit };
 
+	/// <summary> Represents the main game which ties all the components together. </summary>
 	class Game
 	{
 	public:
@@ -31,7 +34,6 @@ namespace MainGame
 		/// <summary> Gets the current game state. </summary>
 		/// <returns> The current game state. </returns>
 		static inline GameState		GetGameState() { return s_currentGameState; }
-
 	private:
 		/// <summary> The service provider. </summary>
 		static ServiceProvider		s_serviceProvider;
@@ -59,20 +61,29 @@ namespace MainGame
 
 		void draw();
 
-		int32_t update();
+		void update();
 
 		void initialiseServices();
+
 		void initialiseBindings();
+
 		void initialiseGameObjects();
+
 		void loadTextures();
 
 		void startMinigame(void*, void*);
+
 		void stopMinigame(void*, void*);
 
 		/// <summary> Handles the window resize event. </summary>
 		/// <param name="_windowX"> The pointer to the new window width. </param>
 		/// <param name="_windowY"> The pointer to the new window height. </param>
 		void resizeScreen(void* _windowX, void* _windowY) { m_letterBoxScreen->Resize(*static_cast<int32_t*>(_windowX), *static_cast<int32_t*>(_windowY)); }
+
+		/// <summary> Sets the game state to exit so that the game will quit the update loop. </summary>
+		/// <param name="_unused"> Unused. </param>
+		/// <param name="_unused2"> Unused. </param>
+		void exitGame(void* _unused, void* _unused2) { s_currentGameState = GameState::Exit; }
 	};
 }
 #endif

@@ -28,11 +28,11 @@ namespace GameObjects
 
 		/// <summary> Gets the tile position of this object on the map. </summary>
 		/// <returns> The tile position of this object on the map. </returns>
-		inline Point GetTilePosition()						const	{ return m_tilePosition; }
+		virtual Point GetTilePosition()						{ return m_tilePosition; }
 
 		/// <summary> Gets the tile position of this object on the map. </summary>
 		/// <param name="_position"> The new tile position. </param>
-		inline void SetTilePosition(const Point _position)			{ m_tilePosition = _position; }
+		inline void SetTilePosition(const Point _position)	{ m_tilePosition = _position; }
 
 		virtual void Draw(Point);
 	protected:

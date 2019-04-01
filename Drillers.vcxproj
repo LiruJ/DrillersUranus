@@ -25,7 +25,6 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CavernGenerator.cpp" />
     <ClCompile Include="DungeonGenerator.cpp" />
-    <ClCompile Include="ConsoleLogger.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="KeyboardControls.cpp" />
     <ClCompile Include="Main.cpp" />

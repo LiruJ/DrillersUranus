@@ -1,16 +1,17 @@
 #include "MiningMinigame.h"
 
-// Graphical includes.
+// Service includes.
 #include "Graphics.h"
 #include "Screen.h"
-
-// Utility includes.
-#include "Random.h"
 
 // Data includes.
 #include "Game.h"
 #include "Rectangle.h"
 
+// Utility includes.
+#include "Random.h"
+
+/// <summary> Sets up event bindings and the UI. </summary>
 void Minigames::MiningMinigame::Initialise()
 {
 	// Get the events service.
@@ -26,6 +27,7 @@ void Minigames::MiningMinigame::Initialise()
 	initialiseGui();
 }
 
+/// <summary> Draws the minigame and the UI. </summary>
 void Minigames::MiningMinigame::Draw()
 {
 	// Get the graphics and screen services.
@@ -50,6 +52,9 @@ void Minigames::MiningMinigame::Draw()
 	if (m_currentToolID != 2) { m_toolButtons[2].Draw(); }
 }
 
+/// <summary> Generates a random cave wall with the gems based on the prosperity. </summary>
+/// <param name="_tilePosition"> The position of the cave wall within the map. </param>
+/// <param name="_prosperity"> The prosperity of the wal. </param>
 void Minigames::MiningMinigame::Generate(const Point _tilePosition, const uint8_t _prosperity)
 {
 	// Set the tile position.
@@ -63,6 +68,45 @@ void Minigames::MiningMinigame::Generate(const Point _tilePosition, const uint8_
 	for (int32_t i = 0; i < numberOfBumps; i++) { generateBump((c_maxHeight - numberOfBumps) + i); }
 }
 
+/// <summary> Generates a random bump on the cave wall from the given height. </summary>
+/// <param name="_height"> The starting height of the bump. </param>
+void Minigames::MiningMinigame::generateBump(const uint8_t _height)
+{
+	// Set the current height to the given height.
+	uint8_t currentHeight = _height;
+
+	// Much like the cavern generation, start at a random place and randomly move around.
+	Point currentPosition(Random::RandomBetween(0, c_wallWidth - 1), Random::RandomBetween(0, c_wallHeight - 1));
+	Point nextPosition;
+
+	// Every time a placement cannot be made, increment this by 1 to prevent an infnite loop.
+	int32_t currentAttempts = 0;
+
+	// Keep going until a certain height is reached.
+	while (currentHeight > c_minimumHeight && currentAttempts < c_maxAttempts)
+	{
+		// Only set the tile if it is lower than the current height, otherwise increment the attempt counter.
+		if (m_wallData[currentPosition.x][currentPosition.y] < currentHeight)
+		{
+			// Set the tile.
+			m_wallData[currentPosition.x][currentPosition.y] = currentHeight;
+
+			// Roll to go down one layer and reset the attempt counter.
+			if (Random::RandomScalar() < c_downChance && currentHeight > 0) { currentHeight--; currentAttempts = 0; }
+		}
+		else { currentAttempts++; }
+
+		// Keep going in a random direction until a valid move is found.
+		do { nextPosition = currentPosition + Direction::GetRandom().GetNormal(); } while (!isInRange(nextPosition));
+
+		// Make the move.
+		currentPosition = nextPosition;
+	}
+}
+
+/// <summary> Changes the current tool to the given value. </summary>
+/// <param name="_toolID"> The new tool ID. </param>
+/// <param name="_unused"> Unused. </param>
 void Minigames::MiningMinigame::changeTool(void * _toolID, void * _unused)
 {
 	// Do nothing if the game state is not minigame.
@@ -72,6 +116,9 @@ void Minigames::MiningMinigame::changeTool(void * _toolID, void * _unused)
 	m_currentToolID = *static_cast<uint8_t*>(_toolID);
 }
 
+/// <summary> Handles the player clicking on the wall to mine. </summary>
+/// <param name="_windowX"> The x position of the click. </param>
+/// <param name="_windowY"> The y position of the click. </param>
 void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
 {
 	// Do nothing if the game state is not minigame.
@@ -129,6 +176,7 @@ void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
 	}
 }
 
+/// <summary> Sets up the GUI. </summary>
 void Minigames::MiningMinigame::initialiseGui()
 {
 	// Initialise the background UI.
@@ -148,41 +196,7 @@ void Minigames::MiningMinigame::initialiseGui()
 	}
 }
 
-void Minigames::MiningMinigame::generateBump(const uint8_t _height)
-{
-	// Set the current height to the given height.
-	uint8_t currentHeight = _height;
-
-	// Much like the cavern generation, start at a random place and randomly move around.
-	Point currentPosition(Random::RandomBetween(0, c_wallWidth - 1), Random::RandomBetween(0, c_wallHeight - 1));
-	Point nextPosition;
-	
-	// Every time a placement cannot be made, increment this by 1 to prevent an infnite loop.
-	int32_t currentAttempts = 0;
-
-	// Keep going until a certain height is reached.
-	while (currentHeight > c_minimumHeight && currentAttempts < c_maxAttempts)
-	{
-		// Only set the tile if it is lower than the current height, otherwise increment the attempt counter.
-		if (m_wallData[currentPosition.x][currentPosition.y] < currentHeight)
-		{
-			// Set the tile.
-			m_wallData[currentPosition.x][currentPosition.y] = currentHeight;
-
-			// Roll to go down one layer and reset the attempt counter.
-			if (Random::RandomScalar() < c_downChance && currentHeight > 0) { currentHeight--; currentAttempts = 0; }
-		}
-		else { currentAttempts++; }
-
-		// Keep going in a random direction until a valid move is found.
-		do { nextPosition = currentPosition + Direction::GetRandom().GetNormal(); }
-		while (!isInRange(nextPosition));
-
-		// Make the move.
-		currentPosition = nextPosition;
-	}
-}
-
+/// <summary> Resets the minigame. </summary>
 void Minigames::MiningMinigame::reset()
 {
 	// Reset the collapse timer and bar.

@@ -9,6 +9,9 @@
 /// <summary> Draws the game. </summary>
 void MainGame::Game::draw()
 {
+	// If the game is going to exit anyway, do nothing.
+	if (s_currentGameState == GameState::Exit) { return; }
+
 	// Get the graphics service.
 	Graphics::Graphics& graphics = GetService().GetGraphics();
 
@@ -29,16 +32,16 @@ void MainGame::Game::draw()
 }
 
 /// <summary> Updates the game. </summary>
-/// <returns> <c>0</c> if the update loop ran successfully, anything else otherwise. </returns>
-int32_t MainGame::Game::update()
+void MainGame::Game::update()
 {
 	// Pump the events service.
 	m_events->PumpEvents();
 
 	// Update the world.
-	return m_world.Update();
+	m_world.Update();
 }
 
+/// <summary> Creates and initialises the game. </summary>
 MainGame::Game::Game()
 {
 	initialiseServices();
@@ -50,7 +53,7 @@ MainGame::Game::Game()
 	loadTextures();
 }
 
-/// <summary> Create and initialise each service. </summary>
+/// <summary> Creates and initialises each service. </summary>
 void MainGame::Game::initialiseServices()
 {
 	// Initialise events.
@@ -76,6 +79,7 @@ void MainGame::Game::initialiseServices()
 	s_serviceProvider.SetScreen(*m_letterBoxScreen);
 }
 
+/// <summary> Hooks up game events to specific functions. </summary>
 void MainGame::Game::initialiseBindings()
 {
 	// Bind the minigame start and end.
@@ -84,8 +88,12 @@ void MainGame::Game::initialiseBindings()
 
 	// Bind the window resizing.
 	m_events->AddFrameworkListener(SDL_WINDOWEVENT, std::bind(&Game::resizeScreen, this, std::placeholders::_1, std::placeholders::_2));
+
+	// Bind the game quit.
+	m_events->AddFrameworkListener(SDL_QUIT, std::bind(&Game::exitGame, this, std::placeholders::_1, std::placeholders::_2));
 }
 
+/// <summary> Sets up the world and mining minigame. </summary>
 void MainGame::Game::initialiseGameObjects()
 {
 	// Initialise the minigame and world.
@@ -116,6 +124,9 @@ void MainGame::Game::loadTextures()
 	});
 }
 
+/// <summary> Starts the mining minigame. </summary>
+/// <param name="_tilePosition"> The position of the tile to mine. </param>
+/// <param name="_tileProsperity"> The prosperity of the tile. </param>
 void MainGame::Game::startMinigame(void* _tilePosition, void* _tileProsperity)
 {
 	// Cast the data.
@@ -127,6 +138,9 @@ void MainGame::Game::startMinigame(void* _tilePosition, void* _tileProsperity)
 	m_miningMinigame.Generate(tilePosition, cellProsperity);
 }
 
+/// <summary> Stops the mining minigame. </summary>
+/// <param name="_tilePosition"> The position of the tile. </param>
+/// <param name="_unused"> Unused. </param>
 void MainGame::Game::stopMinigame(void* _tilePosition, void* _unused)
 {
 	// Set the current game state to map.
@@ -137,10 +151,16 @@ void MainGame::Game::stopMinigame(void* _tilePosition, void* _unused)
 /// <returns> <c>0</c> if the game ran correctly, anything else otherwise. </returns>
 int32_t MainGame::Game::Run()
 {
-	// Update first, if the update fails, fall out to the return, otherwise draw.
-	while (!update()) 
+	// Keep running for as long as the game state is not exit.
+	while (s_currentGameState != GameState::Exit)
 	{
+		// Update the game state.
+		update();
+
+		// Draw the current game state.
 		draw();
+
+		// Wait based on the fps.
 		SDL_Delay((uint32_t)(1000.0f / (float_t)m_SDLGraphics->m_framesPerSecond));
 	}
 

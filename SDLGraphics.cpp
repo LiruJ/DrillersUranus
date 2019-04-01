@@ -1,6 +1,6 @@
 #include "SDLGraphics.h"
 
-// Graphical includes.
+// Framework includes.
 #include <SDL_image.h>
 
 /// <summary> Creates the SDL Graphics object. </summary>
@@ -13,6 +13,7 @@ Graphics::SDLGraphics::SDLGraphics()
 /// <summary> Initialise SDL and create the window and renderer. </summary>
 /// <param name="_width"> The width of the window. </param>
 /// <param name="_height"> The height of the window. </param>
+/// <param name="_logger"> The logger service to use to log the outcome of loading. </param>
 void Graphics::SDLGraphics::Initialise(const int32_t _width, const int32_t _height, Logging::Logger& _logger)
 {
 	// Try to initialise SDL.
@@ -62,6 +63,7 @@ void Graphics::SDLGraphics::Clear(const uint8_t _red, const uint8_t _green, cons
 /// <param name="_red"> The <c>0</c> to <c>255</c> value for the red. </param>
 /// <param name="_green"> The <c>0</c> to <c>255</c> value for the green. </param>
 /// <param name="_blue"> The <c>0</c> to <c>255</c> value for the blue. </param>
+/// <param name="_alpha"> The <c>0</c> to <c>255</c> value for the alpha. </param>
 void Graphics::SDLGraphics::Clear(const uint8_t _red, const uint8_t _green, const uint8_t _blue, const uint8_t _alpha)
 {
 	SDL_SetRenderDrawColor(m_renderer, _red, _green, _blue, _alpha);
@@ -74,10 +76,10 @@ void Graphics::SDLGraphics::Present()
 	SDL_RenderPresent(m_renderer);
 }
 
-/// <summary> Draws the texture with the given ID to the given position. </summary>
-/// <param name="_textureID"> The ID of the texture to draw. </param>
-/// <param name="_x"> The X position. </param>
-/// <param name="_y"> The Y position. </param>
+/// <summary> Draws the given texture from the given sheet at the given position. </summary>
+/// <param name="_sheetID"> The ID of the sheet from which the texture is stored. </param>
+/// <param name="_textureID"> The ID of the texture itself. </param>
+/// <param name="_position"> The position on the window. </param>
 void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textureID, const Point _position)
 {
 	// Get the texture from the IDs.
@@ -90,10 +92,10 @@ void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textur
 	SDL_RenderCopy(m_renderer, texture, NULL, &destRect);
 }
 
-/// <summary> Draws the texture with the given ID to the given position with the given rotation. </summary>
-/// <param name="_textureID"> The ID of the texture to draw. </param>
-/// <param name="_x"> The X position. </param>
-/// <param name="_y"> The Y position. </param>
+/// <summary> Draws the given texture from the given sheet at the given position and rotation. </summary>
+/// <param name="_sheetID"> The ID of the sheet from which the texture is stored. </param>
+/// <param name="_textureID"> The ID of the texture itself. </param>
+/// <param name="_position"> The position on the window. </param>
 /// <param name="_rotation"> The rotation in radians. </param>
 void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textureID, const Point _position, const float _rotation)
 {
@@ -104,9 +106,13 @@ void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textur
 	SDL_Rect destRect = createRectFromTexture(_position.x, _position.y, texture);
 
 	// Draw the texture at the given position.
-	SDL_RenderCopyEx(m_renderer, texture, NULL, &destRect, _rotation * (180 / M_PI), NULL, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(m_renderer, texture, NULL, &destRect, _rotation * (180.0f / M_PI), NULL, SDL_FLIP_NONE);
 }
 
+/// <summary> Draws the given texture from the given sheet at the given destination. </summary>
+/// <param name="_sheetID"> The ID of the sheet from which the texture is stored. </param>
+/// <param name="_textureID"> The ID of the texture itself. </param>
+/// <param name="_destination"> The destination <see cref="Rectangle"/>. </param>
 void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textureID, const Rectangle _destination)
 {
 	// Get the texture from the IDs.
@@ -116,15 +122,25 @@ void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textur
 	SDL_RenderCopy(m_renderer, texture, NULL, &convertRect(_destination));
 }
 
+/// <summary> Draws the given texture from the given sheet at the given destination and rotation. </summary>
+/// <param name="_sheetID"> The ID of the sheet from which the texture is stored. </param>
+/// <param name="_textureID"> The ID of the texture itself. </param>
+/// <param name="_destination"> The destination <see cref="Rectangle"/>. </param>
+/// <param name="_rotation"> The rotation in radians. </param>
 void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textureID, const Rectangle _destination, const float _rotation)
 {
 	// Get the texture from the IDs.
 	SDL_Texture* texture = m_sheets[_sheetID][_textureID];
 
 	// Draw the texture at the given position.
-	SDL_RenderCopyEx(m_renderer, texture, NULL, &convertRect(_destination), _rotation * (180 / M_PI), NULL, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(m_renderer, texture, NULL, &convertRect(_destination), _rotation * (180.0f / M_PI), NULL, SDL_FLIP_NONE);
 }
 
+/// <summary> Draws the given texture from the given sheet at the given destination from the given source. </summary>
+/// <param name="_sheetID"> The ID of the sheet from which the texture is stored. </param>
+/// <param name="_textureID"> The ID of the texture itself. </param>
+/// <param name="_destination"> The destination <see cref="Rectangle"/>. </param>
+/// <param name="_source"> The source <see cref="Rectangle"/>. </param>
 void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textureID, const Rectangle _destination, const Rectangle _source)
 {
 	// Get the texture from the IDs.
@@ -132,6 +148,21 @@ void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textur
 
 	// Draw the texture at the given position.
 	SDL_RenderCopy(m_renderer, texture, &convertRect(_source), &convertRect(_destination));
+}
+
+/// <summary> Draws the given texture from the given sheet at the given destination and rotation from the given source. </summary>
+/// <param name="_sheetID"> The ID of the sheet from which the texture is stored. </param>
+/// <param name="_textureID"> The ID of the texture itself. </param>
+/// <param name="_destination"> The destination <see cref="Rectangle"/>. </param>
+/// <param name="_source"> The source <see cref="Rectangle"/>. </param>
+/// <param name="_rotation"> The rotation in radians. </param>
+void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textureID, const Rectangle _destination, const Rectangle _source, const float _rotation)
+{
+	// Get the texture from the IDs.
+	SDL_Texture* texture = m_sheets[_sheetID][_textureID];
+
+	// Draw the texture at the given position.
+	SDL_RenderCopyEx(m_renderer, texture, &convertRect(_source), &convertRect(_destination), _rotation * (180.0f / M_PI), NULL, SDL_FLIP_NONE);
 }
 
 /// <summary> Loads the texture with the given filename to the given sheet ID. </summary>
@@ -188,6 +219,10 @@ void Graphics::SDLGraphics::LoadSheetToID(const std::string _fileName, const uin
 	loadedTexture = NULL;
 }
 
+/// <summary> Loads the texture with the given filename to the given sheet ID using the given rectangles as bounds. </summary>
+/// <param name="_fileName"> The path of the texture. </param>
+/// <param name="_sheetID"> The ID to with which the sheet should be saved. </param>
+/// <param name="_textureBounds"> The bounds of each texture. </param>
 void Graphics::SDLGraphics::LoadSheetToID(const std::string _fileName, const uint16_t _sheetID, const std::vector<Rectangle> _textureBounds)
 {
 	// If the given ID already has a sheet loaded, throw an error.
@@ -231,8 +266,6 @@ void Graphics::SDLGraphics::LoadSheetToID(const std::string _fileName, const uin
 	loadedTexture = NULL;
 }
 
-
-
 /// <summary> Creates an <see cref="SDL_Rect"/> using the given X and Y positions along with the dimensions of the given <see cref="SDL_Texture"/>. </summary>
 /// <param name="_x"> The X position. </param>
 /// <param name="_y"> The Y position. </param>
@@ -255,6 +288,12 @@ SDL_Rect Graphics::SDLGraphics::createRectFromTexture(const int32_t _x, const in
 	return rectangle;
 }
 
+/// <summary> Creates an <see cref="SDL_Rect"/> from the given values. </summary>
+/// <param name="_x"> The x position. </param>
+/// <param name="_y"> The y position. </param>
+/// <param name="_width"> The width. </param>
+/// <param name="_height"> The height. </param>
+/// <returns> An <see cref="SDL_Rect"/>. </returns>
 SDL_Rect Graphics::SDLGraphics::createRect(const int32_t _x, const int32_t _y, const int32_t _width, const int32_t _height)
 {
 	SDL_Rect rectangle;
@@ -266,6 +305,9 @@ SDL_Rect Graphics::SDLGraphics::createRect(const int32_t _x, const int32_t _y, c
 	return rectangle;
 }
 
+/// <summary> Converts a <see cref="Rectangle"/> into an <see cref="SDL_Rect"/>. </summary>
+/// <param name="_rectangle"> THe <see cref="Rectangle"/> to convert. </param>
+/// <returns> The converted <see cref="SDL_Rect"/>. </returns>
 SDL_Rect Graphics::SDLGraphics::convertRect(const Rectangle _rectangle)
 {
 	SDL_Rect rectangle;

@@ -1,5 +1,6 @@
 #include "KeyboardControls.h"
 
+// Utility includes.
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -32,11 +33,11 @@ void Controls::KeyboardControls::LoadFromFile(const std::string _filePath)
 		currentLineStream >> keyCode;
 
 		// Can't switch on strings, so just check to see if the name matches anything.
-		if (commandName == "Up") { BindCommandToKey(Command::MoveUp, keyCode); }
-		else if (commandName == "Down") { BindCommandToKey(Command::MoveDown, keyCode); }
-		else if (commandName == "Left") { BindCommandToKey(Command::MoveLeft, keyCode); }
-		else if (commandName == "Right") { BindCommandToKey(Command::MoveRight, keyCode); }
+		if (commandName == "Up")			{ BindCommandToKey(Command::MoveUp, keyCode); }
+		else if (commandName == "Down")		{ BindCommandToKey(Command::MoveDown, keyCode); }
+		else if (commandName == "Left")		{ BindCommandToKey(Command::MoveLeft, keyCode); }
+		else if (commandName == "Right")	{ BindCommandToKey(Command::MoveRight, keyCode); }
 		else if (commandName == "Interact") { BindCommandToKey(Command::Interact, keyCode); }
-		else if (commandName == "Swing") { BindCommandToKey(Command::Swing, keyCode); }
+		else if (commandName == "Swing")	{ BindCommandToKey(Command::Swing, keyCode); }
 	}
 }

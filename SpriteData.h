@@ -1,8 +1,10 @@
 #ifndef SPRITEDATA_H
 #define SPRITEDATA_H
 
+// Utility includes.
 #include "Random.h"
 
+/// <summary> Represents data about the sprite sheets used by the game. </summary>
 namespace SpriteData
 {
 	/// <summary> The width and height of a tile. </summary>

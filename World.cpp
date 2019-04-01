@@ -23,9 +23,9 @@ void WorldObjects::World::Draw()
 }
 
 /// <summary> Updates this <see cref="World"/>. </summary>
-int32_t WorldObjects::World::Update()
+void WorldObjects::World::Update()
 {
-	return 0;
+
 }
 
 /// <summary> Binds this <see cref="World"/> to certain events. </summary>

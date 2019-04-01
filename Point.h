@@ -5,9 +5,13 @@
 #include <stdint.h>
 #include <cmath>
 
+/// <summary> Represents a whole-numbered point. </summary>
 struct Point
 {
+	/// <summary> The x position. </summary>
 	int32_t x;
+
+	/// <summary> The y position. </summary>
 	int32_t y;
 	
 	/// <summary> Creates an empty <see cref="Point"/>. </summary>

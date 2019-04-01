@@ -17,6 +17,9 @@
 // Utility includes.
 #include "SpriteData.h"
 
+// Typedef includes.
+#include <stdint.h>
+
 namespace WorldObjects
 {
 	/// <summary> Represents the world data and everything in it. </summary>
@@ -36,7 +39,7 @@ namespace WorldObjects
 
 		void Draw();
 
-		int32_t Update();
+		void Update();
 
 		/// <summary> Gets the player. </summary>
 		/// <returns> An <see cref="IReadOnlyMapObject"/> form of the <see cref="Player"/>. </returns>

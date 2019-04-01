@@ -1,24 +1,30 @@
 #ifndef DIRECTION_H
 #define DIRECTION_H
 
+// Data includes.
 #include "Point.h"
-#include "Random.h"
 
+// Typedef includes.
 #include <cstdlib>
+
+// Utility includes.
+#include "Random.h"
 
 // Forward declaration.
 struct Direction;
 
-enum Directions : int8_t
-{
-	None = -1, Left, Up, Right, Down
-};
+/// <summary> Represents a direction. </summary>
+enum Directions { None = -1, Left, Up, Right, Down };
 
+/// <summary> Represents a direction with various functions. </summary>
 struct Direction
 {
-	Direction(Directions _value) : m_value(_value) { }
-
+	/// <summary> The underlying <see cref="Directions"/> value. </summary>
 	Directions m_value;
+
+	/// <summary> Creates a new <see cref="Direction"/> from the given <see cref="Directions"/> value. </summary>
+	/// <param name="_value"></param>
+	Direction(Directions _value) : m_value(_value) { }
 
 	bool operator==(const Direction& _other) const { return m_value == _other.m_value; }
 	bool operator!=(const Direction& _other) const { return m_value != _other.m_value; }
@@ -26,6 +32,8 @@ struct Direction
 	bool operator==(const Directions& _other) const { return m_value == _other; }
 	bool operator!=(const Directions& _other) const { return m_value != _other; }
 
+	/// <summary> Gets the <see cref="Direction"/> opposite. </summary>
+	/// <returns> The opposite <see cref="Direction"/>. </returns>
 	inline Direction GetOpposite() const
 	{
 		switch (m_value)
@@ -39,6 +47,8 @@ struct Direction
 		}
 	}
 
+	/// <summary> Gets the <see cref="Direction"/> to the left. </summary>
+	/// <returns> The left <see cref="Direction"/>. </returns>
 	inline Direction GetLeft() const
 	{
 		switch (m_value)
@@ -52,6 +62,8 @@ struct Direction
 		}
 	}
 
+	/// <summary> Gets the <see cref="Direction"/> to the right. </summary>
+	/// <returns> The right <see cref="Direction"/>. </returns>
 	inline Direction GetRight() const
 	{
 		switch (m_value)
@@ -65,6 +77,8 @@ struct Direction
 		}
 	}
 
+	/// <summary> Gets the <see cref="Point"/> representing this <see cref="Direction"/> as a move. </summary>
+	/// <returns> The normal of this <see cref="Direction"/>. </returns>
 	inline Point GetNormal() const
 	{
 		switch (m_value)
@@ -78,8 +92,14 @@ struct Direction
 		}
 	}
 
+	/// <summary> Gets a random <see cref="Direction"/>. </summary>
+	/// <returns> The random <see cref="Direction"/>. </returns>
 	inline static Direction GetRandom() { return Direction((Directions)Random::RandomBetween(0, 3)); }
 
+	/// <summary> Gets the <see cref="Direction"/> that is looking at the given position the most. </summary>
+	/// <param name="_position"> The position that is looking. </param>
+	/// <param name="_lookAt"> The position that is being looked at. </param>
+	/// <returns> The <see cref="Direction"/> that is looking the most at the given position. </returns>
 	inline static Direction GetLookAt(const Point _position, const Point _lookAt)
 	{
 		// Calculate the difference between the points, if there is none, throw an error.
