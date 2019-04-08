@@ -14,7 +14,7 @@ namespace SpriteData
 	const int32_t c_wallSize = 8;
 
 	/// <summary> The ID of each sprite sheet. </summary>
-	enum SheetID { Tiles = 0, Inventory, Objects, MineWalls, UI };
+	enum SheetID { Tiles = 0, Inventory, Objects, MineWalls, UI, Gems };
 
 	/// <summary> The ID of each map object. </summary>
 	enum ObjectID { Exit = 0, Spawn, PlayerLeft = 4, PlayerUp, PlayerRight, PlayerDown };
@@ -22,10 +22,14 @@ namespace SpriteData
 	/// <summary> The ID of each inventory item. </summary>
 	enum InventoryID { };
 
+	/// <summary> The ID of each UI element. </summary>
 	enum UIID { SideBar = 0, MinigameBar, WallTimer, Pickaxe, Shovel, Hammer };
 
 	/// <summary> The ID of the tiles. </summary>
 	enum TileID { Wall1 = 0, Wall2, Wall3, Wall4, LowGems, MediumGems, HighGems, MaxGems, Floor1, Floor2, Floor3, Floor4 };
+
+	/// <summary> The ID of each gem in the minigame. </summary>
+	enum GemID { Ruby = 0, Diamond, Sapphire, Emerald };
 
 	/// <summary> Finds if the given ID is that of any type of wall. </summary>
 	/// <param name="_ID"> The ID of the tile to check. </param>

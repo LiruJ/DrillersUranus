@@ -120,6 +120,9 @@
     <ClCompile Include="TileMap.cpp">
       <Filter>Source Files\World</Filter>
     </ClCompile>
+    <ClCompile Include="WallGem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -227,6 +230,12 @@
     <ClInclude Include="IReadOnlyTileMap.h">
       <Filter>Header Files\World</Filter>
     </ClInclude>
+    <ClInclude Include="GemCollider.h">
+      <Filter>Header Files\Minigames</Filter>
+    </ClInclude>
+    <ClInclude Include="WallGem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Content\Tiles.png">
@@ -239,6 +248,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Content\UI.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Content\Gems.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

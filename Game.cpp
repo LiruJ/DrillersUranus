@@ -122,6 +122,15 @@ void MainGame::Game::loadTextures()
 		Rectangle(160, 420, 32, 32),
 		Rectangle(192, 420, 32, 32),
 	});
+
+	// Load the gems.
+	m_SDLGraphics->LoadSheetToID(c_contentFolder + '\\' + "Gems.png", SpriteData::SheetID::Gems, std::vector<Rectangle>
+	{
+		Rectangle(0, 0, 80, 80),
+		Rectangle(144, 0, 80, 64),
+		Rectangle(80, 64, 144, 144),
+		Rectangle(224, 0, 160, 160),
+	});
 }
 
 /// <summary> Starts the mining minigame. </summary>

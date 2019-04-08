@@ -34,12 +34,14 @@
     <ClCompile Include="SDLEvents.cpp" />
     <ClCompile Include="SDLGraphics.cpp" />
     <ClCompile Include="TileMap.cpp" />
+    <ClCompile Include="WallGem.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
     <ClInclude Include="Events.h" />
     <ClInclude Include="Frame.h" />
+    <ClInclude Include="GemCollider.h" />
     <ClInclude Include="IReadOnlyMapObject.h" />
     <ClInclude Include="IReadOnlyTileMap.h" />
     <ClInclude Include="LetterBoxScreen.h" />
@@ -71,10 +73,12 @@
     <ClInclude Include="TileMap.h" />
     <ClInclude Include="Tool.h" />
     <ClInclude Include="Vector2.h" />
+    <ClInclude Include="WallGem.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Content\CaveWalls.png" />
+    <Image Include="Content\Gems.png" />
     <Image Include="Content\MapObjects.png" />
     <Image Include="Content\Tiles.png" />
     <Image Include="Content\UI.png" />
