@@ -121,7 +121,10 @@
       <Filter>Source Files\World</Filter>
     </ClCompile>
     <ClCompile Include="WallGem.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Minigames</Filter>
+    </ClCompile>
+    <ClCompile Include="WallData.cpp">
+      <Filter>Source Files\Minigames</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -234,7 +237,13 @@
       <Filter>Header Files\Minigames</Filter>
     </ClInclude>
     <ClInclude Include="WallGem.h">
+      <Filter>Header Files\Minigames</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WallData.h">
+      <Filter>Header Files\Minigames</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -258,5 +267,10 @@
     <Text Include="Content\Bindings.txt">
       <Filter>Resource Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Drillers.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

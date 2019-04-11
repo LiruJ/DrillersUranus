@@ -34,13 +34,13 @@ void Minigames::MiningMinigame::Draw()
 	Graphics::Graphics& graphics = MainGame::Game::GetService().GetGraphics();
 	Screens::Screen& screen = MainGame::Game::GetService().GetScreen();
 
-	for (int32_t x = 0; x < c_wallWidth; x++)
+	for (int32_t x = 0; x < m_wallData.GetWidth(); x++)
 	{
-		for (int32_t y = 0; y < c_wallHeight; y++)
+		for (int32_t y = 0; y < m_wallData.GetHeight(); y++)
 		{
 			// Calculate the screen position and draw.
 			Point screenPosition = screen.ScreenToWindowSpace(Point(x, y) * SpriteData::c_wallSize);
-			graphics.Draw(SpriteData::SheetID::MineWalls, m_wallData[x][y], Rectangle(screenPosition, screen.ScreenToWindowSize(Point(SpriteData::c_wallSize))));
+			graphics.Draw(SpriteData::SheetID::MineWalls, m_wallData.GetValueAt(x, y), Rectangle(screenPosition, screen.ScreenToWindowSize(Point(SpriteData::c_wallSize))));
 		}
 	}
 
@@ -52,56 +52,20 @@ void Minigames::MiningMinigame::Draw()
 	if (m_currentToolID != 2) { m_toolButtons[2].Draw(); }
 }
 
-/// <summary> Generates a random cave wall with the gems based on the prosperity. </summary>
+/// <summary> Prepares the minigame to be played, using the given map wall and prosperity to generate. </summary>
 /// <param name="_tilePosition"> The position of the cave wall within the map. </param>
-/// <param name="_prosperity"> The prosperity of the wal. </param>
-void Minigames::MiningMinigame::Generate(const Point _tilePosition, const uint8_t _prosperity)
+/// <param name="_prosperity"> The prosperity of the wall. </param>
+void Minigames::MiningMinigame::Prepare(const Point _tilePosition, const uint8_t _prosperity)
 {
+	// Reset the collapse timer and bar.
+	m_collapseTimer = c_maxTimer;
+	m_collapseBar.SetValue(0);
+
 	// Set the tile position.
 	m_tilePosition = _tilePosition;
 
-	// Reset the data to the minimum value.
-	reset();
-
-	// Create a random number of bumps.
-	uint8_t numberOfBumps = Random::RandomBetween(4, 6);
-	for (int32_t i = 0; i < numberOfBumps; i++) { generateBump((c_maxHeight - numberOfBumps) + i); }
-}
-
-/// <summary> Generates a random bump on the cave wall from the given height. </summary>
-/// <param name="_height"> The starting height of the bump. </param>
-void Minigames::MiningMinigame::generateBump(const uint8_t _height)
-{
-	// Set the current height to the given height.
-	uint8_t currentHeight = _height;
-
-	// Much like the cavern generation, start at a random place and randomly move around.
-	Point currentPosition(Random::RandomBetween(0, c_wallWidth - 1), Random::RandomBetween(0, c_wallHeight - 1));
-	Point nextPosition;
-
-	// Every time a placement cannot be made, increment this by 1 to prevent an infnite loop.
-	int32_t currentAttempts = 0;
-
-	// Keep going until a certain height is reached.
-	while (currentHeight > c_minimumHeight && currentAttempts < c_maxAttempts)
-	{
-		// Only set the tile if it is lower than the current height, otherwise increment the attempt counter.
-		if (m_wallData[currentPosition.x][currentPosition.y] < currentHeight)
-		{
-			// Set the tile.
-			m_wallData[currentPosition.x][currentPosition.y] = currentHeight;
-
-			// Roll to go down one layer and reset the attempt counter.
-			if (Random::RandomScalar() < c_downChance && currentHeight > 0) { currentHeight--; currentAttempts = 0; }
-		}
-		else { currentAttempts++; }
-
-		// Keep going in a random direction until a valid move is found.
-		do { nextPosition = currentPosition + Direction::GetRandom().GetNormal(); } while (!isInRange(nextPosition));
-
-		// Make the move.
-		currentPosition = nextPosition;
-	}
+	// Generate the wall.
+	m_wallData.Generate();
 }
 
 /// <summary> Changes the current tool to the given value. </summary>
@@ -131,23 +95,23 @@ void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
 	Point tilePosition = screen.WindowToScreenSpace(Point(*static_cast<int32_t*>(_windowX), *static_cast<int32_t*>(_windowY))) / SpriteData::c_wallSize;
 
 	// If the tile position is not in range, do nothing.
-	if (!isInRange(tilePosition)) { return; }
+	if (!m_wallData.IsInRange(tilePosition)) { return; }
 
 	// Get the size and damage of the current tool.
 	uint8_t currentToolSize = s_tools[m_currentToolID].m_size;
 	uint8_t currentToolDamage = s_tools[m_currentToolID].m_power;
 
 	// Go over each tile covered by this area, and damage it.
-	for (int32_t x = std::max(0, tilePosition.x - (currentToolSize / 2)); x < std::min(c_wallWidth, (uint8_t)( tilePosition.x + (currentToolSize / 2) + 1)); x++)
+	for (int32_t x = std::max(0, tilePosition.x - (currentToolSize / 2)); x < std::min(m_wallData.GetWidth(), (uint8_t)( tilePosition.x + (currentToolSize / 2) + 1)); x++)
 	{
-		for (int32_t y = std::max(0, tilePosition.y - (currentToolSize / 2)); y < std::min(c_wallHeight, (uint8_t)(tilePosition.y + (currentToolSize / 2) + 1)); y++)
+		for (int32_t y = std::max(0, tilePosition.y - (currentToolSize / 2)); y < std::min(m_wallData.GetHeight(), (uint8_t)(tilePosition.y + (currentToolSize / 2) + 1)); y++)
 		{
 			// Get the largest distance from the centre.
 			uint8_t largestDistance = std::abs(x - tilePosition.x) + std::abs(y - tilePosition.y);
 
 			// Calculate the damage that should be dealt, and the damage that can be dealt.
 			uint8_t desiredDamage = std::max(0, currentToolDamage - largestDistance);
-			uint8_t damageDealt = std::min(m_wallData[x][y], desiredDamage);
+			uint8_t damageDealt = std::min(m_wallData.GetValueAt(x, y), desiredDamage);
 
 			// If the desired damage is 0, skip the damage part.
 			if (desiredDamage == 0) { continue; }
@@ -156,7 +120,7 @@ void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
 			m_collapseTimer = std::max(0, m_collapseTimer - std::max(1, (desiredDamage - damageDealt)));
 
 			// Damage this tile.
-			m_wallData[x][y] -= damageDealt;
+			m_wallData.SetValueAt(x, y, m_wallData.GetValueAt(x, y) - damageDealt);
 		}
 	}
 
@@ -193,22 +157,6 @@ void Minigames::MiningMinigame::initialiseGui()
 		m_toolButtons[i] = UserInterface::Button(Point(i * 32, 480), Point(32, 32), SpriteData::UIID::Pickaxe + i);
 		m_toolButtons[i].SetEvent(Events::UserEvent::ChangeTool, i);
 		m_toolButtons[i].Initialise();
-	}
-}
-
-/// <summary> Resets the minigame. </summary>
-void Minigames::MiningMinigame::reset()
-{
-	// Reset the collapse timer and bar.
-	m_collapseTimer = c_maxTimer;
-	m_collapseBar.SetValue(0);
-
-	for (int32_t x = 0; x < c_wallWidth; x++)
-	{
-		for (int32_t y = 0; y < c_wallHeight; y++)
-		{
-			m_wallData[x][y] = c_minimumHeight;
-		}
 	}
 }
 

@@ -144,7 +144,7 @@ void MainGame::Game::startMinigame(void* _tilePosition, void* _tileProsperity)
 
 	// Set the current game state to minigame and generate the cave wall.
 	s_currentGameState = GameState::Minigame;
-	m_miningMinigame.Generate(tilePosition, cellProsperity);
+	m_miningMinigame.Prepare(tilePosition, cellProsperity);
 }
 
 /// <summary> Stops the mining minigame. </summary>
