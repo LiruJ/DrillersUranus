@@ -16,7 +16,7 @@ void Events::SDLEvents::PumpEvents()
 		// Handle user events then delete the data.
 		if (currentEvent.type >= m_startingEventIndex) 
 		{
-			fireEvents(eventFunctions, currentEvent.user.data1, currentEvent.user.data1); 
+			fireEvents(eventFunctions, currentEvent.user.data1, currentEvent.user.data2); 
 			delete currentEvent.user.data1;
 			delete currentEvent.user.data2;
 		}

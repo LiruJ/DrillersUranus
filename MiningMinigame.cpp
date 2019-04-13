@@ -34,13 +34,26 @@ void Minigames::MiningMinigame::Draw()
 	Graphics::Graphics& graphics = MainGame::Game::GetService().GetGraphics();
 	Screens::Screen& screen = MainGame::Game::GetService().GetScreen();
 
-	for (int32_t x = 0; x < m_wallData.GetWidth(); x++)
+	// Extremely inefficient, but time restrictions prevent me from making any optimised algorithm.
+	// If I were to have more time, I would implement a data structure to hold each layer separately.
+	for (uint8_t l = 0; l < m_wallData.c_maxValue; l++)
 	{
-		for (int32_t y = 0; y < m_wallData.GetHeight(); y++)
+		// Draw all gems on this layer.
+		for (uint32_t g = 0; g < m_wallGems.size(); g++) { if (m_wallGems[g].GetLayer() == l) { m_wallGems[g].Draw(); } }
+
+		// Draw rock on this layer.
+		for (int32_t x = 0; x < m_wallData.GetWidth(); x++)
 		{
-			// Calculate the screen position and draw.
-			Point screenPosition = screen.ScreenToWindowSpace(Point(x, y) * SpriteData::c_wallSize);
-			graphics.Draw(SpriteData::SheetID::MineWalls, m_wallData.GetValueAt(x, y), Rectangle(screenPosition, screen.ScreenToWindowSize(Point(SpriteData::c_wallSize))));
+			for (int32_t y = 0; y < m_wallData.GetHeight(); y++)
+			{
+				// If this is the layer to be drawn.
+				if (m_wallData.GetValueAt(x, y) == l)
+				{
+					// Calculate the screen position and draw.
+					Point screenPosition = screen.ScreenToWindowSpace(Point(x, y) * SpriteData::c_wallSize);
+					graphics.Draw(SpriteData::SheetID::MineWalls, l, Rectangle(screenPosition, screen.ScreenToWindowSize(Point(SpriteData::c_wallSize))));
+				}
+			}
 		}
 	}
 
@@ -66,6 +79,9 @@ void Minigames::MiningMinigame::Prepare(const Point _tilePosition, const uint8_t
 
 	// Generate the wall.
 	m_wallData.Generate();
+
+	// Place the gems.
+	placeGems(_prosperity);
 }
 
 /// <summary> Changes the current tool to the given value. </summary>
@@ -116,20 +132,43 @@ void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
 			// If the desired damage is 0, skip the damage part.
 			if (desiredDamage == 0) { continue; }
 
-			// Subtract any over-damage from the timer, awarding precise hits and punishing hitting the back wall.
-			m_collapseTimer = std::max(0, m_collapseTimer - std::max(1, (desiredDamage - damageDealt)));
+			// Find if a gem was hit.
+			WallGem* hitGem = NULL;
+			for (uint32_t g = 0; g < m_wallGems.size(); g++)
+			{
+				if (m_wallGems[g].GetLayer() > m_wallData.GetValueAt(x, y) && m_wallGems[g].CollidesWith(Point(x, y))) { hitGem = &m_wallGems[g]; break; }
+			}
 
-			// Damage this tile.
-			m_wallData.SetValueAt(x, y, m_wallData.GetValueAt(x, y) - damageDealt);
+			// If a gem is hit, collapse a certain amount; otherwise, damage the wall.
+			if (hitGem != NULL)
+			{
+				// Subtract a set amount from the timer.
+				m_collapseTimer = std::max(0, m_collapseTimer - 10);
+			}
+			else
+			{
+				// Subtract any over-damage from the timer, awarding precise hits and punishing hitting the back wall.
+				m_collapseTimer = std::max(0, m_collapseTimer - std::max(1, (desiredDamage - damageDealt)));
+
+				// Damage this tile.
+				m_wallData.SetValueAt(x, y, m_wallData.GetValueAt(x, y) - damageDealt);
+			}
 		}
 	}
 
 	// Update the collapse timer bar.
 	m_collapseBar.SetValue(c_maxTimer - m_collapseTimer);
 
-	// TODO: Check if any gems were uncovered, if so, award them to the player and remove them from the minigame.
+	// Remove any uncovered gems and award them to the player.
+	std::vector<WallGem>::iterator gemIter = m_wallGems.begin();
+	while (gemIter != m_wallGems.end())
+	{
+		// TODO: Award gems to player.
+		if (gemIter->IsFullyUncovered(m_wallData)) { gemIter = m_wallGems.erase(gemIter); }
+		else { ++gemIter; }
+	}
 
-	// TODO: Collapse if timer is 0
+	// Collapse if collapse timer is 0.
 	if (m_collapseTimer == 0)
 	{
 		// Get the events service.
@@ -137,6 +176,58 @@ void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
 
 		// Push the collapse event.
 		events.PushEvent(Events::UserEvent::StopMinigame, new Point(m_tilePosition), NULL);
+	}
+}
+
+
+void Minigames::MiningMinigame::placeGems(const uint8_t _prosperity)
+{
+	// Clear the gem list.
+	m_wallGems.clear();
+
+	// Start with the given prosperity.
+	uint32_t remainingProsperity = (_prosperity + Random::RandomBetween(50, 100)) * 300;
+
+	// Keep placing gems until no prosperity remains.
+	while (remainingProsperity > 0)
+	{
+		// Keep track of the validity of the gem as well as the gem itself.
+		WallGem gem(Point(0), 0, SpriteData::GemID::Ruby);
+		bool isValid = false;
+
+		// Keep attempting to place a gem until a place is found.
+		do
+		{
+			// Generate a random ID and layer for the gem.
+			SpriteData::GemID gemID = (SpriteData::GemID)Random::RandomBetween(0, SpriteData::GemID::Emerald);
+			uint8_t layer = Random::RandomBetween(1, m_wallData.c_maxValue);
+
+			// Create the gem.
+			gem = WallGem(Point(0), layer, gemID);
+
+			// Create a random position for the gem.
+			Point position(Random::RandomBetween(0, m_wallData.GetWidth() - gem.GetWidth()), Random::RandomBetween(0, m_wallData.GetHeight() - gem.GetHeight()));
+			gem.SetWallPosition(position);
+
+			// If the gem is uncovered straight away, it is invalid.
+			isValid = gem.IsFullyCovered(m_wallData);
+
+			// Only check against other gems if the gem is otherwise valid.
+			if (isValid)
+			{
+				for (uint32_t i = 0; i < m_wallGems.size(); i++)
+				{
+					// If the gems collide, set it to invalid and break the check loop.
+					if (m_wallGems[i].CollidesWith(gem)) { isValid = false; break; }
+				}
+			}
+
+
+		} while (!isValid);
+
+		// Add the gem to the vector and reduce the remaining prosperity.
+		remainingProsperity = std::max(0, (int32_t)remainingProsperity - gem.GetValue());
+		m_wallGems.push_back(gem);
 	}
 }
 

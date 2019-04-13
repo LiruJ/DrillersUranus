@@ -6,6 +6,10 @@
 #include "Tool.h"
 #include "Point.h"
 #include "WallData.h"
+#include "WallGem.h"
+
+// Utility includes.
+#include <vector>
 
 // UI includes.
 #include "ProgressBar.h"
@@ -21,7 +25,7 @@ namespace Minigames
 	{
 	public:
 		/// <summary> Creates the initial minigame. </summary>
-		MiningMinigame() : m_currentToolID(0), m_collapseTimer(c_maxTimer), m_wallData(120, 60) { }
+		MiningMinigame() : m_currentToolID(0), m_collapseTimer(c_maxTimer), m_wallData(120, 60), m_wallGems() { }
 
 		void Initialise();
 
@@ -37,6 +41,9 @@ namespace Minigames
 
 		/// <summary> The tile data. </summary>
 		WallData					m_wallData;
+
+		/// <summary> The gems within the wall. </summary>
+		std::vector<WallGem>		m_wallGems;
 
 		/// <summary> The position of the tile on the map. </summary>
 		Point						m_tilePosition;
@@ -55,6 +62,8 @@ namespace Minigames
 
 		/// <summary> The buttons to switch the current tool. </summary>
 		UserInterface::Button		m_toolButtons[3];
+
+		void placeGems(uint8_t);
 
 		void initialiseGui();
 

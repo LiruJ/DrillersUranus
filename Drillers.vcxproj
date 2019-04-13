@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Frame.cpp" />
+    <ClCompile Include="GemCollider.cpp" />
     <ClCompile Include="LetterBoxScreen.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CavernGenerator.cpp" />

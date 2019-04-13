@@ -37,7 +37,9 @@ struct Rectangle
 	/// <summary> Finds if the given position is within this <see cref="Rectangle"/>. </summary>
 	/// <param name="_position"> The position to check. </param>
 	/// <returns> <c>true</c> if the point is inside this <see cref="Rectangle"/>, <c>false</c> otherwise. </returns>
-	bool IsPointInside(const Point _position) const { return _position.x >= x && _position.x < GetMaxX() && _position.y >= y && _position.y < GetMaxY(); }
+	inline bool IsPointInside(const Point _position) const { return _position.x >= x && _position.x < GetMaxX() && _position.y >= y && _position.y < GetMaxY(); }
+
+	inline bool Intersects(const Rectangle _other) const { return (_other.x < x + w && x < _other.x + _other.w && _other.y < y + h && y < _other.y + _other.h); }
 
 	/// <summary> Gets the x position of the right side of this <see cref="Rectangle"/>. </summary>
 	/// <returns> The right hand side x position. </returns>

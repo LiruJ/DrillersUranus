@@ -126,6 +126,9 @@
     <ClCompile Include="WallData.cpp">
       <Filter>Source Files\Minigames</Filter>
     </ClCompile>
+    <ClCompile Include="GemCollider.cpp">
+      <Filter>Source Files\Minigames</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">

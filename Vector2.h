@@ -30,29 +30,29 @@ struct Vector2
 	/// <returns> A unit vector pointing based on the given angle. </returns>
 	inline static Vector2 fromRadians(const double_t _angle) { return Vector2(cos(_angle), sin(_angle)); }
 
-	Vector2 operator+(const Vector2& _vector2)	const	{ return Vector2(x + _vector2.x,	y + _vector2.y); }
+	Vector2 operator+(const Vector2& _vector2)	const	{ return Vector2(x + _vector2.x,		y + _vector2.y); }
 	Vector2 operator+(const double_t _value)	const	{ return Vector2(x + _value,			y + _value); }
 		
 	Vector2& operator+=(const Vector2& _vector2)		{ x += _vector2.x;	y += _vector2.y;	return *this; }
-	Vector2& operator+=(const double_t _value)			{ x += _value;		y += _value;			return *this; }
+	Vector2& operator+=(const double_t _value)			{ x += _value;		y += _value;		return *this; }
 
-	Vector2 operator-(const Vector2& _vector2)	const	{ return Vector2(x - _vector2.x,	y - _vector2.y); }
+	Vector2 operator-(const Vector2& _vector2)	const	{ return Vector2(x - _vector2.x,		y - _vector2.y); }
 	Vector2 operator-(const double_t _value)	const	{ return Vector2(x - _value,			y - _value); }
 
 	Vector2& operator-=(const Vector2& _vector2)		{ x -= _vector2.x;	y -= _vector2.y;	return *this; }
 	Vector2& operator-=(const double_t _value)			{ x -= _value;		y -= _value; }
 
-	Vector2 operator*(const Vector2& _vector2)	const	{ return Vector2(x * _vector2.x,	y * _vector2.y); }
+	Vector2 operator*(const Vector2& _vector2)	const	{ return Vector2(x * _vector2.x,		y * _vector2.y); }
 	Vector2 operator*(const double_t _value)	const	{ return Vector2(x * _value,			y * _value); }
 
 	Vector2& operator*=(const Vector2& _vector2)		{ x *= _vector2.x;	y *= _vector2.y;	return *this; }
-	Vector2& operator*=(const double_t _value)			{ x *= _value;		y *= _value;			return *this; }
+	Vector2& operator*=(const double_t _value)			{ x *= _value;		y *= _value;		return *this; }
 
-	Vector2 operator/(const Vector2& _vector2)	const	{ return Vector2(x / _vector2.x,	y / _vector2.y); }
+	Vector2 operator/(const Vector2& _vector2)	const	{ return Vector2(x / _vector2.x,		y / _vector2.y); }
 	Vector2 operator/(const double_t _value)	const	{ return Vector2(x / _value,			y / _value); }
 
 	Vector2& operator/=(const Vector2& _vector2)		{ x /= _vector2.x;	y /= _vector2.y;	return *this; }
-	Vector2& operator/=(const double_t _value)			{ x /= _value;		y /= _value;			return *this; }
+	Vector2& operator/=(const double_t _value)			{ x /= _value;		y /= _value;		return *this; }
 
 	/// <summary> Calculates the length. </summary>
 	/// <returns> The calculated length. </returns>

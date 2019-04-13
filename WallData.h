@@ -18,6 +18,12 @@ namespace Minigames
 	class WallData
 	{
 	public:
+		/// <summary> The maximum value possible. </summary>
+		const uint8_t	c_maxValue = 13;
+
+		/// <summary> The maximum value possible. </summary>
+		const uint8_t	c_minValue = 3;
+
 		WallData(uint8_t, uint8_t);
 
 		void Generate();
@@ -58,12 +64,6 @@ namespace Minigames
 		/// <returns> The height of the data. </returns>
 		inline uint8_t GetHeight()													const	{ return m_height; }
 	private:
-		/// <summary> The maximum value possible. </summary>
-		const uint8_t	c_maxValue = 13;
-
-		/// <summary> The maximum value possible. </summary>
-		const uint8_t	c_minValue = 3;
-
 		/// <summary> The chance for a bump to go down one layer, set really low as this is rolled a lot. <c>0</c> for no chance, <c>1</c> for full chance. </summary>
 		const float_t	c_downChance = 0.001f;
 
