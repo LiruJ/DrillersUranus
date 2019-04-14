@@ -38,38 +38,51 @@ namespace Minigames
 
 		void Draw();
 
+		/// <summary> Finds if this <see cref="WallGem"/> is fully covered up by the given <see cref="WallData"/>. </summary>
+		/// <param name="_wallData"> The data against which to check. </param>
+		/// <returns> <c>true</c> if this <see cref="WallGem"/> is completely covered; otherwise, <c>false</c>. </returns>
 		inline bool IsFullyCovered(WallData& _wallData) const { return m_collider.IsFullyCovered(m_wallPosition, m_wallLayer, _wallData); }
 
+		/// <summary> Finds if this <see cref="WallGem"/> is fully uncovered by the given <see cref="WallData"/>. </summary>
+		/// <param name="_wallData"> The data against which to check. </param>
+		/// <returns> <c>true</c> if this <see cref="WallGem"/> is completely uncovered; otherwise, <c>false</c>. </returns>
 		inline bool IsFullyUncovered(WallData& _wallData) const { return m_collider.IsFullyUncovered(m_wallPosition, m_wallLayer, _wallData); }
 
-		/// <summary> Finds if the given position on the cave wall is within this gem. </summary>
+		/// <summary> Finds if the given position on the cave wall is within this <see cref="WallGem"/>. </summary>
 		/// <param name="_wallPosition"> The wall position. </param>
-		/// <returns> <c>true</c> if the position collides with the gem; otherwise, <c>false</c>. </returns>
+		/// <returns> <c>true</c> if the position collides with this <see cref="WallGem"/>; otherwise, <c>false</c>. </returns>
 		inline bool CollidesWith(const Point _wallPosition) const { return m_collider.CollidesWith(_wallPosition - m_wallPosition); }
 
+		/// <summary> Finds if this <see cref="WallGem"/> collides with the given <see cref="WallGem"/>. </summary>
+		/// <param name="_other"> The <see cref="WallGem"/> against whcih to check for collisions. </param>
+		/// <returns> <c>true</c> if the <see cref="WallGem"/>s collide; otherwise, <c>false</c>. </returns>
 		inline bool CollidesWith(const WallGem _other) const { return (m_wallLayer == _other.m_wallLayer) ? m_collider.CollidesWith(_other.m_wallPosition - m_wallPosition, _other.m_collider) : false; }
 
-		/// <summary> Gets the position of this gem. </summary>
-		/// <returns> The position of this gem. </returns>
+		/// <summary> Gets the position of this <see cref="WallGem"/>. </summary>
+		/// <returns> The position of this <see cref="WallGem"/>. </returns>
 		inline Point GetWallPosition() const { return m_wallPosition; }
 
-		/// <summary> Gets the width of this gem. </summary>
-		/// <returns> The width of this gem. </returns>
+		/// <summary> Gets the width of this <see cref="WallGem"/>. </summary>
+		/// <returns> The width of this <see cref="WallGem"/>. </returns>
 		inline uint8_t GetWidth() const { return m_collider.GetWidth(); }
 
-		/// <summary> Gets the height of this gem. </summary>
-		/// <returns> The height of this gem. </returns>
+		/// <summary> Gets the height of this <see cref="WallGem"/>. </summary>
+		/// <returns> The height of this <see cref="WallGem"/>. </returns>
 		inline uint8_t GetHeight() const { return m_collider.GetHeight(); }
 
-		/// <summary> Gets the layer of this gem. </summary>
-		/// <returns> The layer of this gem. </returns>
+		/// <summary> Gets the layer of this <see cref="WallGem"/>. </summary>
+		/// <returns> The layer of this <see cref="WallGem"/>. </returns>
 		inline uint8_t GetLayer() const { return m_wallLayer; }
 
-		/// <summary> Gets the value of this gem. </summary>
-		/// <returns> The value of this gem. </returns>
+		/// <summary> Gets the value of this <see cref="WallGem"/>. </summary>
+		/// <returns> The value of this <see cref="WallGem"/>. </returns>
 		inline uint16_t GetValue() const { return m_value; }
 
-		/// <summary> Sets the position of this gem. </summary>
+		/// <summary> Gets the ID of this <see cref="WallGem"/>. </summary>
+		/// <returns> The ID of this <see cref="WallGem"/>. </returns>
+		inline SpriteData::GemID GetID() const { return m_gemID; }
+
+		/// <summary> Sets the position of this <see cref="WallGem"/>. </summary>
 		/// <param name="_wallPosition"> The new wall position. </returns>
 		inline void SetWallPosition(const Point _wallPosition) { m_wallPosition = _wallPosition; }
 	private:

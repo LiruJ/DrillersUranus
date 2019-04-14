@@ -47,7 +47,7 @@ namespace WorldObjects
 		/// <summary> The size of the camera in the world. </summary>
 		Point					m_worldSize;
 
-		/// <summary> The bounds of the world. </summary>
+		/// <summary> The bounds of the camera in the world. </summary>
 		Rectangle				m_worldBounds;
 
 		/// <summary> The UI frame. </summary>

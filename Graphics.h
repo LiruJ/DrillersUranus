@@ -35,12 +35,19 @@ namespace Graphics
 		/// <param name="_position"> The position on the window. </param>
 		virtual void Draw(uint16_t _sheetID, uint16_t _textureID, Point _position) = 0;
 
+		/// <summary> Draws the given texture from the given sheet at the given position. </summary>
+		/// <param name="_sheetID"> The ID of the sheet from which the texture is stored. </param>
+		/// <param name="_textureID"> The ID of the texture itself. </param>
+		/// <param name="_scale"> The amount to which the texture should be scaled. </param>
+		/// <param name="_position"> The position on the window. </param>
+		virtual void Draw(uint16_t _sheetID, uint16_t _textureID, float_t _scale, Point _position) = 0;
+
 		/// <summary> Draws the given texture from the given sheet at the given position and rotation. </summary>
 		/// <param name="_sheetID"> The ID of the sheet from which the texture is stored. </param>
 		/// <param name="_textureID"> The ID of the texture itself. </param>
 		/// <param name="_position"> The position on the window. </param>
 		/// <param name="_rotation"> The rotation in radians. </param>
-		virtual void Draw(uint16_t _sheetID, uint16_t _textureID, Point _position, float _rotation) = 0;
+		virtual void Draw(uint16_t _sheetID, uint16_t _textureID, Point _position, float_t _rotation) = 0;
 		
 		/// <summary> Draws the given texture from the given sheet at the given destination. </summary>
 		/// <param name="_sheetID"> The ID of the sheet from which the texture is stored. </param>
@@ -53,7 +60,7 @@ namespace Graphics
 		/// <param name="_textureID"> The ID of the texture itself. </param>
 		/// <param name="_destination"> The destination <see cref="Rectangle"/>. </param>
 		/// <param name="_rotation"> The rotation in radians. </param>
-		virtual void Draw(uint16_t _sheetID, uint16_t _textureID, Rectangle _destination, float _rotation) = 0;
+		virtual void Draw(uint16_t _sheetID, uint16_t _textureID, Rectangle _destination, float_t _rotation) = 0;
 
 		/// <summary> Draws the given texture from the given sheet at the given destination from the given source. </summary>
 		/// <param name="_sheetID"> The ID of the sheet from which the texture is stored. </param>
@@ -68,7 +75,7 @@ namespace Graphics
 		/// <param name="_destination"> The destination <see cref="Rectangle"/>. </param>
 		/// <param name="_source"> The source <see cref="Rectangle"/>. </param>
 		/// <param name="_rotation"> The rotation in radians. </param>
-		virtual void Draw(uint16_t _sheetID, uint16_t _textureID, Rectangle _destination, Rectangle _source, float _rotation) = 0;
+		virtual void Draw(uint16_t _sheetID, uint16_t _textureID, Rectangle _destination, Rectangle _source, float_t _rotation) = 0;
 
 		/// <summary> The number of frames drawn in a second. </summary>
 		int32_t m_framesPerSecond = 30;

@@ -31,6 +31,8 @@ namespace Screens
 
 		virtual Rectangle	WindowToScreenBounds(const Rectangle _windowBounds) { return Rectangle(WindowToScreenSpace(Point(_windowBounds.x, _windowBounds.y)), WindowToScreenSize(Point(_windowBounds.w, _windowBounds.h))); }
 
+		virtual float_t		GetScale() { return m_scale; }
+
 		void				Resize(int32_t, int32_t);
 	private:
 		/// <summary> The dimensions of the screen the game was designed for. </summary>

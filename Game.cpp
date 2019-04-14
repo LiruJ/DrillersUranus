@@ -121,6 +121,11 @@ void MainGame::Game::loadTextures()
 		Rectangle(128, 420, 32, 32),
 		Rectangle(160, 420, 32, 32),
 		Rectangle(192, 420, 32, 32),
+		Rectangle(128, 192, 128, 32),
+		Rectangle(128, 160, 32, 32),
+		Rectangle(160, 160, 32, 32),
+		Rectangle(192, 160, 32, 32),
+		Rectangle(224, 160, 32, 32),
 	});
 
 	// Load the gems.

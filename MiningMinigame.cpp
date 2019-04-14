@@ -132,7 +132,7 @@ void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
 			// If the desired damage is 0, skip the damage part.
 			if (desiredDamage == 0) { continue; }
 
-			// Find if a gem was hit.
+			// Find if a gem was hit. Stupidly inefficient, but the only way to do this without devoting more time to data structures.
 			WallGem* hitGem = NULL;
 			for (uint32_t g = 0; g < m_wallGems.size(); g++)
 			{
@@ -156,6 +156,9 @@ void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
 		}
 	}
 
+	// Get the events service.
+	Events::Events& events = MainGame::Game::GetService().GetEvents();
+
 	// Update the collapse timer bar.
 	m_collapseBar.SetValue(c_maxTimer - m_collapseTimer);
 
@@ -164,22 +167,16 @@ void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
 	while (gemIter != m_wallGems.end())
 	{
 		// TODO: Award gems to player.
-		if (gemIter->IsFullyUncovered(m_wallData)) { gemIter = m_wallGems.erase(gemIter); }
+		if (gemIter->IsFullyUncovered(m_wallData)) { events.PushEvent(Events::UserEvent::MinedGem, new WallGem(*gemIter), NULL); gemIter = m_wallGems.erase(gemIter); }
 		else { ++gemIter; }
 	}
 
 	// Collapse if collapse timer is 0.
-	if (m_collapseTimer == 0)
-	{
-		// Get the events service.
-		Events::Events& events = MainGame::Game::GetService().GetEvents();
-
-		// Push the collapse event.
-		events.PushEvent(Events::UserEvent::StopMinigame, new Point(m_tilePosition), NULL);
-	}
+	if (m_collapseTimer == 0) { events.PushEvent(Events::UserEvent::StopMinigame, new Point(m_tilePosition), NULL); }
 }
 
-
+/// <summary> Places gems into the wall based on the given prosperity. </summary>
+/// <param name="_prosperity"> A number from <c>0</c> to <c>255</c> for the prosperity of the wall. </param>
 void Minigames::MiningMinigame::placeGems(const uint8_t _prosperity)
 {
 	// Clear the gem list.

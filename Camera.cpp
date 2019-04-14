@@ -52,6 +52,9 @@ void WorldObjects::Camera::Draw(World& _world)
 
 	// Draw the UI.
 	m_sideBar.Draw();
+
+	// Draw the player's inventory.
+	_world.GetPlayer().GetInventory().Draw(Point(832, 192));
 }
 
 /// <summary> Initialises every UI element. </summary>

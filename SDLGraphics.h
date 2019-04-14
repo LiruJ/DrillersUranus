@@ -37,15 +37,17 @@ namespace Graphics
 
 		virtual void Draw(uint16_t, uint16_t, Point);
 
-		virtual void Draw(uint16_t, uint16_t, Point, float);
+		virtual void Draw(uint16_t, uint16_t, float_t, Point);
+
+		virtual void Draw(uint16_t, uint16_t, Point, float_t);
 
 		virtual void Draw(uint16_t, uint16_t, Rectangle);
 
-		virtual void Draw(uint16_t, uint16_t, Rectangle, float);
+		virtual void Draw(uint16_t, uint16_t, Rectangle, float_t);
 
 		virtual void Draw(uint16_t, uint16_t, Rectangle, Rectangle);
 
-		virtual void Draw(uint16_t, uint16_t, Rectangle, Rectangle, float);
+		virtual void Draw(uint16_t, uint16_t, Rectangle, Rectangle, float_t);
 
 		void LoadSheetToID(std::string, uint16_t, int32_t);
 

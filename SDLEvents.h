@@ -18,7 +18,7 @@ namespace Events
 	{
 	public:
 		/// <summary> Creates a new event bus and registers the user events. </summary>
-		SDLEvents() : m_functionsBySDLEventID(std::map<uint32_t, std::vector<std::function<void(void*, void*)>>>()), m_startingEventIndex(SDL_RegisterEvents(4)) { }
+		SDLEvents() : m_functionsBySDLEventID(std::map<uint32_t, std::vector<std::function<void(void*, void*)>>>()), m_startingEventIndex(SDL_RegisterEvents(5)) { }
 
 		void PumpEvents();
 

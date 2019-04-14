@@ -70,6 +70,12 @@
     <Filter Include="Header Files\World">
       <UniqueIdentifier>{076434d1-9cc3-4a02-9169-3659a582ff5e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Inventory">
+      <UniqueIdentifier>{5d9fedae-21a7-40d7-979c-13ea80b45e1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Inventory">
+      <UniqueIdentifier>{be059a9d-02ab-4856-96a2-eafc5e5c8a41}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -128,6 +134,15 @@
     </ClCompile>
     <ClCompile Include="GemCollider.cpp">
       <Filter>Source Files\Minigames</Filter>
+    </ClCompile>
+    <ClCompile Include="InventoryItem.cpp">
+      <Filter>Source Files\Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="Inventory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -247,6 +262,12 @@
     </ClInclude>
     <ClInclude Include="WallData.h">
       <Filter>Header Files\Minigames</Filter>
+    </ClInclude>
+    <ClInclude Include="InventoryItem.h">
+      <Filter>Header Files\Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="Inventory.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

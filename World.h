@@ -42,8 +42,8 @@ namespace WorldObjects
 		void Update();
 
 		/// <summary> Gets the player. </summary>
-		/// <returns> An <see cref="IReadOnlyMapObject"/> form of the <see cref="Player"/>. </returns>
-		inline GameObjects::IReadOnlyMapObject& GetPlayer()	{ return m_player; }
+		/// <returns> The <see cref="Player"/>. </returns>
+		inline GameObjects::Player& GetPlayer()	{ return m_player; }
 
 		/// <summary> Gets the spawn object. </summary>
 		/// <returns> An <see cref="IReadOnlyMapObject"/> form of the spawn. </returns>

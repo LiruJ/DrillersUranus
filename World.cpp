@@ -39,6 +39,9 @@ void WorldObjects::World::Initialise()
 
 	// Bind the minigame stop event.
 	events.AddUserListener(Events::UserEvent::StopMinigame, std::bind(&World::stopMinigame, this, std::placeholders::_1, std::placeholders::_2));
+
+	// Initialise the player.
+	m_player.Initialise();
 }
 
 /// <summary> Generates a random map and places the player on the spawn. </summary>

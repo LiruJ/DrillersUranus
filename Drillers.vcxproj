@@ -22,6 +22,8 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Frame.cpp" />
     <ClCompile Include="GemCollider.cpp" />
+    <ClCompile Include="Inventory.cpp" />
+    <ClCompile Include="InventoryItem.cpp" />
     <ClCompile Include="LetterBoxScreen.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CavernGenerator.cpp" />
@@ -31,6 +33,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MapObject.cpp" />
     <ClCompile Include="MiningMinigame.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="ProgressBar.cpp" />
     <ClCompile Include="SDLEvents.cpp" />
     <ClCompile Include="SDLGraphics.cpp" />
@@ -44,6 +47,8 @@
     <ClInclude Include="Events.h" />
     <ClInclude Include="Frame.h" />
     <ClInclude Include="GemCollider.h" />
+    <ClInclude Include="Inventory.h" />
+    <ClInclude Include="InventoryItem.h" />
     <ClInclude Include="IReadOnlyMapObject.h" />
     <ClInclude Include="IReadOnlyTileMap.h" />
     <ClInclude Include="LetterBoxScreen.h" />

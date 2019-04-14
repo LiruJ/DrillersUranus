@@ -55,6 +55,10 @@ namespace Screens
 		/// <param name="_windowBounds"> The window-space bounds. </param>
 		/// <returns> The converted screen-space bounds. </returns>
 		virtual Rectangle	WindowToScreenBounds(Rectangle _windowBounds) = 0;
+
+		/// <summary> Gets the scale. </summary>
+		/// <returns> The scale. </returns>
+		virtual float_t		GetScale() = 0;
 	};
 }
 #endif
