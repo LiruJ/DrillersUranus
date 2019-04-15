@@ -54,7 +54,12 @@ void WorldObjects::Camera::Draw(World& _world)
 	m_sideBar.Draw();
 
 	// Draw the player's inventory.
+	graphics.DrawString(SpriteData::FontID::SmallDetail, '$' + std::to_string(_world.GetPlayer().GetInventory().CalculateCombinedValue()), screen.ScreenToWindowSpace(Point(868, 164)), { 255, 255, 255, 255 });
 	_world.GetPlayer().GetInventory().Draw(Point(832, 192));
+
+	// Draw the current level and remaining time.
+	graphics.DrawString(SpriteData::FontID::SmallDetail, "LVL. " + std::to_string(_world.GetCurrentLevel()), screen.ScreenToWindowSpace(Point(868, 4)), { 255, 255, 255, 255 });
+	graphics.DrawString(SpriteData::FontID::SmallDetail, std::to_string(_world.GetCollapseTime()), screen.ScreenToWindowSpace(Point(868, 451)), { 255, 255, 255, 255 });
 }
 
 /// <summary> Initialises every UI element. </summary>

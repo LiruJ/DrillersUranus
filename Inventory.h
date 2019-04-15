@@ -10,6 +10,9 @@
 #include <map>
 #include "SpriteData.h"
 
+// Typedef includes.
+#include <stdint.h>
+
 namespace Inventory
 {
 	/// <summary> Represents an inventory of items. </summary>
@@ -19,6 +22,8 @@ namespace Inventory
 		Inventory() : m_inventoryItems(std::map<SpriteData::GemID, InventoryItem>()) {}
 
 		void AddMinedGem(Minigames::WallGem);
+
+		uint32_t CalculateCombinedValue();
 
 		void Draw(Point);
 	private:

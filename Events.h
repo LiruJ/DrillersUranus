@@ -7,7 +7,7 @@
 namespace Events
 {
 	/// <summary> The user defined events. </summary>
-	enum UserEvent { StartMinigame, StopMinigame, ChangeTool, QuitGame, MinedGem };
+	enum UserEvent { StartMinigame, StopMinigame, ChangeTool, QuitGame, MinedGem, PlayerDied };
 
 	/// <summary> Represents a generic event bus that combines a framework's events along with user defined events. </summary>
 	class Events

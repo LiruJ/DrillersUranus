@@ -27,6 +27,10 @@ namespace Inventory
 		/// <summary> Increments the amount of gems in this stack by <c>1</c>. </summary>
 		inline void AddToStack() { ++m_stackAmount; }
 
+		/// <summary> Calculates the value of the entire stack. </summary>
+		/// <returns> The value of the entire stack. </returns>
+		inline uint32_t CalculateStackValue() const { return m_stackAmount * m_singleValue; }
+
 		void Draw(Point) const;
 	private:
 		/// <summary> The ID of the <see cref="WallGem"/> that this <see cref="InventoryItem"/> represents. </summary>

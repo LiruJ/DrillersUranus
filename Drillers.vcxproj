@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
+    <ClInclude Include="Colour.h" />
     <ClInclude Include="Events.h" />
     <ClInclude Include="Frame.h" />
     <ClInclude Include="GemCollider.h" />
@@ -97,6 +98,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Drillers.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Content\IMMORTAL.ttf" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -157,12 +161,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)SDKs\SDL\include;$(SolutionDir)SDKs\SDL2_image\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SDKs\SDL\include;$(SolutionDir)SDKs\SDL2_image\include;$(SolutionDir)SDKs\SDL2_ttf\include;$(SolutionDir)SDKs\SDL2_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShowIncludes>true</ShowIncludes>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)SDKs\SDL2_image\lib\x86;$(SolutionDir)SDKs\SDL\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)SDKs\SDL2_image\lib\x86;$(SolutionDir)SDKs\SDL\lib\x86;$(SolutionDir)SDKs\SDL2_ttf\lib\x86;$(SolutionDir)SDKs\SDL2_mixer\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>

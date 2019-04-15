@@ -41,8 +41,7 @@ namespace GameObjects
 		/// <summary> The <see cref="Inventory"/> within which the <see cref="WallGem"/>s are stored. </summary>
 		Inventory::Inventory m_inventory;
 
-
-		void minedGem(void* _minedGem, void* _unused);
+		void minedGem(void*, void*);
 	};
 }
 #endif

@@ -17,7 +17,7 @@
 namespace MainGame
 {
 	/// <summary> Represents the current state of the <see cref="Game"/>. </summary>
-	enum GameState { MainMenu, Map, Minigame, Exit };
+	enum GameState { MainMenu, Map, Minigame, Exit, Lost };
 
 	/// <summary> Represents the main game which ties all the components together. </summary>
 	class Game
@@ -84,6 +84,8 @@ namespace MainGame
 		/// <param name="_unused"> Unused. </param>
 		/// <param name="_unused2"> Unused. </param>
 		void exitGame(void* _unused, void* _unused2) { s_currentGameState = GameState::Exit; }
+
+		void loseGame(void*, void*);
 	};
 }
 #endif

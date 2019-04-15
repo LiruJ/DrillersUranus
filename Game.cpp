@@ -16,12 +16,13 @@ void MainGame::Game::draw()
 	Graphics::Graphics& graphics = GetService().GetGraphics();
 
 	// Clear the window.
-	graphics.Clear(0, 0, 0);
+	graphics.Clear({ 0, 0, 0, 255 });
 
 	// Handle drawing based on the current state.
 	switch (s_currentGameState)
 	{
 	case MainMenu: { break; }
+	case Lost: {}
 	case Map: { m_world.Draw(); break; }
 	case Minigame: { m_miningMinigame.Draw(); break; }
 	default: { throw std::exception("Invalid gamestate."); }
@@ -91,6 +92,9 @@ void MainGame::Game::initialiseBindings()
 
 	// Bind the game quit.
 	m_events->AddFrameworkListener(SDL_QUIT, std::bind(&Game::exitGame, this, std::placeholders::_1, std::placeholders::_2));
+
+	// Bind the lose game.
+	m_events->AddUserListener(Events::UserEvent::PlayerDied, std::bind(&Game::loseGame, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 /// <summary> Sets up the world and mining minigame. </summary>
@@ -136,6 +140,10 @@ void MainGame::Game::loadTextures()
 		Rectangle(80, 64, 144, 144),
 		Rectangle(224, 0, 160, 160),
 	});
+
+	// Load the fonts.
+	m_SDLGraphics->LoadFontToID(c_contentFolder + '\\' + "Immortal.ttf", SpriteData::FontID::Menu, 28);
+	m_SDLGraphics->LoadFontToID(c_contentFolder + '\\' + "trebuc.ttf", SpriteData::FontID::SmallDetail, 20);
 }
 
 /// <summary> Starts the mining minigame. </summary>
@@ -159,6 +167,17 @@ void MainGame::Game::stopMinigame(void* _tilePosition, void* _unused)
 {
 	// Set the current game state to map.
 	s_currentGameState = GameState::Map;
+}
+
+/// <summary> Fires when the player is crushed or otherwise dies, shows the game over screen until they choose to go back. </summary>
+/// <param name="_unused"> Unused. </param>
+/// <param name="_unused2"> Unused. </param>
+void MainGame::Game::loseGame(void* _unused, void* _unused2)
+{
+	// Set the current game state to lost.
+	s_currentGameState = GameState::Lost;
+
+	// TODO: Bind the game end to display the game over screen, which then leads to the main menu.
 }
 
 /// <summary> Runs the game, starting the update and draw loop. </summary>

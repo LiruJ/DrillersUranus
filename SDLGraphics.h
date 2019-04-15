@@ -6,10 +6,12 @@
 
 // Framework includes.
 #include "SDL.h"
+#include <SDL_ttf.h>
 
 // Data includes.
 #include "Rectangle.h"
 #include "Point.h"
+#include "Colour.h"
 
 // Service includes.
 #include "Logger.h"
@@ -29,9 +31,7 @@ namespace Graphics
 
 		void Initialise(int32_t, int32_t, Logging::Logger&);
 		
-		virtual void Clear(uint8_t, uint8_t, uint8_t);
-
-		virtual void Clear(uint8_t, uint8_t, uint8_t, uint8_t);
+		virtual void Clear(Colour);
 
 		virtual void Present();
 
@@ -49,12 +49,21 @@ namespace Graphics
 
 		virtual void Draw(uint16_t, uint16_t, Rectangle, Rectangle, float_t);
 
+		virtual void DrawString(uint16_t, std::string, Point, Colour);
+
+		virtual void DrawString(uint16_t, std::string, Rectangle, Colour);
+
 		void LoadSheetToID(std::string, uint16_t, int32_t);
 
 		void LoadSheetToID(std::string, uint16_t, std::vector<Rectangle>);
+
+		void LoadFontToID(std::string, uint16_t, uint8_t);
 	private:
 		/// <summary> The texture vectors keyed by sheet ID. </summary>
 		std::map<uint16_t, std::vector<SDL_Texture*>>	m_sheets;
+
+		/// <summary> The fonts keyed by font ID. </summary>
+		std::map<uint16_t, TTF_Font*>					m_fonts;
 
 		/// <summary> The renderer. </summary>
 		SDL_Renderer*									m_renderer;

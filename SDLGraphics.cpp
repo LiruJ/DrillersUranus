@@ -4,9 +4,8 @@
 #include <SDL_image.h>
 
 /// <summary> Creates the SDL Graphics object. </summary>
-Graphics::SDLGraphics::SDLGraphics()
+Graphics::SDLGraphics::SDLGraphics() : m_sheets(std::map<uint16_t, std::vector<SDL_Texture*>>()), m_fonts(std::map<uint16_t, TTF_Font*>())
 {
-	m_sheets = std::map<uint16_t, std::vector<SDL_Texture*>>();
 	m_framesPerSecond = 60;
 }
 
@@ -17,15 +16,19 @@ Graphics::SDLGraphics::SDLGraphics()
 void Graphics::SDLGraphics::Initialise(const int32_t _width, const int32_t _height, Logging::Logger& _logger)
 {
 	// Try to initialise SDL.
-	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) { _logger.Log("SDL initialization failed."); }
-	else { _logger.Log("SDL initialization succeeded!"); }
+	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) { _logger.Log("SDL initialisation failed."); }
+	else { _logger.Log("SDL initialisation succeeded!"); }
 
 	// Try to initialise SDL's IMG library.
-	if (IMG_Init(IMG_INIT_PNG) < 0) { _logger.Log("SDL_Image initialization failed."); }
-	else { _logger.Log("SDL_Image initialization succeeded!"); }
+	if (IMG_Init(IMG_INIT_PNG) < 0) { _logger.Log("SDL_Image initialisation failed."); }
+	else { _logger.Log("SDL_Image initialisation succeeded!"); }
+
+	// Try to intialise SDL's TTF library.
+	if (TTF_Init() < 0) { _logger.Log("SDL_ttf initialisation failed."); }
+	else { _logger.Log("SDL_ttf initialisation succeeded!"); }
 
 	// Create the window.
-	m_window = SDL_CreateWindow("Experiment", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _width, _height, SDL_WINDOW_SHOWN);
+	m_window = SDL_CreateWindow("Drillers of Uranus", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _width, _height, SDL_WINDOW_SHOWN);
 	if (m_window == nullptr)
 	{
 		SDL_DestroyWindow(m_window);
@@ -50,23 +53,10 @@ void Graphics::SDLGraphics::Initialise(const int32_t _width, const int32_t _heig
 }
 
 /// <summary> Clears the screen with the given colour. </summary>
-/// <param name="_red"> The <c>0</c> to <c>255</c> value for the red. </param>
-/// <param name="_green"> The <c>0</c> to <c>255</c> value for the green. </param>
-/// <param name="_blue"> The <c>0</c> to <c>255</c> value for the blue. </param>
-void Graphics::SDLGraphics::Clear(const uint8_t _red, const uint8_t _green, const uint8_t _blue)
+/// <param name="_colour"> The colour to which to clear. </param>
+void Graphics::SDLGraphics::Clear(const Colour _colour)
 {
-	SDL_SetRenderDrawColor(m_renderer, _red, _green, _blue, SDL_ALPHA_OPAQUE);
-	SDL_RenderClear(m_renderer);
-}
-
-/// /// <summary> Clears the screen with the given colour. </summary>
-/// <param name="_red"> The <c>0</c> to <c>255</c> value for the red. </param>
-/// <param name="_green"> The <c>0</c> to <c>255</c> value for the green. </param>
-/// <param name="_blue"> The <c>0</c> to <c>255</c> value for the blue. </param>
-/// <param name="_alpha"> The <c>0</c> to <c>255</c> value for the alpha. </param>
-void Graphics::SDLGraphics::Clear(const uint8_t _red, const uint8_t _green, const uint8_t _blue, const uint8_t _alpha)
-{
-	SDL_SetRenderDrawColor(m_renderer, _red, _green, _blue, _alpha);
+	SDL_SetRenderDrawColor(m_renderer, _colour.r, _colour.g, _colour.b, _colour.a);
 	SDL_RenderClear(m_renderer);
 }
 
@@ -97,7 +87,7 @@ void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textur
 /// <param name="_textureID"> The ID of the texture itself. </param>
 /// <param name="_scale"> The amount to which the texture should be scaled. </param>
 /// <param name="_position"> The position on the window. </param>
-void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textureID, const float _scale, const Point _position)
+void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textureID, const float_t _scale, const Point _position)
 {
 	// Get the texture from the IDs.
 	SDL_Texture* texture = m_sheets[_sheetID][_textureID];
@@ -116,7 +106,7 @@ void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textur
 /// <param name="_textureID"> The ID of the texture itself. </param>
 /// <param name="_position"> The position on the window. </param>
 /// <param name="_rotation"> The rotation in radians. </param>
-void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textureID, const Point _position, const float _rotation)
+void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textureID, const Point _position, const float_t _rotation)
 {
 	// Get the texture from the IDs.
 	SDL_Texture* texture = m_sheets[_sheetID][_textureID];
@@ -146,7 +136,7 @@ void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textur
 /// <param name="_textureID"> The ID of the texture itself. </param>
 /// <param name="_destination"> The destination <see cref="Rectangle"/>. </param>
 /// <param name="_rotation"> The rotation in radians. </param>
-void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textureID, const Rectangle _destination, const float _rotation)
+void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textureID, const Rectangle _destination, const float_t _rotation)
 {
 	// Get the texture from the IDs.
 	SDL_Texture* texture = m_sheets[_sheetID][_textureID];
@@ -175,13 +165,63 @@ void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textur
 /// <param name="_destination"> The destination <see cref="Rectangle"/>. </param>
 /// <param name="_source"> The source <see cref="Rectangle"/>. </param>
 /// <param name="_rotation"> The rotation in radians. </param>
-void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textureID, const Rectangle _destination, const Rectangle _source, const float _rotation)
+void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textureID, const Rectangle _destination, const Rectangle _source, const float_t _rotation)
 {
 	// Get the texture from the IDs.
 	SDL_Texture* texture = m_sheets[_sheetID][_textureID];
 
 	// Draw the texture at the given position.
 	SDL_RenderCopyEx(m_renderer, texture, &convertRect(_source), &convertRect(_destination), _rotation * (180.0f / M_PI), NULL, SDL_FLIP_NONE);
+}
+
+/// <summary> Draws the given string with the given font at the given position and colour. </summary>
+/// <param name="_fontID"> The ID of the font. </param>
+/// <param name="_text"> The text to write. </param>
+/// <param name="_position"> The position. </param>
+/// <param name="_colour"> The colour. </param>
+void Graphics::SDLGraphics::DrawString(uint16_t _fontID, std::string _text, Point _position, Colour _colour)
+{
+	// Get the font.
+	TTF_Font* font = m_fonts[_fontID];
+
+	// Render the text to a surface then turn that into a texture.
+	SDL_Surface* textSurface = TTF_RenderText_Solid(font, _text.c_str(), { _colour.r, _colour.g, _colour.b });
+	SDL_Texture* textTexture = SDL_CreateTextureFromSurface(m_renderer, textSurface);
+
+	// Create the destination rect.
+	SDL_Rect destRect;
+	destRect.x = _position.x;
+	destRect.y = _position.y;
+	TTF_SizeText(font, _text.c_str(), &destRect.w, &destRect.h);
+
+	// Draw the text.
+	SDL_RenderCopy(m_renderer, textTexture, NULL, &destRect);
+
+	// Release the surface and texture.
+	SDL_FreeSurface(textSurface);
+	SDL_DestroyTexture(textTexture);
+}
+
+/// <summary> Draws the given string with the given font at the given position and colour. </summary>
+/// <param name="_fontID"> The ID of the font. </param>
+/// <param name="_text"> The text to write. </param>
+/// <param name="_destination"> The destination. <see cref="Rectangle"/>. </param>
+/// <param name="_colour"> The colour. </param>
+void Graphics::SDLGraphics::DrawString(uint16_t _fontID, std::string _text, Rectangle _destination, Colour _colour)
+{
+	// Get the font.
+	TTF_Font* font = m_fonts[_fontID];
+
+	// Render the text to a surface then turn that into a texture.
+	SDL_Surface* textSurface = TTF_RenderText_Solid(font, _text.c_str(), { _colour.r, _colour.g, _colour.b });
+	SDL_Texture* textTexture = SDL_CreateTextureFromSurface(m_renderer, textSurface);
+
+	// Draw the text.
+	SDL_RenderCopy(m_renderer, textTexture, NULL, &convertRect(_destination));
+
+	// Release the surface and texture.
+	SDL_FreeSurface(textSurface);
+	SDL_DestroyTexture(textTexture);
 }
 
 /// <summary> Loads the texture with the given filename to the given sheet ID. </summary>
@@ -285,6 +325,25 @@ void Graphics::SDLGraphics::LoadSheetToID(const std::string _fileName, const uin
 	loadedTexture = NULL;
 }
 
+/// <summary> Loads the font from the given path to the given ID at the given font size in points. </summary>
+/// <param name="_fileName"> The path of the font. </param>
+/// <param name="_fontID"> The ID to which the font should be loaded. </param>
+/// <param name="_pointSize"> The size of the font in points. </param>
+void Graphics::SDLGraphics::LoadFontToID(const std::string _fileName, const uint16_t _fontID, const uint8_t _pointSize)
+{
+	// If the given ID has already been loaded, throw an error.
+	if (m_fonts.count(_fontID) > 0) { throw std::exception("Font with given ID has already been loaded."); }
+
+	// Load the font.
+	TTF_Font* loadedFont = TTF_OpenFont(_fileName.c_str(), _pointSize);
+
+	// If the font has not loaded correctly, throw an error.
+	if (loadedFont == nullptr) { throw std::exception("Given font does not exist or could not be loaded."); }
+
+	// Add the font to the map.
+	m_fonts.emplace(_fontID, loadedFont);
+}
+
 /// <summary> Creates an <see cref="SDL_Rect"/> using the given X and Y positions along with the dimensions of the given <see cref="SDL_Texture"/>. </summary>
 /// <param name="_x"> The X position. </param>
 /// <param name="_y"> The Y position. </param>
@@ -292,16 +351,11 @@ void Graphics::SDLGraphics::LoadSheetToID(const std::string _fileName, const uin
 /// <returns> A calculated <see cref="SDL_Rect"/>. </returns>
 SDL_Rect Graphics::SDLGraphics::createRectFromTexture(const int32_t _x, const int32_t _y, SDL_Texture* _texture)
 {
-	// Get the width and height of the texture.
-	int32_t w, h;
-	SDL_QueryTexture(_texture, NULL, NULL, &w, &h);
-
 	// Create a rectangle and set each parameter.
 	SDL_Rect rectangle;
 	rectangle.x = _x;
 	rectangle.y = _y;
-	rectangle.w = w;
-	rectangle.h = h;
+	SDL_QueryTexture(_texture, NULL, NULL, &rectangle.w, &rectangle.h);
 
 	// Return the rectangle.
 	return rectangle;

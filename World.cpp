@@ -68,6 +68,10 @@ void WorldObjects::World::GenerateRandomMap()
 
 	// Move the player to the spawn.
 	m_player.SetTilePosition(m_spawnPoint.GetTilePosition());
+
+	// Set the remaining turns based on how far away the exit is.
+	uint32_t distance = abs(m_spawnPoint.GetTilePosition().x - m_exitPoint.GetTilePosition().x) + abs(m_spawnPoint.GetTilePosition().y - m_exitPoint.GetTilePosition().y);
+	m_turnsUntilCollapse = ceil(distance * (2.0f + Random::RandomScalar())) - (m_floorCount * Random::RandomBetween(1, 6));
 }
 
 /// <summary> Handles the player pressing a key to move/ </summary>
@@ -108,6 +112,41 @@ void WorldObjects::World::handleKeyDown(void* _scancode, void* _mod)
 /// <summary> Handle turn-based logic. </summary>
 void WorldObjects::World::doTurn()
 {
+	// Decrement the counter.
+	m_turnsUntilCollapse = std::max(0, m_turnsUntilCollapse - 1);
+
+	// If the counter is at 0, collapse a bit.
+	if (m_turnsUntilCollapse == 0) { collapse(); }
+}
+
+/// <summary> Causes some tiles to cave in. </summary>
+void WorldObjects::World::collapse()
+{
+	// How many tiles have to be caved in.
+	uint8_t tilesToCollapse = Random::RandomBetween(12, 30);
+
+	// How many attempts to cave a tile in have been made.
+	uint32_t collapseAttempts = 0;
+
+	// Keep caving in tiles until the limit is reached or no more attempts can be made.
+	while (collapseAttempts < c_maxCollapseAttempts && tilesToCollapse > 0)
+	{
+		// Generate a random position.
+		Point position(Random::RandomBetween(1, m_tileData.GetWidth() - 2), Random::RandomBetween(1, m_tileData.GetHeight() - 2));
+
+		// If this cell is valid to collapse, collapse it; otherwise, mark it as an attempt.
+		if (m_tileData.IsCellClear(position) && m_spawnPoint.GetTilePosition() != position && m_exitPoint.GetTilePosition() != position) 
+		{ 
+			m_tileData.FillCellWithRandomWall(position);
+			--tilesToCollapse;
+			collapseAttempts = 0;
+
+			// If the player was crushed by this tile, send the end game event.
+			if (position == m_player.GetTilePosition()) { MainGame::Game::GetService().GetEvents().PushEvent(Events::UserEvent::PlayerDied, NULL, NULL); }
+		}
+		else { ++collapseAttempts; }
+	}
+
 }
 
 /// <summary> Handles player movement. </summary>
@@ -119,11 +158,8 @@ void WorldObjects::World::handleMovement(const Directions _direction, const bool
 	Direction desiredDirection = Direction(_direction);
 
 	// If the cell is clear and movement is wanted, move towards it, otherwise just face towards it.
-	if (!_noMovement && m_tileData.IsCellClearAndInRange(m_player.GetTilePosition() + desiredDirection.GetNormal())) { m_player.MoveInDirection(_direction); }
+	if (!_noMovement && m_tileData.IsCellClearAndInRange(m_player.GetTilePosition() + desiredDirection.GetNormal())) { m_player.MoveInDirection(_direction); doTurn(); }
 	else { m_player.SetFacing(_direction); }
-
-	// Do a turn since a movement was made.
-	doTurn();
 }
 
 /// <summary> Handles the player swinging their pickaxe to mine the cell in front of them. </summary>
@@ -166,4 +202,7 @@ void WorldObjects::World::stopMinigame(void* _tilePosition, void* _unused)
 
 	// Since the minigame has ended, the cave wall has collapsed, meaning the wall should be destroyed.
 	m_tileData.FillCellWithRandomFloor(tilePosition);
+
+	// Do a turn.
+	doTurn();
 }

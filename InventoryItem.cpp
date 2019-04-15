@@ -1,4 +1,4 @@
-#include "InventoryItem.h"
+﻿#include "InventoryItem.h"
 
 // Service includes.
 #include "Game.h"
@@ -16,4 +16,8 @@ void Inventory::InventoryItem::Draw(const Point _position) const
 	// Draw the frame and gem.
 	graphics.Draw(SpriteData::SheetID::UI, SpriteData::UIID::InventoryFrame, screen.GetScale(), screen.ScreenToWindowSpace(_position));
 	graphics.Draw(SpriteData::SheetID::UI, SpriteData::UIID::RubyIcon + m_gemID, screen.GetScale(), screen.ScreenToWindowSpace(_position));
+
+	// Draw the text.
+	graphics.DrawString(SpriteData::FontID::SmallDetail, 'x' + std::to_string(m_stackAmount),
+		screen.ScreenToWindowSpace(_position + Point(36, 4)), { 224, 224, 224, 255 });
 }

@@ -22,6 +22,9 @@ namespace SpriteData
 	/// <summary> The ID of each UI element. </summary>
 	enum UIID { SideBar = 0, MinigameBar, WallTimer, Pickaxe, Shovel, Hammer, InventoryFrame, RubyIcon, DiamondIcon, SapphireIcon, EmeraldIcon };
 
+	/// <summary> The ID of each font. </summary>
+	enum FontID { Menu = 0, SmallDetail };
+
 	/// <summary> The ID of the tiles. </summary>
 	enum TileID { Wall1 = 0, Wall2, Wall3, Wall4, LowGems, MediumGems, HighGems, MaxGems, Floor1, Floor2, Floor3, Floor4 };
 

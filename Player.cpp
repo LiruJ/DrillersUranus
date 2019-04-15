@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "Events.h"
 
+/// <summary> Initialises the event bindings. </summary>
 void GameObjects::Player::Initialise()
 {
 	// Get the event service.
@@ -13,6 +14,9 @@ void GameObjects::Player::Initialise()
 	events.AddUserListener(Events::UserEvent::MinedGem, std::bind(&Player::minedGem, this, std::placeholders::_1, std::placeholders::_2));
 }
 
+/// <summary> Fires when a gem is mined, then adds it to the inventory. </summary>
+/// <param name="_minedGem"> The mined gem. </param>
+/// <param name="_unused"> Unused. </param>
 void GameObjects::Player::minedGem(void* _minedGem, void* _unused)
 {
 	// Get the mined gem.
