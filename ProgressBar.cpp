@@ -14,6 +14,9 @@
 /// <summary> Draws this <see cref="ProgressBar"/> onto the screen. </summary>
 void UserInterface::ProgressBar::Draw()
 {
+	// If this progress bar is not active, do nothing.
+	if (!m_isActive) { return; }
+
 	// Get the graphics and screen services.
 	Graphics::Graphics& graphics = MainGame::Game::GetService().GetGraphics();
 	Screens::Screen& screen = MainGame::Game::GetService().GetScreen();

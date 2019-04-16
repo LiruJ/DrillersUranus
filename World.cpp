@@ -42,10 +42,21 @@ void WorldObjects::World::Initialise()
 
 	// Initialise the player.
 	m_player.Initialise();
+
+	// Initialise the camera.
+	m_camera.Initialise();
+}
+
+/// <summary> Resets the world to its starting state. </summary>
+void WorldObjects::World::Reset()
+{
+	m_floorCount = 0;
+	m_player.GetInventory().Reset();
+	generateRandomMap();
 }
 
 /// <summary> Generates a random map and places the player on the spawn. </summary>
-void WorldObjects::World::GenerateRandomMap()
+void WorldObjects::World::generateRandomMap()
 {
 	// Initialise the start and end points.
 	m_spawnPoint.SetTilePosition(Point(0, 0));
@@ -187,7 +198,7 @@ void WorldObjects::World::handleInteraction()
 	// If the player is standing on the exit point, take them to a new floor.
 	if (m_player.GetTilePosition() == m_exitPoint.GetTilePosition()) 
 	{
-		GenerateRandomMap();
+		generateRandomMap();
 		m_floorCount++;
 	}
 }

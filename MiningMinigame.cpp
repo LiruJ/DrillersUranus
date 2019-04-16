@@ -74,6 +74,9 @@ void Minigames::MiningMinigame::Prepare(const Point _tilePosition, const uint8_t
 	m_collapseTimer = c_maxTimer;
 	m_collapseBar.SetValue(0);
 
+	// Enable the buttons.
+	for (int32_t i = 0; i < 3; i++) { m_toolButtons[i].SetActive(true); }
+
 	// Set the tile position.
 	m_tilePosition = _tilePosition;
 
@@ -143,7 +146,7 @@ void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
 			if (hitGem != NULL)
 			{
 				// Subtract a set amount from the timer.
-				m_collapseTimer = std::max(0, m_collapseTimer - 10);
+				m_collapseTimer = std::max(0, m_collapseTimer - 7);
 			}
 			else
 			{
@@ -172,7 +175,7 @@ void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
 	}
 
 	// Collapse if collapse timer is 0.
-	if (m_collapseTimer == 0) { events.PushEvent(Events::UserEvent::StopMinigame, new Point(m_tilePosition), NULL); }
+	if (m_collapseTimer == 0) { collapse(); }
 }
 
 /// <summary> Places gems into the wall based on the given prosperity. </summary>
@@ -228,6 +231,18 @@ void Minigames::MiningMinigame::placeGems(const uint8_t _prosperity)
 	}
 }
 
+void Minigames::MiningMinigame::collapse()
+{
+	// Get the events service.
+	Events::Events& events = MainGame::Game::GetService().GetEvents();
+
+	// Disable the buttons.
+	for (int32_t i = 0; i < 3; i++) { m_toolButtons[i].SetActive(false); }
+
+	// Push the minigame end event.
+	events.PushEvent(Events::UserEvent::StopMinigame, new Point(m_tilePosition), NULL);
+}
+
 /// <summary> Sets up the GUI. </summary>
 void Minigames::MiningMinigame::initialiseGui()
 {
@@ -249,4 +264,4 @@ void Minigames::MiningMinigame::initialiseGui()
 }
 
 // Initialise the tools.
-Minigames::Tool Minigames::MiningMinigame::s_tools[3] = { Minigames::Tool(7, 4), Minigames::Tool(11, 7), Minigames::Tool(17, 8) };
+Minigames::Tool Minigames::MiningMinigame::s_tools[3] = { Minigames::Tool(3, 2), Minigames::Tool(5, 3), Minigames::Tool(11, 7) };

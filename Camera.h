@@ -13,6 +13,7 @@
 
 // UI includes.
 #include "Frame.h"
+#include "Button.h"
 
 namespace WorldObjects
 {
@@ -24,11 +25,15 @@ namespace WorldObjects
 	{
 	public:
 		/// <summary> Creates an empty <see cref="Camera"/>. </summary>
-		Camera() : m_worldPosition(Point(0, 0)), m_worldSize(Point(960, 540)), m_worldBounds(m_worldPosition, m_worldSize) { initialiseGui(); }
+		Camera() : m_worldPosition(Point(0, 0)), m_worldSize(Point(960, 540)), 
+			m_worldBounds(m_worldPosition, m_worldSize)
+			{ }
 
 		// Prevent copies.
 		Camera(Camera&) = delete;
 		Camera& operator=(const Camera&) = delete;
+
+		void Initialise();
 
 		void Draw(World&);
 
@@ -53,7 +58,17 @@ namespace WorldObjects
 		/// <summary> The UI frame. </summary>
 		UserInterface::Frame	m_sideBar;
 
-		void			initialiseGui();
+		/// <summary> The game over screen. </summary>
+		UserInterface::Frame	m_deathScreen;
+
+		/// <summary> The button that takes the player back to the main menu after dying. </summary>
+		UserInterface::Button	m_menuButton;
+
+		/// <summary> Shows the death screen. </summary>
+		void showDeathScreen(void*, void*) { m_deathScreen.SetActive(true); m_menuButton.SetActive(true); }
+
+		/// <summary> Hides the death screen. </summary>
+		void hideDeathScreen(void*, void*) { m_deathScreen.SetActive(false); m_menuButton.SetActive(false); }
 	};
 }
 #endif

@@ -37,7 +37,7 @@ namespace Minigames
 		static Tool					s_tools[3];
 
 		/// <summary> The maximum timer value. </summary>
-		const uint16_t				c_maxTimer = 1000;
+		const uint16_t				c_maxTimer = 1500;
 
 		/// <summary> The tile data. </summary>
 		WallData					m_wallData;
@@ -64,6 +64,8 @@ namespace Minigames
 		UserInterface::Button		m_toolButtons[3];
 
 		void placeGems(uint8_t);
+
+		void collapse();
 
 		void initialiseGui();
 

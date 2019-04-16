@@ -28,10 +28,10 @@ namespace Minigames
 			// Set anything unique to a gem ID.
 			switch (_gemID)
 			{
-			case SpriteData::GemID::Diamond:	{ m_value = 5500; break; }
+			case SpriteData::GemID::Diamond:	{ m_value = 3200; break; }
 			case SpriteData::GemID::Emerald:	{ m_value = 950; break; }
 			case SpriteData::GemID::Ruby:		{ m_value = 2800; break; }
-			case SpriteData::GemID::Sapphire:	{ m_value = 1800; break; }
+			case SpriteData::GemID::Sapphire:	{ m_value = 2500; break; }
 			default:							{ throw std::exception("Given gem ID is invalid."); }
 			}
 		}

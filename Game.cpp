@@ -21,8 +21,8 @@ void MainGame::Game::draw()
 	// Handle drawing based on the current state.
 	switch (s_currentGameState)
 	{
-	case MainMenu: { break; }
-	case Lost: {}
+	case MainMenu: { m_mainMenu.Draw(); break; }
+	case Lost:
 	case Map: { m_world.Draw(); break; }
 	case Minigame: { m_miningMinigame.Draw(); break; }
 	default: { throw std::exception("Invalid gamestate."); }
@@ -92,9 +92,17 @@ void MainGame::Game::initialiseBindings()
 
 	// Bind the game quit.
 	m_events->AddFrameworkListener(SDL_QUIT, std::bind(&Game::exitGame, this, std::placeholders::_1, std::placeholders::_2));
+	m_events->AddUserListener(Events::UserEvent::QuitGame, std::bind(&Game::exitGame, this, std::placeholders::_1, std::placeholders::_2));
 
 	// Bind the lose game.
 	m_events->AddUserListener(Events::UserEvent::PlayerDied, std::bind(&Game::loseGame, this, std::placeholders::_1, std::placeholders::_2));
+
+	// Bind the start game.
+	m_events->AddUserListener(Events::UserEvent::StartGame, std::bind(&Game::startGame, this, std::placeholders::_1, std::placeholders::_2));
+
+	// Bind the main menu.
+	m_events->AddUserListener(Events::UserEvent::MainMenu, std::bind(&Game::endGame, this, std::placeholders::_1, std::placeholders::_2));
+	m_mainMenu.Initialise();
 }
 
 /// <summary> Sets up the world and mining minigame. </summary>
@@ -103,9 +111,6 @@ void MainGame::Game::initialiseGameObjects()
 	// Initialise the minigame and world.
 	m_miningMinigame.Initialise();
 	m_world.Initialise();
-
-	// Generate a random map to start with.
-	m_world.GenerateRandomMap();
 }
 
 /// <summary> Loads all textures to the graphics service. </summary>
@@ -130,6 +135,14 @@ void MainGame::Game::loadTextures()
 		Rectangle(160, 160, 32, 32),
 		Rectangle(192, 160, 32, 32),
 		Rectangle(224, 160, 32, 32),
+		Rectangle(1088, 0, 960, 540),
+		Rectangle(128, 0, 128, 32),
+		Rectangle(128, 32, 128, 32),
+		Rectangle(128, 64, 128, 32),
+		Rectangle(128, 96, 128, 32),
+		Rectangle(128, 128, 128, 32),
+		Rectangle(256, 0, 320, 256),
+		Rectangle(128, 224, 128, 96),
 	});
 
 	// Load the gems.
@@ -180,6 +193,16 @@ void MainGame::Game::loseGame(void* _unused, void* _unused2)
 	// TODO: Bind the game end to display the game over screen, which then leads to the main menu.
 }
 
+/// <summary> Starts the game. </summary>
+void MainGame::Game::startGame(void*, void*)
+{
+	// Reset the world.
+	m_world.Reset();
+
+	// Set the game state to ingame.
+	s_currentGameState = GameState::Map;
+}
+
 /// <summary> Runs the game, starting the update and draw loop. </summary>
 /// <returns> <c>0</c> if the game ran correctly, anything else otherwise. </returns>
 int32_t MainGame::Game::Run()
@@ -205,4 +228,4 @@ int32_t MainGame::Game::Run()
 ServiceProvider MainGame::Game::s_serviceProvider = ServiceProvider();
 
 // Initialise the game state to the map.
-MainGame::GameState MainGame::Game::s_currentGameState = MainGame::GameState::Map;
+MainGame::GameState MainGame::Game::s_currentGameState = MainGame::GameState::MainMenu;

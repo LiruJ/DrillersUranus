@@ -35,7 +35,7 @@ namespace WorldObjects
 
 		void Initialise();
 
-		void GenerateRandomMap();
+		void Reset();
 
 		void Draw();
 
@@ -88,6 +88,8 @@ namespace WorldObjects
 
 		/// <summary> How many turns the player can make before they lose. </summary>
 		uint16_t				m_turnsUntilCollapse;
+
+		void generateRandomMap();
 
 		void handleKeyDown(void*, void*);
 

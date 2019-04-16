@@ -8,6 +8,9 @@
 /// <summary> Draws this <see cref="Frame"/> onto the screen. </summary>
 void UserInterface::Frame::Draw()
 {
+	// If this frame is not active, do nothing.
+	if (!m_isActive) { return; }
+
 	// Get the graphics and screen services.
 	Graphics::Graphics& graphics = MainGame::Game::GetService().GetGraphics();
 	Screens::Screen& screen = MainGame::Game::GetService().GetScreen();

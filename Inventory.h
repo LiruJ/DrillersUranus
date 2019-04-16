@@ -23,6 +23,9 @@ namespace Inventory
 
 		void AddMinedGem(Minigames::WallGem);
 
+		/// <summary> Completely clears out the inventory. </summary>
+		void Reset() { m_inventoryItems.clear(); }
+
 		uint32_t CalculateCombinedValue();
 
 		void Draw(Point);

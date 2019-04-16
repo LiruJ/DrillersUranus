@@ -15,6 +15,9 @@ void UserInterface::Button::Initialise()
 /// <param name="_windowY"> The y position of the mouse relative to the window. </param>
 void UserInterface::Button::handleClick(void* _windowX, void* _windowY)
 {
+	// If this button is not active, do nothing.
+	if (!m_isActive) { return; }
+
 	// Get the screen and events services.
 	Screens::Screen& screen = MainGame::Game::GetService().GetScreen();
 	Events::Events& events = MainGame::Game::GetService().GetEvents();

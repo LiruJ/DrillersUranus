@@ -14,6 +14,9 @@
 // Utility includes.
 #include <string>
 
+// UI includes.
+#include "MainMenu.h"
+
 namespace MainGame
 {
 	/// <summary> Represents the current state of the <see cref="Game"/>. </summary>
@@ -53,6 +56,9 @@ namespace MainGame
 		/// <summary> The events service which allows for events to be pumped. </summary>
 		Events::SDLEvents*			m_events;
 
+		/// <summary> The main menu. </summary>
+		UserInterface::MainMenu		m_mainMenu;
+
 		/// <summary> The map world. </summary>
 		WorldObjects::World			m_world;
 
@@ -81,11 +87,14 @@ namespace MainGame
 		void resizeScreen(void* _windowX, void* _windowY) { m_letterBoxScreen->Resize(*static_cast<int32_t*>(_windowX), *static_cast<int32_t*>(_windowY)); }
 
 		/// <summary> Sets the game state to exit so that the game will quit the update loop. </summary>
-		/// <param name="_unused"> Unused. </param>
-		/// <param name="_unused2"> Unused. </param>
-		void exitGame(void* _unused, void* _unused2) { s_currentGameState = GameState::Exit; }
+		void exitGame(void*, void*) { s_currentGameState = GameState::Exit; }
 
 		void loseGame(void*, void*);
+
+		void startGame(void*, void*);
+	
+		/// <summary> Goes back to the main menu. </summary>
+		void endGame(void*, void*) { s_currentGameState = GameState::MainMenu; }
 	};
 }
 #endif
