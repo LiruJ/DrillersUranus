@@ -6,7 +6,6 @@
 
 // Service includes.
 #include "Game.h"
-#include "Events.h"
 #include "Graphics.h"
 #include "Screen.h"
 
@@ -25,7 +24,7 @@ void WorldObjects::Camera::Draw(World& _world)
 	IReadOnlyTileMap& tileMap = _world.GetTileMap();
 
 	// Centre on the player.
-	CentreOnMapObject(_world.GetPlayer());
+	centreOnMapObject(_world.GetPlayer());
 
 	// Draw the map data based on the visible area of the camera.
 	for (int32_t x = std::max(0, m_worldPosition.x / SpriteData::c_tileSize); x < std::min((int32_t)tileMap.GetWidth(), ((m_worldPosition.x + 832) / SpriteData::c_tileSize) + 1); x++)
@@ -45,60 +44,12 @@ void WorldObjects::Camera::Draw(World& _world)
 	}
 
 	// Draw the spawn and exit points if they're on screen.
-	if (IsOnScreen(_world.GetSpawn())) { _world.GetSpawn().Draw(m_worldPosition); }
-	if (IsOnScreen(_world.GetExit())) { _world.GetExit().Draw(m_worldPosition); }
+	if (isOnScreen(_world.GetSpawn())) { _world.GetSpawn().Draw(m_worldPosition); }
+	if (isOnScreen(_world.GetExit())) { _world.GetExit().Draw(m_worldPosition); }
 
 	// Draw the player.
 	_world.GetPlayer().Draw(m_worldPosition);
 
 	// Draw the UI.
-	m_sideBar.Draw();
-
-	// Draw the player's inventory.
-	graphics.DrawString(SpriteData::FontID::SmallDetail, '$' + std::to_string(_world.GetPlayer().GetInventory().CalculateCombinedValue()), screen.ScreenToWindowSpace(Point(868, 164)), { 255, 255, 255, 255 });
-	_world.GetPlayer().GetInventory().Draw(Point(832, 192));
-
-	// Draw the current level and remaining time.
-	graphics.DrawString(SpriteData::FontID::SmallDetail, 
-		"LVL. " + std::to_string(_world.GetCurrentLevel()), 
-		screen.ScreenToWindowSpace(Point(868, 4)), { 255, 255, 255, 255 });
-
-	graphics.DrawString(SpriteData::FontID::SmallDetail,
-		std::to_string(_world.GetCollapseTime()),
-		screen.ScreenToWindowSpace(Point(868, 451)),
-		{ (uint8_t)std::max(255 - _world.GetCollapseTime(), 0), (uint8_t)_world.GetCollapseTime(), (uint8_t)_world.GetCollapseTime(), 255 });
-
-	// Draw the death screen.
-	m_deathScreen.Draw();
-	m_menuButton.Draw();
-	if (m_menuButton.IsActive()) 
-	{
-		graphics.DrawString(SpriteData::FontID::SmallDetail, 
-			'$' + std::to_string(_world.GetPlayer().GetInventory().CalculateCombinedValue()),
-			screen.ScreenToWindowSpace(Point(424, 254)), { 255, 255, 255, 255 }); 
-	}
-}
-/// <summary> Initialises every UI element. </summary>
-void WorldObjects::Camera::Initialise()
-{
-	m_sideBar = UserInterface::Frame(Point(832, 0), Point(128, 540), SpriteData::UIID::SideBar);
-
-	// Initialise the death screen.
-	m_deathScreen = UserInterface::Frame(Point(384, 222), Point(128, 96), SpriteData::UIID::DeathScreen);
-	m_menuButton = UserInterface::Button(Point(384, 286), Point(128, 32), SpriteData::UIID::MenuButton);
-	hideDeathScreen(NULL, NULL);
-
-	// Get the event service.
-	Events::Events& events = MainGame::Game::GetService().GetEvents();
-
-	// Bind the menu button to go to the main menu.
-	m_menuButton.SetEvent(Events::UserEvent::MainMenu, 0);
-	m_menuButton.Initialise();
-
-	// Bind the player dying to the death screen showing.
-	events.AddUserListener(Events::UserEvent::PlayerDied, std::bind(&Camera::showDeathScreen, this, std::placeholders::_1, std::placeholders::_2));
-
-	// Bind the game starting to the death screen hiding.
-	events.AddUserListener(Events::UserEvent::StartGame, std::bind(&Camera::hideDeathScreen, this, std::placeholders::_1, std::placeholders::_2));
-
+	m_gameMenu.Draw(_world);
 }

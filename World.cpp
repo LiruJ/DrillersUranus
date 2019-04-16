@@ -85,7 +85,7 @@ void WorldObjects::World::generateRandomMap()
 	m_turnsUntilCollapse = ceil(distance * (2.0f + Random::RandomScalar())) - (m_floorCount * Random::RandomBetween(1, 6));
 }
 
-/// <summary> Handles the player pressing a key to move/ </summary>
+/// <summary> Handles the player pressing a key to move. </summary>
 /// <param name="_scancode"> The scan code of the pressed key. </param>
 /// <param name="_mod"> The modifier key that the player was holding on the key press. </param>
 void WorldObjects::World::handleKeyDown(void* _scancode, void* _mod)

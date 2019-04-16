@@ -16,5 +16,5 @@ void UserInterface::Frame::Draw()
 	Screens::Screen& screen = MainGame::Game::GetService().GetScreen();
 
 	// Calculate the screen position and draw.
-	graphics.Draw(SpriteData::SheetID::UI, m_spriteID, screen.ScreenToWindowBounds(m_screenBounds));
+	graphics.Draw(SpriteData::SheetID::UI, m_spriteID, screen.ScreenToWindowBounds(m_bounds));
 }

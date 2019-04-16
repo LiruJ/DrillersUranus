@@ -12,8 +12,7 @@
 #include <vector>
 
 // UI includes.
-#include "ProgressBar.h"
-#include "Button.h"
+#include "MinigameMenu.h"
 
 // Typedef includes.
 #include <stdint.h>
@@ -25,7 +24,7 @@ namespace Minigames
 	{
 	public:
 		/// <summary> Creates the initial minigame. </summary>
-		MiningMinigame() : m_currentToolID(0), m_collapseTimer(c_maxTimer), m_wallData(120, 60), m_wallGems() { }
+		MiningMinigame() : m_collapseTimer(c_maxTimer), m_wallData(120, 60), m_wallGems() { }
 
 		void Initialise();
 
@@ -48,30 +47,24 @@ namespace Minigames
 		/// <summary> The position of the tile on the map. </summary>
 		Point						m_tilePosition;
 
-		/// <summary> Starts at <c>1000</c> and goes down every time the player mines, when it reaches <c>0</c> the wall collapses and the minigame ends. </summary>
+		/// <summary> Starts at <c>1500</c> and goes down every time the player mines, when it reaches <c>0</c> the wall collapses and the minigame ends. </summary>
 		uint16_t					m_collapseTimer;
 
 		/// <summary> The index in the tools array of the currently selected tool. </summary>
 		uint8_t						m_currentToolID;
 
-		/// <summary> The buttom UI behind the buttons and collapse bar. </summary>
-		UserInterface::Frame		m_bottomBar;
-
-		/// <summary> The bar of how unstable the wall is. </summary>
-		UserInterface::ProgressBar	m_collapseBar;
-
-		/// <summary> The buttons to switch the current tool. </summary>
-		UserInterface::Button		m_toolButtons[3];
+		/// <summary> The menu for the minigame. </summary>
+		UserInterface::MinigameMenu m_minigameMenu;
 
 		void placeGems(uint8_t);
 
-		void collapse();
-
-		void initialiseGui();
-
 		void changeTool(void*, void*);
 
+		void hotkeyTool(void*, void*);
+
 		void mineAt(void*, void*);
+
+		void mined(void*, void*);
 	};
 }
 #endif

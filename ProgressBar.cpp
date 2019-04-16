@@ -22,8 +22,8 @@ void UserInterface::ProgressBar::Draw()
 	Screens::Screen& screen = MainGame::Game::GetService().GetScreen();
 
 	// Calculate the window bounds then draw.
-	Point windowPosition = screen.ScreenToWindowSpace(m_screenPosition);
-	Rectangle destRect = Rectangle(windowPosition.x, windowPosition.y, screen.ScreenToWindowSize((int32_t)((float_t)m_screenSize.x * (m_current / (float_t)m_max))), screen.ScreenToWindowSize(m_screenSize.y));
-	Rectangle sourceRect = Rectangle(0, 0, (int32_t)((float_t)m_screenSize.x * (m_current / (float_t)m_max)), m_screenSize.y);
+	Point windowPosition = screen.ScreenToWindowSpace(m_position);
+	Rectangle destRect = Rectangle(windowPosition.x, windowPosition.y, screen.ScreenToWindowSize((int32_t)((float_t)m_size.x * (m_current / (float_t)m_max))), screen.ScreenToWindowSize(m_size.y));
+	Rectangle sourceRect = Rectangle(0, 0, (int32_t)((float_t)m_size.x * (m_current / (float_t)m_max)), m_size.y);
 	graphics.Draw(SpriteData::SheetID::UI, m_spriteID, destRect, sourceRect);
 }

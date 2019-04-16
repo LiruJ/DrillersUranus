@@ -1,5 +1,9 @@
 #include "MiningMinigame.h"
 
+// Framework includes.
+#include <SDL_scancode.h>
+#include <SDL_events.h>
+
 // Service includes.
 #include "Graphics.h"
 #include "Screen.h"
@@ -18,13 +22,20 @@ void Minigames::MiningMinigame::Initialise()
 	Events::Events& events = MainGame::Game::GetService().GetEvents();
 
 	// Bind click to handle mining.
-	events.AddFrameworkListener(SDL_MOUSEBUTTONDOWN, std::bind(&Minigames::MiningMinigame::mineAt, this, std::placeholders::_1, std::placeholders::_2));
+	events.AddFrameworkListener(SDL_MOUSEBUTTONDOWN, std::bind(&MiningMinigame::mineAt, this, std::placeholders::_1, std::placeholders::_2));
+
+	// Bind the wall mined event.
+	events.AddUserListener(Events::UserEvent::MinedWall, std::bind(&MiningMinigame::mined, this, std::placeholders::_1, std::placeholders::_2));
 
 	// Bind the tool buttons to change the tool.
-	events.AddUserListener(Events::UserEvent::ChangeTool, std::bind(&Minigames::MiningMinigame::changeTool, this, std::placeholders::_1, std::placeholders::_2));
+	events.AddUserListener(Events::UserEvent::ChangeTool, std::bind(&MiningMinigame::changeTool, this, std::placeholders::_1, std::placeholders::_2));
+	events.AddFrameworkListener(SDL_KEYDOWN, std::bind(&MiningMinigame::hotkeyTool, this, std::placeholders::_1, std::placeholders::_2));
 
 	// Initialise the GUI.
-	initialiseGui();
+	m_minigameMenu.Initialise(c_maxTimer);
+
+	// Change the tool to the first one.
+	events.PushEvent(Events::UserEvent::ChangeTool, new uint8_t(0), NULL);
 }
 
 /// <summary> Draws the minigame and the UI. </summary>
@@ -58,11 +69,7 @@ void Minigames::MiningMinigame::Draw()
 	}
 
 	// Draw the UI.
-	m_bottomBar.Draw();
-	m_collapseBar.Draw();
-	if (m_currentToolID != 0) { m_toolButtons[0].Draw(); }
-	if (m_currentToolID != 1) { m_toolButtons[1].Draw(); }
-	if (m_currentToolID != 2) { m_toolButtons[2].Draw(); }
+	m_minigameMenu.Draw();
 }
 
 /// <summary> Prepares the minigame to be played, using the given map wall and prosperity to generate. </summary>
@@ -70,12 +77,8 @@ void Minigames::MiningMinigame::Draw()
 /// <param name="_prosperity"> The prosperity of the wall. </param>
 void Minigames::MiningMinigame::Prepare(const Point _tilePosition, const uint8_t _prosperity)
 {
-	// Reset the collapse timer and bar.
-	m_collapseTimer = c_maxTimer;
-	m_collapseBar.SetValue(0);
-
-	// Enable the buttons.
-	for (int32_t i = 0; i < 3; i++) { m_toolButtons[i].SetActive(true); }
+	// Start on the first tool.
+	MainGame::Game::GetService().GetEvents().PushEvent(Events::UserEvent::ChangeTool, new uint8_t(0), NULL);
 
 	// Set the tile position.
 	m_tilePosition = _tilePosition;
@@ -90,13 +93,37 @@ void Minigames::MiningMinigame::Prepare(const Point _tilePosition, const uint8_t
 /// <summary> Changes the current tool to the given value. </summary>
 /// <param name="_toolID"> The new tool ID. </param>
 /// <param name="_unused"> Unused. </param>
-void Minigames::MiningMinigame::changeTool(void * _toolID, void * _unused)
+void Minigames::MiningMinigame::changeTool(void* _toolID, void* _unused = NULL)
 {
 	// Do nothing if the game state is not minigame.
 	if (MainGame::Game::GetGameState() != MainGame::GameState::Minigame) { return; }
 
 	// Set the current tool ID to the given ID.
 	m_currentToolID = *static_cast<uint8_t*>(_toolID);
+}
+
+/// <summary> Handles the player pressing a key to change tool. </summary>
+/// <param name="_scancode"> The scan code of the pressed key. </param>
+/// <param name="_mod"> The modifier key that the player was holding on the key press. </param>
+void Minigames::MiningMinigame::hotkeyTool(void* _scancode, void* _mod)
+{
+	// Do nothing if the game state is not minigame.
+	if (MainGame::Game::GetGameState() != MainGame::GameState::Minigame) { return; }
+
+	// Cast the scancode.
+	SDL_Scancode scancode = *static_cast<SDL_Scancode*>(_scancode);
+
+	// Get the events service.
+	Events::Events& events = MainGame::Game::GetService().GetEvents();
+
+	// Cheaper to switch on the given code rather than do any maths with it.
+	// Push a change tool event instead of manually changing the tool, so that the function can be reused and anything that's listening for the change tool event can also change.
+	switch (scancode)
+	{
+	case SDL_SCANCODE_1: { events.PushEvent(Events::UserEvent::ChangeTool, new uint8_t(0), NULL); break; }
+	case SDL_SCANCODE_2: { events.PushEvent(Events::UserEvent::ChangeTool, new uint8_t(1), NULL); break; }
+	case SDL_SCANCODE_3: { events.PushEvent(Events::UserEvent::ChangeTool, new uint8_t(2), NULL); break; }
+	}
 }
 
 /// <summary> Handles the player clicking on the wall to mine. </summary>
@@ -159,23 +186,32 @@ void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
 		}
 	}
 
+	// Push the mined event.
+	MainGame::Game::GetService().GetEvents().PushEvent(Events::UserEvent::MinedWall, new uint16_t(m_collapseTimer), new uint16_t(c_maxTimer));
+}
+
+/// <summary> Fires when the wall is mined. </summary>
+/// <param name="_collapseTimer"> The new value of the collapse timer. </param>
+/// <param name="_maxTimer"> The max value of the collapse timer. </param>
+void Minigames::MiningMinigame::mined(void* _collapseTimer, void* _maxTimer)
+{
 	// Get the events service.
 	Events::Events& events = MainGame::Game::GetService().GetEvents();
-
-	// Update the collapse timer bar.
-	m_collapseBar.SetValue(c_maxTimer - m_collapseTimer);
 
 	// Remove any uncovered gems and award them to the player.
 	std::vector<WallGem>::iterator gemIter = m_wallGems.begin();
 	while (gemIter != m_wallGems.end())
 	{
-		// TODO: Award gems to player.
-		if (gemIter->IsFullyUncovered(m_wallData)) { events.PushEvent(Events::UserEvent::MinedGem, new WallGem(*gemIter), NULL); gemIter = m_wallGems.erase(gemIter); }
+		if (gemIter->IsFullyUncovered(m_wallData)) 
+		{
+			events.PushEvent(Events::UserEvent::MinedGem, new WallGem(*gemIter), NULL);
+			gemIter = m_wallGems.erase(gemIter);
+		}
 		else { ++gemIter; }
 	}
 
 	// Collapse if collapse timer is 0.
-	if (m_collapseTimer == 0) { collapse(); }
+	if (m_collapseTimer == 0) { events.PushEvent(Events::UserEvent::StopMinigame, new Point(m_tilePosition), NULL); }
 }
 
 /// <summary> Places gems into the wall based on the given prosperity. </summary>
@@ -228,38 +264,6 @@ void Minigames::MiningMinigame::placeGems(const uint8_t _prosperity)
 		// Add the gem to the vector and reduce the remaining prosperity.
 		remainingProsperity = std::max(0, (int32_t)remainingProsperity - gem.GetValue());
 		m_wallGems.push_back(gem);
-	}
-}
-
-void Minigames::MiningMinigame::collapse()
-{
-	// Get the events service.
-	Events::Events& events = MainGame::Game::GetService().GetEvents();
-
-	// Disable the buttons.
-	for (int32_t i = 0; i < 3; i++) { m_toolButtons[i].SetActive(false); }
-
-	// Push the minigame end event.
-	events.PushEvent(Events::UserEvent::StopMinigame, new Point(m_tilePosition), NULL);
-}
-
-/// <summary> Sets up the GUI. </summary>
-void Minigames::MiningMinigame::initialiseGui()
-{
-	// Initialise the background UI.
-	m_bottomBar = UserInterface::Frame(Point(0, 480), Point(960, 60), SpriteData::UIID::MinigameBar);
-
-	// Initialise the collapse bar.
-	m_collapseBar = UserInterface::ProgressBar(Point(0, 512), Point(960, 28), SpriteData::UIID::WallTimer);
-	m_collapseBar.SetMax(c_maxTimer);
-	m_collapseBar.SetValue(0);
-
-	// Initialise the buttons.
-	for (int32_t i = 0; i < 3; i++)
-	{
-		m_toolButtons[i] = UserInterface::Button(Point(i * 32, 480), Point(32, 32), SpriteData::UIID::Pickaxe + i);
-		m_toolButtons[i].SetEvent(Events::UserEvent::ChangeTool, i);
-		m_toolButtons[i].Initialise();
 	}
 }
 

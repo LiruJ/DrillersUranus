@@ -26,5 +26,5 @@ void UserInterface::Button::handleClick(void* _windowX, void* _windowY)
 	Point windowPosition(*static_cast<int32_t*>(_windowX), *static_cast<int32_t*>(_windowY));
 
 	// Check if the mouse position is within the bounds of this button, if it is, push the event.
-	if (m_screenBounds.IsPointInside(screen.WindowToScreenSpace(windowPosition))) { events.PushEvent(m_eventID, new int32_t(m_data), NULL); }
+	if (m_bounds.IsPointInside(screen.WindowToScreenSpace(windowPosition))) { events.PushEvent(m_eventID, new int32_t(m_data), NULL); }
 }
