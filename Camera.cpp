@@ -31,6 +31,9 @@ void WorldObjects::Camera::Draw(World& _world)
 	{
 		for (int32_t y = std::max(0, m_worldPosition.y / SpriteData::c_tileSize); y < std::min((int32_t)tileMap.GetHeight(), ((m_worldPosition.y + m_worldSize.y) / SpriteData::c_tileSize) + 1); y++)
 		{
+			// If the tile is not visible, skip it.
+			if (!tileMap.GetTileAt(Point(x, y)).m_visibility) { continue; }
+
 			// Calculate the window position.
 			Point windowPosition = screen.ScreenToWindowSpace((Point(x, y) * SpriteData::c_tileSize) - m_worldPosition);
 
@@ -45,7 +48,7 @@ void WorldObjects::Camera::Draw(World& _world)
 
 	// Draw the spawn and exit points if they're on screen.
 	if (isOnScreen(_world.GetSpawn())) { _world.GetSpawn().Draw(m_worldPosition); }
-	if (isOnScreen(_world.GetExit())) { _world.GetExit().Draw(m_worldPosition); }
+	if (isOnScreen(_world.GetExit()) && tileMap.GetTileAt(_world.GetExit().GetTilePosition()).m_visibility) { _world.GetExit().Draw(m_worldPosition); }
 
 	// Draw the player.
 	_world.GetPlayer().Draw(m_worldPosition);

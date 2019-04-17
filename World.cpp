@@ -83,6 +83,9 @@ void WorldObjects::World::generateRandomMap()
 	// Set the remaining turns based on how far away the exit is.
 	uint32_t distance = abs(m_spawnPoint.GetTilePosition().x - m_exitPoint.GetTilePosition().x) + abs(m_spawnPoint.GetTilePosition().y - m_exitPoint.GetTilePosition().y);
 	m_turnsUntilCollapse = ceil(distance * (2.0f + Random::RandomScalar())) - (m_floorCount * Random::RandomBetween(1, 6));
+
+	// Uncover the seen tiles.
+	uncoverTiles();
 }
 
 /// <summary> Handles the player pressing a key to move. </summary>
@@ -171,6 +174,9 @@ void WorldObjects::World::handleMovement(const Directions _direction, const bool
 	// If the cell is clear and movement is wanted, move towards it, otherwise just face towards it.
 	if (!_noMovement && m_tileData.IsCellClearAndInRange(m_player.GetTilePosition() + desiredDirection.GetNormal())) { m_player.MoveInDirection(_direction); doTurn(); }
 	else { m_player.SetFacing(_direction); }
+
+	// Uncover the seen tiles.
+	uncoverTiles();
 }
 
 /// <summary> Handles the player swinging their pickaxe to mine the cell in front of them. </summary>
@@ -190,6 +196,9 @@ void WorldObjects::World::handleSwinging()
 		Events::Events& events = MainGame::Game::GetService().GetEvents();
 		events.PushEvent(Events::UserEvent::StartMinigame, new Point(minePosition), new uint8_t(m_tileData.GetTileAt(minePosition).m_prosperity));
 	}
+
+	// Uncover the seen tiles.
+	uncoverTiles();
 }
 
 /// <summary> Handles the player interacting with the object on which they are standing. </summary>
@@ -200,6 +209,35 @@ void WorldObjects::World::handleInteraction()
 	{
 		generateRandomMap();
 		m_floorCount++;
+	}
+}
+
+/// <summary> Discovers tiles in front of the player. </summary>
+void WorldObjects::World::uncoverTiles()
+{
+	// Get the start of the end points.
+	Point startPosition = (m_player.GetTilePosition() + (m_player.GetFacing().GetNormal() * m_player.GetSightDistance())) + (m_player.GetFacing().GetLeft().GetNormal() * m_player.GetSightDistance());
+
+	// Get the player's central position.
+	Vector2 playerPosition = Vector2(m_player.GetTilePosition().x + 0.5f, m_player.GetTilePosition().y + 0.5f);
+
+	// Repeat for all the end points.
+	for (uint8_t x = 0; x < 1 + m_player.GetSightDistance() * 2; x++)
+	{
+		// Calculate the end point of the line.
+		Point endPoint = startPosition + (m_player.GetFacing().GetRight().GetNormal() * x);
+
+		// Get the cells covered by the line.
+		std::vector<Point> lineOfSight = Point::getCoveredPoints(playerPosition, Vector2(endPoint.x + 0.5f, endPoint.y + 0.5f));
+
+		for (uint16_t p = 0; p < lineOfSight.size(); p++)
+		{
+			// Uncover the tile.
+			m_tileData.SetCellVisiblity(lineOfSight[p], true);
+
+			// If this cell blocks vision, break the line.
+			if (!m_tileData.IsCellClearAndInRange(lineOfSight[p])) { break; }
+		}
 	}
 }
 
@@ -216,4 +254,7 @@ void WorldObjects::World::stopMinigame(void* _tilePosition, void* _unused)
 
 	// Do a turn.
 	doTurn();
+
+	// Uncover the seen tiles.
+	uncoverTiles();
 }

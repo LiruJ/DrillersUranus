@@ -37,6 +37,7 @@
     <ClCompile Include="MinigameMenu.cpp" />
     <ClCompile Include="MiningMinigame.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Point.cpp" />
     <ClCompile Include="ProgressBar.cpp" />
     <ClCompile Include="SDLEvents.cpp" />
     <ClCompile Include="SDLGraphics.cpp" />

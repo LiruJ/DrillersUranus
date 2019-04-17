@@ -99,6 +99,8 @@ namespace WorldObjects
 
 		void handleInteraction();
 
+		void uncoverTiles();
+
 		void stopMinigame(void*, void*);
 
 		void doTurn();

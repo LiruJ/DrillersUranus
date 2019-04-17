@@ -1,6 +1,12 @@
 #ifndef POINT_H
 #define POINT_H
 
+// Data includes.
+#include "Vector2.h"
+
+// Utility includes.
+#include <vector>
+
 // Typedef includes.
 #include <stdint.h>
 #include <cmath>
@@ -36,6 +42,8 @@ struct Point
 	/// <param name="_xy"> The x and y value. </param>
 	/// <remarks> Defines behaviour for floats, otherwise multiple warnings are generated about data loss. </remarks>
 	Point(const float_t _xy) : x((int32_t)_xy), y((int32_t)_xy) {}
+
+	static std::vector<Point> getCoveredPoints(Vector2, Vector2);
 
 	bool operator==(const Point& _other)	const	{ return (x == _other.x && y == _other.y); }
 	bool operator!=(const Point& _other)	const	{ return (x != _other.x || y != _other.y); }
