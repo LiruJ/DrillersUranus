@@ -6,6 +6,10 @@
 #include "KeyboardControls.h"
 #include "LetterBoxScreen.h"
 
+// Utility includes.
+#include "SpriteData.h"
+#include "AudioData.h"
+
 /// <summary> Draws the game. </summary>
 void MainGame::Game::draw()
 {
@@ -52,6 +56,8 @@ MainGame::Game::Game()
 	initialiseGameObjects();
 
 	loadTextures();
+
+	loadSounds();
 }
 
 /// <summary> Creates and initialises each service. </summary>
@@ -69,6 +75,11 @@ void MainGame::Game::initialiseServices()
 	m_SDLGraphics = new Graphics::SDLGraphics();
 	m_SDLGraphics->Initialise(960, 540, *logger);
 	s_serviceProvider.SetGraphics(*m_SDLGraphics);
+
+	// Initialise and add the audio.
+	m_SDLAudio = new Audio::SDLAudio();
+	m_SDLAudio->Initialise(*logger);
+	s_serviceProvider.SetAudio(*m_SDLAudio);
 
 	// Initialise and add the controls.
 	Controls::KeyboardControls* keyboardControls = new Controls::KeyboardControls();
@@ -120,6 +131,7 @@ void MainGame::Game::loadTextures()
 	m_SDLGraphics->LoadSheetToID(c_contentFolder + '\\' + "Tiles.png", SpriteData::SheetID::Tiles, SpriteData::c_tileSize);
 	m_SDLGraphics->LoadSheetToID(c_contentFolder + '\\' + "MapObjects.png", SpriteData::SheetID::Objects, SpriteData::c_tileSize);
 	m_SDLGraphics->LoadSheetToID(c_contentFolder + '\\' + "CaveWalls.png", SpriteData::SheetID::MineWalls, SpriteData::c_wallSize);
+	m_SDLGraphics->LoadSheetToID(c_contentFolder + '\\' + "MinimapIcons.png", SpriteData::SheetID::Minimap, 1);
 
 	// Load the UI elements.
 	m_SDLGraphics->LoadSheetToID(c_contentFolder + '\\' + "UI.png", SpriteData::SheetID::UI, std::vector<Rectangle>
@@ -157,6 +169,47 @@ void MainGame::Game::loadTextures()
 	// Load the fonts.
 	m_SDLGraphics->LoadFontToID(c_contentFolder + '\\' + "Immortal.ttf", SpriteData::FontID::Menu, 28);
 	m_SDLGraphics->LoadFontToID(c_contentFolder + '\\' + "trebuc.ttf", SpriteData::FontID::SmallDetail, 20);
+}
+
+/// <summary> Loads all required audio files. </summary>
+void MainGame::Game::loadSounds()
+{
+	m_SDLAudio->LoadSoundToID(AudioData::SoundID::Collapse, c_contentFolder + '\\' + "Collapse.wav");
+	m_SDLAudio->LoadSoundToID(AudioData::SoundID::GemWallCollapse, c_contentFolder + '\\' + "GemWallCollapse.wav");
+	m_SDLAudio->LoadSoundToID(AudioData::SoundID::GetGem, c_contentFolder + '\\' + "GetGem.wav");
+	m_SDLAudio->LoadSoundToID(AudioData::SoundID::HitGem, c_contentFolder + '\\' + "GemHit.wav");
+	m_SDLAudio->LoadSoundToID(AudioData::SoundID::PlayerCrushed, c_contentFolder + '\\' + "PlayerCrushed.wav");
+	m_SDLAudio->LoadSoundToID(AudioData::SoundID::UseExit, c_contentFolder + '\\' + "UseExit.wav");
+	m_SDLAudio->LoadSoundToID(AudioData::SoundID::UIClick, c_contentFolder + '\\' + "UIClick.wav");
+
+	// Load the step sounds.
+	m_SDLAudio->LoadSoundVariantsToID(AudioData::VariedSoundID::Step, std::vector<std::string>
+	{
+		c_contentFolder + '\\' + "Step1.wav",
+		c_contentFolder + '\\' + "Step2.wav",
+		c_contentFolder + '\\' + "Step3.wav",
+		c_contentFolder + '\\' + "Step4.wav",
+		c_contentFolder + '\\' + "Step5.wav",
+		c_contentFolder + '\\' + "Step6.wav",
+	});
+
+	// Load the hit sounds.
+	m_SDLAudio->LoadSoundVariantsToID(AudioData::VariedSoundID::Hit, std::vector<std::string>
+	{
+		c_contentFolder + '\\' + "Hit1.wav",
+		c_contentFolder + '\\' + "Hit2.wav",
+		c_contentFolder + '\\' + "Hit3.wav",
+		c_contentFolder + '\\' + "Hit4.wav",
+	});
+
+	// Load the smash sounds.
+	m_SDLAudio->LoadSoundVariantsToID(AudioData::VariedSoundID::Smash, std::vector<std::string>
+	{
+		c_contentFolder + '\\' + "Smash1.wav",
+		c_contentFolder + '\\' + "Smash2.wav",
+		c_contentFolder + '\\' + "Smash3.wav",
+		c_contentFolder + '\\' + "Smash4.wav",
+	});
 }
 
 /// <summary> Starts the mining minigame. </summary>

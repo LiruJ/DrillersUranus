@@ -7,6 +7,7 @@
 #include "Controls.h"
 #include "Screen.h"
 #include "Events.h"
+#include "Audio.h"
 
 /// <summary> Represents a service provider only allowing services to be gotten but not set. </summary>
 class Services
@@ -33,5 +34,9 @@ public:
 	/// <summary> Gets the events. </summary>
 	/// <returns> The events. </returns>
 	virtual Events::Events&		GetEvents() = 0;
+
+	/// <summary> Gets the audio. </summary>
+	/// <returns> The audio. </returns>
+	virtual Audio::Audio&		GetAudio() = 0;
 };
 #endif

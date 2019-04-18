@@ -2,6 +2,7 @@
 
 // Utility includes.
 #include "Random.h"
+#include "AudioData.h"
 
 // Service includes.
 #include "Events.h"
@@ -80,9 +81,8 @@ void WorldObjects::World::generateRandomMap()
 	// Move the player to the spawn.
 	m_player.SetTilePosition(m_spawnPoint.GetTilePosition());
 
-	// Set the remaining turns based on how far away the exit is.
-	uint32_t distance = abs(m_spawnPoint.GetTilePosition().x - m_exitPoint.GetTilePosition().x) + abs(m_spawnPoint.GetTilePosition().y - m_exitPoint.GetTilePosition().y);
-	m_turnsUntilCollapse = ceil(distance * (2.0f + Random::RandomScalar())) - (m_floorCount * Random::RandomBetween(1, 6));
+	// Set the remaining turns.
+	m_turnsUntilCollapse = std::max(ceil((m_tileData.GetWidth() + m_tileData.GetHeight()) * 1.5f), ceil((m_tileData.GetWidth() + m_tileData.GetHeight()) * 3.0f) - (m_floorCount * 5.0f));
 
 	// Uncover the seen tiles.
 	uncoverTiles();
@@ -124,20 +124,25 @@ void WorldObjects::World::handleKeyDown(void* _scancode, void* _mod)
 }
 
 /// <summary> Handle turn-based logic. </summary>
-void WorldObjects::World::doTurn()
+/// <param name="_amount"> The amount of turns to do, defaults to <c>1</c>. </param>
+void WorldObjects::World::doTurn(const uint8_t _amount = 1)
 {
-	// Decrement the counter.
-	m_turnsUntilCollapse = std::max(0, m_turnsUntilCollapse - 1);
+	// Repeat for the amount of needed turns.
+	for (uint8_t i = 0; i < _amount; i++)
+	{
+		// Decrement the counter.
+		m_turnsUntilCollapse = std::max(0, m_turnsUntilCollapse - 1);
 
-	// If the counter is at 0, collapse a bit.
-	if (m_turnsUntilCollapse == 0) { collapse(); }
+		// If the counter is at 0, collapse a bit.
+		if (m_turnsUntilCollapse == 0) { collapse(); }
+	}
 }
 
 /// <summary> Causes some tiles to cave in. </summary>
 void WorldObjects::World::collapse()
 {
 	// How many tiles have to be caved in.
-	uint8_t tilesToCollapse = Random::RandomBetween(12, 30);
+	uint8_t tilesToCollapse = Random::RandomBetween(18, 40);
 
 	// How many attempts to cave a tile in have been made.
 	uint32_t collapseAttempts = 0;
@@ -156,11 +161,17 @@ void WorldObjects::World::collapse()
 			collapseAttempts = 0;
 
 			// If the player was crushed by this tile, send the end game event.
-			if (position == m_player.GetTilePosition()) { MainGame::Game::GetService().GetEvents().PushEvent(Events::UserEvent::PlayerDied, NULL, NULL); }
+			if (position == m_player.GetTilePosition()) 
+			{ 
+				MainGame::Game::GetService().GetEvents().PushEvent(Events::UserEvent::PlayerDied, NULL, NULL);
+				MainGame::Game::GetService().GetAudio().PlaySound(AudioData::SoundID::PlayerCrushed);
+			}
 		}
 		else { ++collapseAttempts; }
 	}
 
+	// Play the collapse sound.
+	MainGame::Game::GetService().GetAudio().PlaySound(AudioData::SoundID::Collapse);
 }
 
 /// <summary> Handles player movement. </summary>
@@ -172,7 +183,12 @@ void WorldObjects::World::handleMovement(const Directions _direction, const bool
 	Direction desiredDirection = Direction(_direction);
 
 	// If the cell is clear and movement is wanted, move towards it, otherwise just face towards it.
-	if (!_noMovement && m_tileData.IsCellClearAndInRange(m_player.GetTilePosition() + desiredDirection.GetNormal())) { m_player.MoveInDirection(_direction); doTurn(); }
+	if (!_noMovement && m_tileData.IsCellClearAndInRange(m_player.GetTilePosition() + desiredDirection.GetNormal())) 
+	{
+		m_player.MoveInDirection(_direction);
+		doTurn();
+		MainGame::Game::GetService().GetAudio().PlayRandomSound(AudioData::VariedSoundID::Step);
+	}
 	else { m_player.SetFacing(_direction); }
 
 	// Uncover the seen tiles.
@@ -186,10 +202,15 @@ void WorldObjects::World::handleSwinging()
 	Point minePosition = m_player.GetTilePosition() + m_player.GetFacing().GetNormal();
 
 	// If the cell is empty or outside of the playable area, do nothing.
-	if (m_tileData.IsCellClear(minePosition) || !m_tileData.IsCellInPlayableArea(minePosition)) { return; }
+	if (!m_tileData.IsCellInPlayableArea(minePosition) || m_tileData.IsCellClear(minePosition)) { return; }
 
 	// If the cell has no prosperity, destroy it and do a turn, otherwise put the minigame start event onto the event bus.
-	if (m_tileData.GetTileAt(minePosition).m_prosperity == 0) { m_tileData.FillCellWithRandomFloor(minePosition); doTurn(); }
+	if (m_tileData.GetTileAt(minePosition).m_prosperity == 0) 
+	{
+		m_tileData.FillCellWithRandomFloor(minePosition); 
+		doTurn(2);
+		MainGame::Game::GetService().GetAudio().PlayRandomSound(AudioData::VariedSoundID::Hit);
+	}
 	else
 	{
 		// Get the events service then push the event.
@@ -207,6 +228,7 @@ void WorldObjects::World::handleInteraction()
 	// If the player is standing on the exit point, take them to a new floor.
 	if (m_player.GetTilePosition() == m_exitPoint.GetTilePosition()) 
 	{
+		MainGame::Game::GetService().GetAudio().PlaySound(AudioData::SoundID::UseExit);
 		generateRandomMap();
 		m_floorCount++;
 	}
@@ -252,8 +274,11 @@ void WorldObjects::World::stopMinigame(void* _tilePosition, void* _unused)
 	// Since the minigame has ended, the cave wall has collapsed, meaning the wall should be destroyed.
 	m_tileData.FillCellWithRandomFloor(tilePosition);
 
-	// Do a turn.
-	doTurn();
+	// Play the gem wall collapse sound.
+	MainGame::Game::GetService().GetAudio().PlaySound(AudioData::SoundID::GemWallCollapse);
+
+	// Do turns.
+	doTurn(10);
 
 	// Uncover the seen tiles.
 	uncoverTiles();

@@ -10,43 +10,51 @@ class ServiceProvider : public Services
 public:
 	/// <summary> Gets the logger. </summary>
 	/// <returns> The logger. </returns>
-	virtual inline Logging::Logger&										GetLogger()														{ return *m_logger; }
+	inline virtual Logging::Logger&		GetLogger()									{ return *m_logger; }
 	
 	/// <summary> Sets the logger. </summary>
 	/// <param name="_logger"> The logger. </param>
-	inline void															SetLogger(Logging::Logger& _logger)								{ m_logger = &_logger; }
+	inline void							SetLogger(Logging::Logger& _logger)			{ m_logger = &_logger; }
 
 	/// <summary> Gets the graphics. </summary>
 	/// <returns> The graphics. </returns>
-	virtual inline Graphics::Graphics&									GetGraphics()													{ return *m_graphics; }
+	inline virtual Graphics::Graphics&	GetGraphics()								{ return *m_graphics; }
 	
 	/// <summary> Sets the graphics. </summary>
 	/// <param name="_graphics"> The graphics. </param>
-	inline void															SetGraphics(Graphics::Graphics& _graphics)						{ m_graphics = &_graphics; }
+	inline void							SetGraphics(Graphics::Graphics& _graphics)	{ m_graphics = &_graphics; }
 
 	/// <summary> Gets the controls. </summary>
 	/// <returns> The controls. </returns>
-	virtual inline Controls::Controls&									GetControls()													{ return *m_controls; }
+	inline virtual Controls::Controls&	GetControls()								{ return *m_controls; }
 	
 	/// <summary> Sets the controls. </summary>
 	/// <param name="_controls"> The controls. </param>
-	inline void															SetControls(Controls::Controls& _controls)						{ m_controls = &_controls; }
+	inline void							SetControls(Controls::Controls& _controls)	{ m_controls = &_controls; }
 
 	/// <summary> Gets the screen. </summary>
 	/// <returns> The screen. </returns>
-	virtual inline Screens::Screen&										GetScreen()														{ return *m_screen; }
+	inline virtual Screens::Screen&		GetScreen()									{ return *m_screen; }
 	
 	/// <summary> Sets the screen. </summary>
 	/// <param name="_screen"> The screen. </param>
-	inline void															SetScreen(Screens::Screen& _screen)								{ m_screen = &_screen; }
+	inline void							SetScreen(Screens::Screen& _screen)			{ m_screen = &_screen; }
 
 	/// <summary> Gets the events. </summary>
 	/// <returns> The events. </returns>
-	virtual inline Events::Events&										GetEvents()														{ return *m_events; }
+	inline virtual Events::Events&		GetEvents()									{ return *m_events; }
 	
 	/// <summary> Sets the events. </summary>
 	/// <param name="_events"> The events. </param>
-	inline void															SetEvents(Events::Events& _events)								{ m_events = &_events; }
+	inline void							SetEvents(Events::Events& _events)			{ m_events = &_events; }
+
+	/// <summary> Gets the audio. </summary>
+	/// <returns> The audio. </returns>
+	inline virtual Audio::Audio&		GetAudio()									{ return *m_audio; }
+
+	/// <summary> Sets the audio. </summary>
+	/// <param name="_audio"> The audio. </param>
+	inline void							SetAudio(Audio::Audio& _audio)				{ m_audio = &_audio; }
 private:
 	/// <summary> The service used for logging game data. </summary>
 	Logging::Logger*	m_logger;
@@ -62,5 +70,8 @@ private:
 
 	/// <summary> The service used for pushing events onto the event bus. </summary>
 	Events::Events*		m_events;
+
+	/// <summary> The service used to play audio. </summary>
+	Audio::Audio*		m_audio;
 };
 #endif

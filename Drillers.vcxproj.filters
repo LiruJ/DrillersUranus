@@ -76,6 +76,12 @@
     <Filter Include="Source Files\Inventory">
       <UniqueIdentifier>{be059a9d-02ab-4856-96a2-eafc5e5c8a41}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Structures">
+      <UniqueIdentifier>{74253e56-35fb-4942-9240-b629c406922a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Services\Audio">
+      <UniqueIdentifier>{8fa19f6e-cc80-4a63-aaf8-8111eb63bb0f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -153,7 +159,13 @@
     <ClCompile Include="MinigameMenu.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Minimap.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
     <ClCompile Include="Point.cpp">
+      <Filter>Source Files\Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="SDLAudio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -292,6 +304,18 @@
     </ClInclude>
     <ClInclude Include="MinigameMenu.h">
       <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Minimap.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio.h">
+      <Filter>Header Files\Services\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="SDLAudio.h">
+      <Filter>Header Files\Services\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioData.h">
+      <Filter>Header Files\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -35,10 +35,12 @@
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="MapObject.cpp" />
     <ClCompile Include="MinigameMenu.cpp" />
+    <ClCompile Include="Minimap.cpp" />
     <ClCompile Include="MiningMinigame.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="ProgressBar.cpp" />
+    <ClCompile Include="SDLAudio.cpp" />
     <ClCompile Include="SDLEvents.cpp" />
     <ClCompile Include="SDLGraphics.cpp" />
     <ClCompile Include="TileMap.cpp" />
@@ -47,6 +49,8 @@
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Audio.h" />
+    <ClInclude Include="AudioData.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Colour.h" />
     <ClInclude Include="Events.h" />
@@ -72,6 +76,7 @@
     <ClInclude Include="MapGenerator.h" />
     <ClInclude Include="MapObject.h" />
     <ClInclude Include="MinigameMenu.h" />
+    <ClInclude Include="Minimap.h" />
     <ClInclude Include="MiningMinigame.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Point.h" />
@@ -80,6 +85,7 @@
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Screen.h" />
+    <ClInclude Include="SDLAudio.h" />
     <ClInclude Include="SDLEvents.h" />
     <ClInclude Include="SDLGraphics.h" />
     <ClInclude Include="ServiceProvider.h" />
@@ -173,7 +179,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)SDKs\SDL2_image\lib\x86;$(SolutionDir)SDKs\SDL\lib\x86;$(SolutionDir)SDKs\SDL2_ttf\lib\x86;$(SolutionDir)SDKs\SDL2_mixer\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -198,11 +204,19 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)SDKs\SDL\include;$(SolutionDir)SDKs\SDL2_image\include;$(SolutionDir)SDKs\SDL2_ttf\include;$(SolutionDir)SDKs\SDL2_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)SDKs\SDL2_image\lib\x86;$(SolutionDir)SDKs\SDL\lib\x86;$(SolutionDir)SDKs\SDL2_ttf\lib\x86;$(SolutionDir)SDKs\SDL2_mixer\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
     </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

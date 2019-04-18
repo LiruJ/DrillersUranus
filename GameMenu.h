@@ -7,6 +7,7 @@
 // UI includes.
 #include "Frame.h"
 #include "Button.h"
+#include "Minimap.h"
 
 // Forward declaration.
 namespace WorldObjects { class World; }
@@ -39,6 +40,9 @@ namespace UserInterface
 		/// <summary> The end screen that shows when the player dies. </summary>
 		Frame		m_endScreen;
 		
+		/// <summary> The minimap. </summary>
+		Minimap		m_minimap;
+
 		void setActive(bool);
 
 		/// <summary> Hides this menu. </summary>

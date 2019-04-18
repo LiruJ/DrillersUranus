@@ -8,6 +8,7 @@
 //Service includes.
 #include "ServiceProvider.h"
 #include "SDLGraphics.h"
+#include "SDLAudio.h"
 #include "SDLEvents.h"
 #include "LetterBoxScreen.h"
 
@@ -50,6 +51,9 @@ namespace MainGame
 		/// <summary> The graphical service which allows for textures to be loaded. </summary>
 		Graphics::SDLGraphics*		m_SDLGraphics;
 
+		/// <summary> The audio service which allows for sounds to be loaded. </summary>
+		Audio::SDLAudio*			m_SDLAudio;
+
 		/// <summary> The screen service which allows for resizing. </summary>
 		Screens::LetterBoxScreen*	m_letterBoxScreen;
 
@@ -76,6 +80,8 @@ namespace MainGame
 		void initialiseGameObjects();
 
 		void loadTextures();
+
+		void loadSounds();
 
 		void startMinigame(void*, void*);
 

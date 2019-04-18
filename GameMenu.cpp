@@ -20,6 +20,9 @@ void UserInterface::GameMenu::Initialise()
 	m_quitButton = UserInterface::Button(Point(384, 286), Point(128, 32), SpriteData::UIID::MenuButton);
 	hideDeathScreen();
 
+	// Initialise the minimap.
+	m_minimap = Minimap(Rectangle(832, 32, 128, 128));
+
 	// Get the event service.
 	Events::Events& events = MainGame::Game::GetService().GetEvents();
 
@@ -63,7 +66,10 @@ void UserInterface::GameMenu::Draw(WorldObjects::World& _world)
 	graphics.DrawString(SpriteData::FontID::SmallDetail,
 		std::to_string(_world.GetCollapseTime()),
 		screen.ScreenToWindowSpace(Point(868, 451)),
-		{ (uint8_t)std::max(255 - _world.GetCollapseTime(), 0), (uint8_t)_world.GetCollapseTime(), (uint8_t)_world.GetCollapseTime(), 255 });
+		{ 255, 128, 128, 255 });
+
+	// Draw the minimap.
+	m_minimap.Draw(_world);
 
 	// Draw the death screen.
 	m_endScreen.Draw();

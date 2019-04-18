@@ -39,10 +39,10 @@ void WorldObjects::Camera::Draw(World& _world)
 
 			// Calculate the sprite ID by the prosperity.
 			uint16_t spriteID = tileMap.GetTileAt(Point(x, y)).m_ID;
-			if (tileMap.GetTileAt(Point(x, y)).m_prosperity > 0) { spriteID = SpriteData::LowGems + (tileMap.GetTileAt(Point(x, y)).m_prosperity / 64); }
+			if (tileMap.GetTileAt(Point(x, y)).m_prosperity > 0) { spriteID = SpriteData::TileID::LowGems + (tileMap.GetTileAt(Point(x, y)).m_prosperity / 64); }
 
 			// Draw the tile.
-			graphics.Draw(SpriteData::Tiles, spriteID, Rectangle(windowPosition, screen.ScreenToWindowSize(SpriteData::c_tileSize)));
+			graphics.Draw(SpriteData::SheetID::Tiles, spriteID, Rectangle(windowPosition, screen.ScreenToWindowSize(SpriteData::c_tileSize)));
 		}
 	}
 

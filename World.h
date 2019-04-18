@@ -103,7 +103,7 @@ namespace WorldObjects
 
 		void stopMinigame(void*, void*);
 
-		void doTurn();
+		void doTurn(uint8_t);
 
 		void collapse();
 	};

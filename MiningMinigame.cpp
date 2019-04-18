@@ -14,6 +14,7 @@
 
 // Utility includes.
 #include "Random.h"
+#include "AudioData.h"
 
 /// <summary> Sets up event bindings and the UI. </summary>
 void Minigames::MiningMinigame::Initialise()
@@ -88,6 +89,9 @@ void Minigames::MiningMinigame::Prepare(const Point _tilePosition, const uint8_t
 
 	// Place the gems.
 	placeGems(_prosperity);
+
+	// Reset the collapse timer.
+	m_collapseTimer = c_maxTimer;
 }
 
 /// <summary> Changes the current tool to the given value. </summary>
@@ -143,6 +147,9 @@ void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
 	// If the tile position is not in range, do nothing.
 	if (!m_wallData.IsInRange(tilePosition)) { return; }
 
+	// Store if a gem was hit.
+	bool didHitGem = false;
+
 	// Get the size and damage of the current tool.
 	uint8_t currentToolSize = s_tools[m_currentToolID].m_size;
 	uint8_t currentToolDamage = s_tools[m_currentToolID].m_power;
@@ -173,7 +180,10 @@ void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
 			if (hitGem != NULL)
 			{
 				// Subtract a set amount from the timer.
-				m_collapseTimer = std::max(0, m_collapseTimer - 7);
+				m_collapseTimer = std::max(0, m_collapseTimer - 15);
+
+				// A gem was hit, so keep track of it.
+				didHitGem = true;
 			}
 			else
 			{
@@ -185,6 +195,10 @@ void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
 			}
 		}
 	}
+
+	// Play a sound based on if a gem was hit.
+	if(didHitGem) { MainGame::Game::GetService().GetAudio().PlaySound(AudioData::SoundID::HitGem); }
+	else { MainGame::Game::GetService().GetAudio().PlayRandomSound(AudioData::VariedSoundID::Smash); }
 
 	// Push the mined event.
 	MainGame::Game::GetService().GetEvents().PushEvent(Events::UserEvent::MinedWall, new uint16_t(m_collapseTimer), new uint16_t(c_maxTimer));
@@ -205,6 +219,7 @@ void Minigames::MiningMinigame::mined(void* _collapseTimer, void* _maxTimer)
 		if (gemIter->IsFullyUncovered(m_wallData)) 
 		{
 			events.PushEvent(Events::UserEvent::MinedGem, new WallGem(*gemIter), NULL);
+			MainGame::Game::GetService().GetAudio().PlaySound(AudioData::SoundID::GetGem);
 			gemIter = m_wallGems.erase(gemIter);
 		}
 		else { ++gemIter; }
