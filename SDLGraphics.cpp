@@ -51,6 +51,37 @@ void Graphics::SDLGraphics::Initialise(const int32_t _width, const int32_t _heig
 	// Allow the user to resize the window.
 	SDL_SetWindowResizable(m_window, SDL_TRUE);
 }
+/// <summary> Unloads all textures and destroys the window. </summary>
+void Graphics::SDLGraphics::Unload()
+{
+	// Unload textures.
+	for (uint16_t i = 0; i < m_sheets.size(); i++)
+	{
+		for (uint16_t j = 0; j < m_sheets[i].size(); j++)
+		{
+			SDL_DestroyTexture(m_sheets[i][j]);
+			m_sheets[i][j] = NULL;
+		}
+	}
+
+	// Unload fonts.
+	for (uint16_t i = 0; i < m_fonts.size(); i++)
+	{
+		TTF_CloseFont(m_fonts[i]);
+		m_fonts[i] = NULL;
+	}
+
+	// Destroy the window.
+	SDL_DestroyRenderer(m_renderer);
+	SDL_DestroyWindow(m_window);
+	m_renderer = NULL;
+	m_window = NULL;
+
+	// Quit each system.
+	TTF_Quit();
+	IMG_Quit();
+	SDL_Quit();
+}
 
 /// <summary> Clears the screen with the given colour. </summary>
 /// <param name="_colour"> The colour to which to clear. </param>

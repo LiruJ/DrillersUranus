@@ -6,6 +6,7 @@
 
 namespace WorldObjects
 {
+	/// <summary> Represents a tile on the map. </summary>
 	struct Tile
 	{
 		/// <summary> The ID. </summary>

@@ -14,6 +14,7 @@
 
 // Utility includes.
 #include <string>
+#include "AudioData.h"
 
 // UI includes.
 #include "MainMenu.h"
@@ -82,6 +83,8 @@ namespace MainGame
 		void loadTextures();
 
 		void loadSounds();
+
+		void unload();
 
 		void startMinigame(void*, void*);
 

@@ -8,7 +8,6 @@
 
 // Utility includes.
 #include "SpriteData.h"
-#include "AudioData.h"
 
 /// <summary> Draws the game. </summary>
 void MainGame::Game::draw()
@@ -41,6 +40,9 @@ void MainGame::Game::update()
 {
 	// Pump the events service.
 	m_events->PumpEvents();
+
+	// Play random music if none is playing.
+	if (!GetService().GetAudio().IsSongPlaying()) { GetService().GetAudio().PlayRandomSong(); }
 
 	// Update the world.
 	m_world.Update();
@@ -182,6 +184,10 @@ void MainGame::Game::loadSounds()
 	m_SDLAudio->LoadSoundToID(AudioData::SoundID::UseExit, c_contentFolder + '\\' + "UseExit.wav");
 	m_SDLAudio->LoadSoundToID(AudioData::SoundID::UIClick, c_contentFolder + '\\' + "UIClick.wav");
 
+	// Load the music.
+	m_SDLAudio->LoadSongToID(AudioData::SongID::Main, c_contentFolder + '\\' + "Music1.wav");
+	m_SDLAudio->LoadSongToID(AudioData::SongID::Cave, c_contentFolder + '\\' + "Music2.wav");
+
 	// Load the step sounds.
 	m_SDLAudio->LoadSoundVariantsToID(AudioData::VariedSoundID::Step, std::vector<std::string>
 	{
@@ -210,6 +216,13 @@ void MainGame::Game::loadSounds()
 		c_contentFolder + '\\' + "Smash3.wav",
 		c_contentFolder + '\\' + "Smash4.wav",
 	});
+}
+
+/// <summary> Unloads and destroys anything SDL related. </summary>
+void MainGame::Game::unload()
+{
+	m_SDLAudio->Unload();
+	m_SDLGraphics->Unload();
 }
 
 /// <summary> Starts the mining minigame. </summary>
@@ -242,8 +255,6 @@ void MainGame::Game::loseGame(void* _unused, void* _unused2)
 {
 	// Set the current game state to lost.
 	s_currentGameState = GameState::Lost;
-
-	// TODO: Bind the game end to display the game over screen, which then leads to the main menu.
 }
 
 /// <summary> Starts the game. </summary>
@@ -272,6 +283,9 @@ int32_t MainGame::Game::Run()
 		// Wait based on the fps.
 		SDL_Delay((uint32_t)(1000.0f / (float_t)m_SDLGraphics->m_framesPerSecond));
 	}
+
+	// Unload before quitting.
+	unload();
 
 	// Return 0 to say the game ran successfully.
 	return 0;

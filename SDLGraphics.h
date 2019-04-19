@@ -31,6 +31,8 @@ namespace Graphics
 
 		void Initialise(int32_t, int32_t, Logging::Logger&);
 		
+		void Unload();
+
 		virtual void Clear(Colour);
 
 		virtual void Present();

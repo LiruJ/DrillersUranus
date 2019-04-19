@@ -10,6 +10,6 @@ namespace AudioData
 	enum VariedSoundID { Step, Hit, Smash };
 
 	/// <summary> The music. </summary>
-	enum SongID { Menu };
+	enum SongID { Main, Cave };
 }
 #endif
