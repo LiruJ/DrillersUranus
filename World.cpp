@@ -166,6 +166,9 @@ void WorldObjects::World::collapse()
 
 	// Play the collapse sound.
 	MainGame::Game::GetService().GetAudio().PlaySound(AudioData::SoundID::Collapse);
+
+	// Shake the screen a lot.
+	MainGame::Game::GetService().GetScreen().ShakeScreen(75);
 }
 
 /// <summary> Handles player movement. </summary>
@@ -203,8 +206,15 @@ void WorldObjects::World::handleSwinging()
 	{
 		m_tileData.FillCellWithRandomFloor(minePosition); 
 		doTurn(2);
+
+		// Play the sound.
 		MainGame::Game::GetService().GetAudio().PlayRandomSound(AudioData::VariedSoundID::Hit);
+
+		// Create particles.
 		MainGame::Game::GetService().GetParticles().AddParticles(minePosition * SpriteData::c_tileSize, 50, SpriteData::ParticleID::WallStart, SpriteData::ParticleID::WallEnd);
+
+		// Shake the screen a bit.
+		MainGame::Game::GetService().GetScreen().ShakeScreen(10);
 	}
 	else
 	{
@@ -271,6 +281,9 @@ void WorldObjects::World::stopMinigame(void* _tilePosition, void* _unused)
 
 	// Play the gem wall collapse sound.
 	MainGame::Game::GetService().GetAudio().PlaySound(AudioData::SoundID::GemWallCollapse);
+
+	// Create particles.
+	MainGame::Game::GetService().GetParticles().AddParticles(tilePosition * SpriteData::c_tileSize, 50, SpriteData::ParticleID::WallStart, SpriteData::ParticleID::WallEnd);
 
 	// Do turns.
 	doTurn(10);

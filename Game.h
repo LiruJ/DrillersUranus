@@ -110,8 +110,7 @@ namespace MainGame
 
 		void startGame(void*, void*);
 	
-		/// <summary> Goes back to the main menu. </summary>
-		void endGame(void*, void*) { s_currentGameState = GameState::MainMenu; }
+		void endGame(void*, void*);
 	};
 }
 #endif

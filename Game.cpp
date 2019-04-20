@@ -49,6 +49,9 @@ void MainGame::Game::update()
 
 	// Update the particles.
 	m_particles->Update(*m_gameTime);
+
+	// Update the screen.
+	m_letterBoxScreen->Update(*m_gameTime);
 }
 
 /// <summary> Creates and initialises the game. </summary>
@@ -253,6 +256,9 @@ void MainGame::Game::startMinigame(void* _tilePosition, void* _tileProsperity)
 
 	// Kill particles.
 	m_particles->KillAllAlive();
+
+	// Stop shaking.
+	MainGame::Game::GetService().GetScreen().ShakeScreen(0);
 }
 
 /// <summary> Stops the mining minigame. </summary>
@@ -265,6 +271,9 @@ void MainGame::Game::stopMinigame(void* _tilePosition, void* _unused)
 
 	// Kill particles.
 	m_particles->KillAllAlive();
+
+	// Stop shaking.
+	MainGame::Game::GetService().GetScreen().ShakeScreen(0);
 }
 
 /// <summary> Fires when the player is crushed or otherwise dies, shows the game over screen until they choose to go back. </summary>
@@ -287,6 +296,16 @@ void MainGame::Game::startGame(void*, void*)
 
 	// Set the game state to ingame.
 	s_currentGameState = GameState::Map;
+}
+
+/// <summary> Goes back to the main menu. </summary>
+void MainGame::Game::endGame(void *, void *)
+{
+	// Set the game state to menu.
+	s_currentGameState = GameState::MainMenu;
+
+	// Stop shaking.
+	MainGame::Game::GetService().GetScreen().ShakeScreen(0);
 }
 
 /// <summary> Runs the game, starting the update and draw loop. </summary>

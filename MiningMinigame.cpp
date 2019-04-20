@@ -203,6 +203,9 @@ void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
 	if(didHitGem) { MainGame::Game::GetService().GetAudio().PlaySound(AudioData::SoundID::HitGem); }
 	else { MainGame::Game::GetService().GetAudio().PlayRandomSound(AudioData::VariedSoundID::Smash); }
 
+	// Shake the screen based on how close the wall is to collapsing.
+	MainGame::Game::GetService().GetScreen().ShakeScreen((1.0f - ((float_t)m_collapseTimer / c_maxTimer)) * 50);
+
 	// Push the mined event.
 	MainGame::Game::GetService().GetEvents().PushEvent(Events::UserEvent::MinedWall, new uint16_t(m_collapseTimer), new uint16_t(c_maxTimer));
 }

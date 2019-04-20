@@ -59,6 +59,10 @@ namespace Screens
 		/// <summary> Gets the scale. </summary>
 		/// <returns> The scale. </returns>
 		virtual float_t		GetScale() = 0;
+
+		/// <summary> Shakes the screen with the given strength in pixels. </summary>
+		/// <param name="_strength"> The maximum amount in pixels that the screen will move. </param>
+		virtual void		ShakeScreen(uint16_t _strength) = 0;
 	};
 }
 #endif
