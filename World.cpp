@@ -23,12 +23,6 @@ void WorldObjects::World::Draw()
 	m_camera.Draw(*this);
 }
 
-/// <summary> Updates this <see cref="World"/>. </summary>
-void WorldObjects::World::Update()
-{
-
-}
-
 /// <summary> Binds this <see cref="World"/> to certain events. </summary>
 void WorldObjects::World::Initialise()
 {
@@ -210,6 +204,7 @@ void WorldObjects::World::handleSwinging()
 		m_tileData.FillCellWithRandomFloor(minePosition); 
 		doTurn(2);
 		MainGame::Game::GetService().GetAudio().PlayRandomSound(AudioData::VariedSoundID::Hit);
+		MainGame::Game::GetService().GetParticles().AddParticles(minePosition * SpriteData::c_tileSize, 50, SpriteData::ParticleID::WallStart, SpriteData::ParticleID::WallEnd);
 	}
 	else
 	{

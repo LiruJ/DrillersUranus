@@ -41,6 +41,8 @@ namespace Graphics
 
 		virtual void Draw(uint16_t, uint16_t, float_t, Point);
 
+		virtual void Draw(uint16_t, uint16_t, Point, float_t, float_t);
+
 		virtual void Draw(uint16_t, uint16_t, Point, float_t);
 
 		virtual void Draw(uint16_t, uint16_t, Rectangle);

@@ -26,8 +26,8 @@ void MainGame::Game::draw()
 	{
 	case MainMenu: { m_mainMenu.Draw(); break; }
 	case Lost:
-	case Map: { m_world.Draw(); break; }
-	case Minigame: { m_miningMinigame.Draw(); break; }
+	case Map: { m_world.Draw(); m_particles->Draw(*m_SDLGraphics, *m_letterBoxScreen, m_world.GetCamera().GetWorldPosition()); break; }
+	case Minigame: { m_miningMinigame.Draw(); m_particles->Draw(*m_SDLGraphics, *m_letterBoxScreen); break; }
 	default: { throw std::exception("Invalid gamestate."); }
 	}
 
@@ -38,14 +38,17 @@ void MainGame::Game::draw()
 /// <summary> Updates the game. </summary>
 void MainGame::Game::update()
 {
+	// Update the gametime.
+	m_gameTime->Update();
+
 	// Pump the events service.
 	m_events->PumpEvents();
 
 	// Play random music if none is playing.
 	if (!GetService().GetAudio().IsSongPlaying()) { GetService().GetAudio().PlayRandomSong(); }
 
-	// Update the world.
-	m_world.Update();
+	// Update the particles.
+	m_particles->Update(*m_gameTime);
 }
 
 /// <summary> Creates and initialises the game. </summary>
@@ -91,6 +94,15 @@ void MainGame::Game::initialiseServices()
 	// Initialise the screen.
 	m_letterBoxScreen = new Screens::LetterBoxScreen();
 	s_serviceProvider.SetScreen(*m_letterBoxScreen);
+
+	// Initialise the time.
+	m_gameTime = new Time::GameTime();
+	s_serviceProvider.SetTime(*m_gameTime);
+
+	// Initialise the particles.
+	m_particles = new Particles::ExplodingParticles();
+	m_particles->SetSheetID(SpriteData::SheetID::Particles);
+	s_serviceProvider.SetParticles(*m_particles);
 }
 
 /// <summary> Hooks up game events to specific functions. </summary>
@@ -134,6 +146,7 @@ void MainGame::Game::loadTextures()
 	m_SDLGraphics->LoadSheetToID(c_contentFolder + '\\' + "MapObjects.png", SpriteData::SheetID::Objects, SpriteData::c_tileSize);
 	m_SDLGraphics->LoadSheetToID(c_contentFolder + '\\' + "CaveWalls.png", SpriteData::SheetID::MineWalls, SpriteData::c_wallSize);
 	m_SDLGraphics->LoadSheetToID(c_contentFolder + '\\' + "MinimapIcons.png", SpriteData::SheetID::Minimap, 1);
+	m_SDLGraphics->LoadSheetToID(c_contentFolder + '\\' + "Particles.png", SpriteData::SheetID::Particles, 3);
 
 	// Load the UI elements.
 	m_SDLGraphics->LoadSheetToID(c_contentFolder + '\\' + "UI.png", SpriteData::SheetID::UI, std::vector<Rectangle>
@@ -237,6 +250,9 @@ void MainGame::Game::startMinigame(void* _tilePosition, void* _tileProsperity)
 	// Set the current game state to minigame and generate the cave wall.
 	s_currentGameState = GameState::Minigame;
 	m_miningMinigame.Prepare(tilePosition, cellProsperity);
+
+	// Kill particles.
+	m_particles->KillAllAlive();
 }
 
 /// <summary> Stops the mining minigame. </summary>
@@ -246,6 +262,9 @@ void MainGame::Game::stopMinigame(void* _tilePosition, void* _unused)
 {
 	// Set the current game state to map.
 	s_currentGameState = GameState::Map;
+
+	// Kill particles.
+	m_particles->KillAllAlive();
 }
 
 /// <summary> Fires when the player is crushed or otherwise dies, shows the game over screen until they choose to go back. </summary>
@@ -255,6 +274,9 @@ void MainGame::Game::loseGame(void* _unused, void* _unused2)
 {
 	// Set the current game state to lost.
 	s_currentGameState = GameState::Lost;
+
+	// Kill particles.
+	m_particles->KillAllAlive();
 }
 
 /// <summary> Starts the game. </summary>

@@ -14,7 +14,7 @@ namespace SpriteData
 	const int32_t c_wallSize = 8;
 
 	/// <summary> The ID of each sprite sheet. </summary>
-	enum SheetID { Tiles = 0, Inventory, Objects, MineWalls, UI, Gems, Minimap };
+	enum SheetID { Tiles = 0, Inventory, Objects, MineWalls, UI, Gems, Minimap, Particles };
 
 	/// <summary> The ID of each map object. </summary>
 	enum ObjectID { Exit = 0, Spawn, PlayerLeft = 4, PlayerUp, PlayerRight, PlayerDown };
@@ -30,6 +30,9 @@ namespace SpriteData
 
 	/// <summary> The icons used for the minimap. </summary>
 	enum MinimapID { SpawnIcon = 0, ExitIcon, Player, PlainWall = 4, PlainFloor, LowProsp = 8, MedProsp, HighProsp, MaxProsp };
+
+	/// <summary> The start and end indices used for particles. </summary>
+	enum ParticleID { WallStart = 0, WallEnd = 9 };
 
 	/// <summary> The ID of each gem in the minigame. </summary>
 	enum GemID { Ruby = 0, Diamond, Sapphire, Emerald };

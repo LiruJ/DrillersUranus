@@ -11,6 +11,8 @@
 #include "SDLAudio.h"
 #include "SDLEvents.h"
 #include "LetterBoxScreen.h"
+#include "GameTime.h"
+#include "ExplodingParticles.h"
 
 // Utility includes.
 #include <string>
@@ -60,6 +62,12 @@ namespace MainGame
 
 		/// <summary> The events service which allows for events to be pumped. </summary>
 		Events::SDLEvents*			m_events;
+
+		/// <summary> The time service which allows for updating. </summary>
+		Time::GameTime*				m_gameTime;
+
+		/// <summary> The particles service which allows for updating. </summary>
+		Particles::ExplodingParticles* m_particles;
 
 		/// <summary> The main menu. </summary>
 		UserInterface::MainMenu		m_mainMenu;

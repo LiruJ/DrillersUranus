@@ -30,6 +30,10 @@ namespace WorldObjects
 		inline void Initialise() { m_gameMenu.Initialise(); }
 
 		void Draw(World&);
+
+		/// <summary> Gets the position of the camera within the world. </summary>
+		/// <returns> The camera's world position. </returns>
+		inline Point GetWorldPosition() const { return m_worldPosition; }
 	private:
 		/// <summary> The position of the camera in the world. </summary>
 		Point					m_worldPosition;

@@ -82,6 +82,12 @@
     <Filter Include="Header Files\Services\Audio">
       <UniqueIdentifier>{8fa19f6e-cc80-4a63-aaf8-8111eb63bb0f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Services\Time">
+      <UniqueIdentifier>{e5f429f6-f624-4f9c-8911-4ce8a621a5ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Services\Particles">
+      <UniqueIdentifier>{88751a34-2c9f-4b4d-8c32-59ef53962335}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -132,9 +138,6 @@
     <ClCompile Include="TileMap.cpp">
       <Filter>Source Files\World</Filter>
     </ClCompile>
-    <ClCompile Include="WallGem.cpp">
-      <Filter>Source Files\Minigames</Filter>
-    </ClCompile>
     <ClCompile Include="WallData.cpp">
       <Filter>Source Files\Minigames</Filter>
     </ClCompile>
@@ -165,8 +168,17 @@
     <ClCompile Include="Point.cpp">
       <Filter>Source Files\Structures</Filter>
     </ClCompile>
+    <ClCompile Include="WallGem.cpp">
+      <Filter>Source Files\Minigames</Filter>
+    </ClCompile>
     <ClCompile Include="SDLAudio.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="ExplodingParticles.cpp">
+      <Filter>Source Files\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Source Files\Structures</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -316,6 +328,21 @@
     </ClInclude>
     <ClInclude Include="AudioData.h">
       <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.h">
+      <Filter>Header Files\Services\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTime.h">
+      <Filter>Header Files\Services\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleManager.h">
+      <Filter>Header Files\Services\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="ExplodingParticles.h">
+      <Filter>Header Files\Services\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Header Files\Services\Particles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

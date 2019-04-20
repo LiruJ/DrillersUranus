@@ -61,9 +61,9 @@ void Minigames::MiningMinigame::Draw()
 				// If this is the layer to be drawn.
 				if (m_wallData.GetValueAt(x, y) == l)
 				{
-					// Calculate the screen position and draw.
-					Point screenPosition = screen.ScreenToWindowSpace(Point(x, y) * SpriteData::c_wallSize);
-					graphics.Draw(SpriteData::SheetID::MineWalls, l, Rectangle(screenPosition, screen.ScreenToWindowSize(Point(SpriteData::c_wallSize))));
+					// Calculate the window position and draw.
+					Point windowPosition = screen.ScreenToWindowSpace(Point(x, y) * SpriteData::c_wallSize);
+					graphics.Draw(SpriteData::SheetID::MineWalls, l, Rectangle(windowPosition, screen.ScreenToWindowSize(Point(SpriteData::c_wallSize))));
 				}
 			}
 		}
@@ -192,6 +192,9 @@ void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
 
 				// Damage this tile.
 				m_wallData.SetValueAt(x, y, m_wallData.GetValueAt(x, y) - damageDealt);
+
+				// Create particles.
+				MainGame::Game::GetService().GetParticles().AddParticles(Point(x, y) * SpriteData::c_wallSize, 5, SpriteData::ParticleID::WallStart, SpriteData::ParticleID::WallEnd);
 			}
 		}
 	}

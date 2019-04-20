@@ -8,6 +8,8 @@
 #include "Screen.h"
 #include "Events.h"
 #include "Audio.h"
+#include "Time.h"
+#include "ParticleManager.h"
 
 /// <summary> Represents a service provider only allowing services to be gotten but not set. </summary>
 class Services
@@ -38,5 +40,13 @@ public:
 	/// <summary> Gets the audio. </summary>
 	/// <returns> The audio. </returns>
 	virtual Audio::Audio&		GetAudio() = 0;
+
+	/// <summary> Gets the time. </summary>
+	/// <returns> The time. </returns>
+	virtual Time::Time&	GetTime() = 0;
+
+	/// <summary> Gets the particle manager. </summary>
+	/// <returns> The particle manager. </returns>
+	virtual Particles::ParticleManager& GetParticles() = 0;
 };
 #endif

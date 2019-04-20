@@ -39,8 +39,6 @@ namespace WorldObjects
 
 		void Draw();
 
-		void Update();
-
 		/// <summary> Gets the player. </summary>
 		/// <returns> The <see cref="Player"/>. </returns>
 		inline GameObjects::Player&					GetPlayer()					{ return m_player; }
@@ -64,6 +62,10 @@ namespace WorldObjects
 		/// <summary> Gets how many turns until the map starts to collapse. </summary>
 		/// <returns> The amount of turns until the map starts to collapse. </returns>
 		inline uint16_t								GetCollapseTime() const		{ return m_turnsUntilCollapse; }
+
+		/// <summary> Gets the camera. </summary>
+		/// <returns> The camera. </returns>
+		inline Camera&								GetCamera()					{ return m_camera; }
 	private:
 		/// <summary> The most attempts that will be made to collapse a tile. </summary>
 		const uint32_t c_maxCollapseAttempts = 5000;

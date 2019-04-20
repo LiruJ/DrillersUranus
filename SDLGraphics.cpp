@@ -123,13 +123,33 @@ void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textur
 	// Get the texture from the IDs.
 	SDL_Texture* texture = m_sheets[_sheetID][_textureID];
 
-	// Creates and scales the destination rectangle.
+	// Create and scale the destination rectangle.
 	SDL_Rect scaledDest = createRectFromTexture(_position.x, _position.y, texture);
 	scaledDest.w = ceil(scaledDest.w * _scale);
 	scaledDest.h = ceil(scaledDest.h * _scale);
 
 	// Draw the texture at the given position.
 	SDL_RenderCopy(m_renderer, texture, NULL, &scaledDest);
+}
+
+/// <summary> Draws the given texture from the given sheet at the given position with the given rotation and scale. </summary>
+/// <param name="_sheetID"> The ID of the sheet from which the texture is stored. </param>
+/// <param name="_textureID"> The ID of the texture itself. </param>
+/// <param name="_position"> The position on the window. </param>
+/// <param name="_scale"> The amount to which the texture should be scaled. </param>
+/// <param name="_rotation"> The rotation in radians. </param>
+void Graphics::SDLGraphics::Draw(const uint16_t _sheetID, const uint16_t _textureID, const Point _position, const float_t _scale, const float_t _rotation)
+{
+	// Get the texture from the IDs.
+	SDL_Texture* texture = m_sheets[_sheetID][_textureID];
+
+	// Create and scale the destination rectangle.
+	SDL_Rect scaledDest = createRectFromTexture(_position.x, _position.y, texture);
+	scaledDest.w = ceil(scaledDest.w * _scale);
+	scaledDest.h = ceil(scaledDest.h * _scale);
+
+	// Draw the texture at the given position.
+	SDL_RenderCopyEx(m_renderer, texture, NULL, &scaledDest, _rotation * (180.0f / M_PI), NULL, SDL_FLIP_NONE);
 }
 
 /// <summary> Draws the given texture from the given sheet at the given position and rotation. </summary>

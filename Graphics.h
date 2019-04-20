@@ -37,6 +37,14 @@ namespace Graphics
 		/// <param name="_position"> The position on the window. </param>
 		virtual void Draw(uint16_t _sheetID, uint16_t _textureID, float_t _scale, Point _position) = 0;
 
+		/// <summary> Draws the given texture from the given sheet at the given position with the given rotation and scale. </summary>
+		/// <param name="_sheetID"> The ID of the sheet from which the texture is stored. </param>
+		/// <param name="_textureID"> The ID of the texture itself. </param>
+		/// <param name="_position"> The position on the window. </param>
+		/// <param name="_scale"> The amount to which the texture should be scaled. </param>
+		/// <param name="_rotation"> The rotation in radians. </param>
+		virtual void Draw(uint16_t _sheetID, uint16_t _textureID, Point _position, float_t _scale, float_t _rotation) = 0;
+
 		/// <summary> Draws the given texture from the given sheet at the given position and rotation. </summary>
 		/// <param name="_sheetID"> The ID of the sheet from which the texture is stored. </param>
 		/// <param name="_textureID"> The ID of the texture itself. </param>

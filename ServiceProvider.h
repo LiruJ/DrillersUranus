@@ -55,6 +55,22 @@ public:
 	/// <summary> Sets the audio. </summary>
 	/// <param name="_audio"> The audio. </param>
 	inline void							SetAudio(Audio::Audio& _audio)				{ m_audio = &_audio; }
+
+	/// <summary> Gets the time. </summary>
+	/// <returns> The time. </returns>
+	inline virtual Time::Time&			GetTime()									{ return *m_time; }
+
+	/// <summary> Sets the time. </summary>
+	/// <param name="_time"> The time. </param>
+	inline void							SetTime(Time::Time& _time)					{ m_time = &_time; }
+
+	/// <summary> Gets the particle manager. </summary>
+	/// <returns> The particle manager. </returns>
+	inline virtual Particles::ParticleManager& GetParticles()						{ return *m_particles; }
+
+	/// <summary> Sets the particle manager. </summary>
+	/// <returns> The particle manager. </returns>
+	inline virtual void					SetParticles(Particles::ParticleManager& _particles) { m_particles = &_particles; };
 private:
 	/// <summary> The service used for logging game data. </summary>
 	Logging::Logger*	m_logger;
@@ -73,5 +89,10 @@ private:
 
 	/// <summary> The service used to play audio. </summary>
 	Audio::Audio*		m_audio;
+
+	/// <summary> The service used to track game time. </summary>
+	Time::Time*			m_time;
+
+	Particles::ParticleManager* m_particles;
 };
 #endif
