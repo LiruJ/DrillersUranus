@@ -48,7 +48,7 @@ void WorldObjects::World::Initialise(Events::Events& _events)
 /// <summary> Resets the world to its starting state. </summary>
 void WorldObjects::World::Reset()
 {
-	m_floorCount = 9;
+	m_floorCount = 0;
 	m_player.GetInventory().Reset();
 	generateRandomMap();
 }
