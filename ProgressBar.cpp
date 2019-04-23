@@ -4,22 +4,25 @@
 #include "Rectangle.h"
 
 // Service includes.
-#include "Game.h"
 #include "Graphics.h"
 #include "Screen.h"
+
+// Utility includes.
+#include "SpriteData.h"
 
 // Typedef includes.
 #include <cmath>
 
 /// <summary> Draws this <see cref="ProgressBar"/> onto the screen. </summary>
-void UserInterface::ProgressBar::Draw()
+/// <param name="_services"> The service provider. </param>
+void UserInterface::ProgressBar::Draw(Services::ServiceProvider& _services) const
 {
 	// If this progress bar is not active, do nothing.
 	if (!m_isActive) { return; }
 
 	// Get the graphics and screen services.
-	Graphics::Graphics& graphics = MainGame::Game::GetService().GetGraphics();
-	Screens::Screen& screen = MainGame::Game::GetService().GetScreen();
+	Graphics::Graphics& graphics = _services.GetService<Graphics::Graphics>(Services::ServiceType::Graphics);
+	Screens::Screen& screen = _services.GetService<Screens::Screen>(Services::ServiceType::Screen);
 
 	// Calculate the window bounds then draw.
 	Point windowPosition = screen.ScreenToWindowSpace(m_position);

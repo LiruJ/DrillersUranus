@@ -55,10 +55,12 @@
     <ClInclude Include="AudioData.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Colour.h" />
+    <ClInclude Include="EventContext.h" />
     <ClInclude Include="Events.h" />
     <ClInclude Include="ExplodingParticles.h" />
     <ClInclude Include="Frame.h" />
     <ClInclude Include="GameMenu.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="GameTime.h" />
     <ClInclude Include="GemCollider.h" />
     <ClInclude Include="Inventory.h" />
@@ -95,7 +97,6 @@
     <ClInclude Include="SDLEvents.h" />
     <ClInclude Include="SDLGraphics.h" />
     <ClInclude Include="ServiceProvider.h" />
-    <ClInclude Include="Services.h" />
     <ClInclude Include="SpriteData.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TileMap.h" />

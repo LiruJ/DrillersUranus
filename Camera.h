@@ -8,6 +8,10 @@
 // GameObject includes.
 #include "IReadOnlyMapObject.h"
 
+// Service include.
+#include "ServiceProvider.h"
+#include "Events.h"
+
 // Utility includes.
 #include "SpriteData.h"
 
@@ -27,9 +31,10 @@ namespace WorldObjects
 		Camera() : m_worldPosition(Point(0, 0)), m_worldSize(Point(960, 540)), m_worldBounds(m_worldPosition, m_worldSize) { }
 
 		/// <summary> Initialises the UI. </summary>
-		inline void Initialise() { m_gameMenu.Initialise(); }
+		/// <param name="_events"> The events bus. </param>
+		inline void Initialise(Events::Events& _events) { m_gameMenu.Initialise(_events); }
 
-		void Draw(World&);
+		void Draw(World&, Services::ServiceProvider&);
 
 		/// <summary> Gets the position of the camera within the world. </summary>
 		/// <returns> The camera's world position. </returns>

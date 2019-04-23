@@ -4,6 +4,10 @@
 // Derived includes.
 #include "Frame.h"
 
+// Service includes.
+#include "Events.h"
+#include "EventContext.h"
+
 // Utility includes.
 #include <algorithm>
 
@@ -22,7 +26,7 @@ namespace UserInterface
 		/// <param name="_spriteID"> The sprite ID. </param>
 		ProgressBar(const Point _position, const Point _size, const uint16_t _spriteID) : Frame::Frame(_position, _size, _spriteID), m_max(100), m_current(0) {}
 
-		virtual void Draw();
+		virtual void Draw(Services::ServiceProvider&) const;
 
 		/// <summary> Sets the current value. </summary>
 		/// <param name="_value"> The new value. </param>

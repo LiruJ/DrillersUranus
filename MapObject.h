@@ -7,6 +7,9 @@
 // Data includes.
 #include "Point.h"
 
+// Service includes.
+#include "ServiceProvider.h"
+
 // Utility includes.
 #include "SpriteData.h"
 
@@ -34,7 +37,7 @@ namespace GameObjects
 		/// <param name="_position"> The new tile position. </param>
 		inline void SetTilePosition(const Point _position)	{ m_tilePosition = _position; }
 
-		virtual void Draw(Point);
+		virtual void Draw(Point, Services::ServiceProvider&);
 	protected:
 		/// <summary> The position of this object on the map. </summary>
 		Point	m_tilePosition;

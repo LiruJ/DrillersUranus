@@ -5,6 +5,8 @@
 #include "SpriteData.h"
 
 // Service includes.
+#include "ServiceProvider.h"
+#include "EventContext.h"
 #include "Events.h"
 
 // UI includes.
@@ -25,12 +27,12 @@ namespace UserInterface
 			m_backButton(Point(323, 363), Point(128, 32), SpriteData::UIID::BackButton)
 		{
 			// Hide the help screen to start with.
-			hideHelp(NULL, NULL);
+			hideHelp();
 		}
 
-		void Draw();
+		void Draw(Services::ServiceProvider&) const;
 
-		void Initialise();
+		void Initialise(Events::Events&);
 	private:
 		/// <summary> If the help screen is being displayed. </summary>
 		bool m_isInHelpScreen;
@@ -56,11 +58,11 @@ namespace UserInterface
 		void setAllActive(bool);
 
 		/// <summary> Disables all main elements. </summary>
-		void disableAll(void*, void*) { setAllActive(false); }
+		void disableAll(Events::EventContext* = NULL) { setAllActive(false); }
 
-		void showHelp(void*, void*);
+		void showHelp(Events::EventContext* = NULL);
 
-		void hideHelp(void*, void*);
+		void hideHelp(Events::EventContext* = NULL);
 	};
 }
 #endif

@@ -7,9 +7,10 @@
 // Service includes.
 #include "Graphics.h"
 #include "Screen.h"
+#include "ParticleManager.h"
+#include "Audio.h"
 
 // Data includes.
-#include "Game.h"
 #include "Rectangle.h"
 
 // Utility includes.
@@ -17,41 +18,40 @@
 #include "AudioData.h"
 
 /// <summary> Sets up event bindings and the UI. </summary>
-void Minigames::MiningMinigame::Initialise()
+/// <param name="_events"> The events bus. </param>
+void Minigames::MiningMinigame::Initialise(Events::Events& _events)
 {
-	// Get the events service.
-	Events::Events& events = MainGame::Game::GetService().GetEvents();
-
 	// Bind click to handle mining.
-	events.AddFrameworkListener(SDL_MOUSEBUTTONDOWN, std::bind(&MiningMinigame::mineAt, this, std::placeholders::_1, std::placeholders::_2));
+	_events.AddFrameworkListener(SDL_MOUSEBUTTONDOWN, std::bind(&MiningMinigame::mineAt, this, std::placeholders::_1));
 
 	// Bind the wall mined event.
-	events.AddUserListener(Events::UserEvent::MinedWall, std::bind(&MiningMinigame::mined, this, std::placeholders::_1, std::placeholders::_2));
+	_events.AddUserListener(Events::UserEvent::MinedWall, std::bind(&MiningMinigame::mined, this, std::placeholders::_1));
 
 	// Bind the tool buttons to change the tool.
-	events.AddUserListener(Events::UserEvent::ChangeTool, std::bind(&MiningMinigame::changeTool, this, std::placeholders::_1, std::placeholders::_2));
-	events.AddFrameworkListener(SDL_KEYDOWN, std::bind(&MiningMinigame::hotkeyTool, this, std::placeholders::_1, std::placeholders::_2));
+	_events.AddUserListener(Events::UserEvent::ChangeTool, std::bind(&MiningMinigame::changeTool, this, std::placeholders::_1));
+	_events.AddFrameworkListener(SDL_KEYDOWN, std::bind(&MiningMinigame::hotkeyTool, this, std::placeholders::_1));
 
 	// Initialise the GUI.
-	m_minigameMenu.Initialise(c_maxTimer);
+	m_minigameMenu.Initialise(c_maxTimer, _events);
 
 	// Change the tool to the first one.
-	events.PushEvent(Events::UserEvent::ChangeTool, new uint8_t(0), NULL);
+	_events.PushEvent(Events::UserEvent::ChangeTool, new uint8_t(0), NULL);
 }
 
 /// <summary> Draws the minigame and the UI. </summary>
-void Minigames::MiningMinigame::Draw()
+/// <param name="_services"> The service provider. </param>
+void Minigames::MiningMinigame::Draw(Services::ServiceProvider& _services)
 {
 	// Get the graphics and screen services.
-	Graphics::Graphics& graphics = MainGame::Game::GetService().GetGraphics();
-	Screens::Screen& screen = MainGame::Game::GetService().GetScreen();
+	Graphics::Graphics& graphics = _services.GetService<Graphics::Graphics>(Services::ServiceType::Graphics);
+	Screens::Screen& screen = _services.GetService<Screens::Screen>(Services::ServiceType::Screen);
 
 	// Extremely inefficient, but time restrictions prevent me from making any optimised algorithm.
 	// If I were to have more time, I would implement a data structure to hold each layer separately.
 	for (uint8_t l = 0; l < m_wallData.c_maxValue; l++)
 	{
 		// Draw all gems on this layer.
-		for (uint32_t g = 0; g < m_wallGems.size(); g++) { if (m_wallGems[g].GetLayer() == l) { m_wallGems[g].Draw(); } }
+		for (uint32_t g = 0; g < m_wallGems.size(); g++) { if (m_wallGems[g].GetLayer() == l) { m_wallGems[g].Draw(_services); } }
 
 		// Draw rock on this layer.
 		for (int32_t x = 0; x < m_wallData.GetWidth(); x++)
@@ -70,16 +70,16 @@ void Minigames::MiningMinigame::Draw()
 	}
 
 	// Draw the UI.
-	m_minigameMenu.Draw();
+	m_minigameMenu.Draw(_services);
 }
 
 /// <summary> Prepares the minigame to be played, using the given map wall and prosperity to generate. </summary>
 /// <param name="_tilePosition"> The position of the cave wall within the map. </param>
 /// <param name="_prosperity"> The prosperity of the wall. </param>
-void Minigames::MiningMinigame::Prepare(const Point _tilePosition, const uint8_t _prosperity)
+void Minigames::MiningMinigame::Prepare(Services::ServiceProvider& _services, const Point _tilePosition, const uint8_t _prosperity)
 {
 	// Start on the first tool.
-	MainGame::Game::GetService().GetEvents().PushEvent(Events::UserEvent::ChangeTool, new uint8_t(0), NULL);
+	_services.GetService<Events::Events>(Services::ServiceType::Events).PushEvent(Events::UserEvent::ChangeTool, new uint8_t(0), NULL);
 
 	// Set the tile position.
 	m_tilePosition = _tilePosition;
@@ -95,30 +95,28 @@ void Minigames::MiningMinigame::Prepare(const Point _tilePosition, const uint8_t
 }
 
 /// <summary> Changes the current tool to the given value. </summary>
-/// <param name="_toolID"> The new tool ID. </param>
-/// <param name="_unused"> Unused. </param>
-void Minigames::MiningMinigame::changeTool(void* _toolID, void* _unused = NULL)
+/// <param name="_context"> The context of the event. </param>
+void Minigames::MiningMinigame::changeTool(Events::EventContext* _context)
 {
 	// Do nothing if the game state is not minigame.
-	if (MainGame::Game::GetGameState() != MainGame::GameState::Minigame) { return; }
+	if (_context->m_gameState != MainGame::GameState::Minigame) { return; }
 
 	// Set the current tool ID to the given ID.
-	m_currentToolID = *static_cast<uint8_t*>(_toolID);
+	m_currentToolID = *static_cast<uint8_t*>(_context->m_data1);
 }
 
 /// <summary> Handles the player pressing a key to change tool. </summary>
-/// <param name="_scancode"> The scan code of the pressed key. </param>
-/// <param name="_mod"> The modifier key that the player was holding on the key press. </param>
-void Minigames::MiningMinigame::hotkeyTool(void* _scancode, void* _mod)
+/// <param name="_context"> The context of the event. </param>
+void Minigames::MiningMinigame::hotkeyTool(Events::EventContext* _context)
 {
 	// Do nothing if the game state is not minigame.
-	if (MainGame::Game::GetGameState() != MainGame::GameState::Minigame) { return; }
+	if (_context->m_gameState != MainGame::GameState::Minigame) { return; }
 
 	// Cast the scancode.
-	SDL_Scancode scancode = *static_cast<SDL_Scancode*>(_scancode);
+	SDL_Scancode scancode = *static_cast<SDL_Scancode*>(_context->m_data1);
 
 	// Get the events service.
-	Events::Events& events = MainGame::Game::GetService().GetEvents();
+	Events::Events& events = _context->m_services->GetService<Events::Events>(Services::ServiceType::Events);
 
 	// Cheaper to switch on the given code rather than do any maths with it.
 	// Push a change tool event instead of manually changing the tool, so that the function can be reused and anything that's listening for the change tool event can also change.
@@ -131,18 +129,17 @@ void Minigames::MiningMinigame::hotkeyTool(void* _scancode, void* _mod)
 }
 
 /// <summary> Handles the player clicking on the wall to mine. </summary>
-/// <param name="_windowX"> The x position of the click. </param>
-/// <param name="_windowY"> The y position of the click. </param>
-void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
+/// <param name="_context"> The context of the event. </param>
+void Minigames::MiningMinigame::mineAt(Events::EventContext* _context)
 {
 	// Do nothing if the game state is not minigame.
-	if (MainGame::Game::GetGameState() != MainGame::GameState::Minigame) { return; }
+	if (_context->m_gameState != MainGame::GameState::Minigame) { return; }
 
 	// Get the screen service.
-	Screens::Screen& screen = MainGame::Game::GetService().GetScreen();
+	Screens::Screen& screen = _context->m_services->GetService<Screens::Screen>(Services::ServiceType::Screen);
 
 	// Convert the screen position to a tile position.
-	Point tilePosition = screen.WindowToScreenSpace(Point(*static_cast<int32_t*>(_windowX), *static_cast<int32_t*>(_windowY))) / SpriteData::c_wallSize;
+	Point tilePosition = screen.WindowToScreenSpace(Point(*static_cast<int32_t*>(_context->m_data1), *static_cast<int32_t*>(_context->m_data2))) / SpriteData::c_wallSize;
 
 	// If the tile position is not in range, do nothing.
 	if (!m_wallData.IsInRange(tilePosition)) { return; }
@@ -194,29 +191,29 @@ void Minigames::MiningMinigame::mineAt(void* _windowX, void* _windowY)
 				m_wallData.SetValueAt(x, y, m_wallData.GetValueAt(x, y) - damageDealt);
 
 				// Create particles.
-				MainGame::Game::GetService().GetParticles().AddParticles(Point(x, y) * SpriteData::c_wallSize, 5, SpriteData::ParticleID::WallStart, SpriteData::ParticleID::WallEnd);
+				_context->m_services->GetService<Particles::ParticleManager>(Services::ServiceType::Particles).AddParticles(Point(x, y) * SpriteData::c_wallSize, 5, SpriteData::ParticleID::WallStart, SpriteData::ParticleID::WallEnd);
 			}
 		}
 	}
 
 	// Play a sound based on if a gem was hit.
-	if(didHitGem) { MainGame::Game::GetService().GetAudio().PlaySound(AudioData::SoundID::HitGem); }
-	else { MainGame::Game::GetService().GetAudio().PlayRandomSound(AudioData::VariedSoundID::Smash); }
-
+	Audio::Audio& audio = _context->m_services->GetService<Audio::Audio>(Services::ServiceType::Audio);
+	if (didHitGem) { audio.PlaySound(AudioData::SoundID::HitGem); }
+	else { audio.PlayRandomSound(AudioData::VariedSoundID::Smash); }
+	
 	// Shake the screen based on how close the wall is to collapsing.
-	MainGame::Game::GetService().GetScreen().ShakeScreen((1.0f - ((float_t)m_collapseTimer / c_maxTimer)) * 50);
+	screen.ShakeScreen((1.0f - ((float_t)m_collapseTimer / c_maxTimer)) * 15);
 
 	// Push the mined event.
-	MainGame::Game::GetService().GetEvents().PushEvent(Events::UserEvent::MinedWall, new uint16_t(m_collapseTimer), new uint16_t(c_maxTimer));
+	_context->m_services->GetService<Events::Events>(Services::ServiceType::Events).PushEvent(Events::UserEvent::MinedWall, new uint16_t(c_maxTimer), new uint16_t(m_collapseTimer));
 }
 
 /// <summary> Fires when the wall is mined. </summary>
-/// <param name="_collapseTimer"> The new value of the collapse timer. </param>
-/// <param name="_maxTimer"> The max value of the collapse timer. </param>
-void Minigames::MiningMinigame::mined(void* _collapseTimer, void* _maxTimer)
+/// <param name="_context"> The context of the event. </param>
+void Minigames::MiningMinigame::mined(Events::EventContext* _context)
 {
 	// Get the events service.
-	Events::Events& events = MainGame::Game::GetService().GetEvents();
+	Events::Events& events = _context->m_services->GetService<Events::Events>(Services::ServiceType::Events);
 
 	// Remove any uncovered gems and award them to the player.
 	std::vector<WallGem>::iterator gemIter = m_wallGems.begin();
@@ -225,10 +222,10 @@ void Minigames::MiningMinigame::mined(void* _collapseTimer, void* _maxTimer)
 		if (gemIter->IsFullyUncovered(m_wallData)) 
 		{
 			events.PushEvent(Events::UserEvent::MinedGem, new WallGem(*gemIter), NULL);
-			MainGame::Game::GetService().GetAudio().PlaySound(AudioData::SoundID::GetGem);
+			_context->m_services->GetService<Audio::Audio>(Services::ServiceType::Audio).PlaySound(AudioData::SoundID::GetGem);
 			gemIter = m_wallGems.erase(gemIter);
 		}
-		else { ++gemIter; }
+		else { gemIter++; }
 	}
 
 	// Collapse if collapse timer is 0.

@@ -5,6 +5,9 @@
 #include "Point.h"
 #include "Rectangle.h"
 
+// Service includes.
+#include "ServiceProvider.h"
+
 // Typedef includes.
 #include <stdint.h>
 
@@ -23,7 +26,7 @@ namespace UserInterface
 		/// <param name="_spriteID"> The sprite ID. </param>
 		Frame(const Point _position, const Point _size, const uint16_t _spriteID) : m_position(_position), m_size(_size), m_bounds(_position, _size), m_spriteID(_spriteID), m_isActive(true) {}
 
-		virtual void Draw();
+		virtual void Draw(Services::ServiceProvider& _services) const;
 
 		/// <summary> Gets if this <see cref="Frame"/> is updated and drawn. </summary>
 		/// <returns> If this <see cref="Frame"/> is active. </returns>
@@ -38,6 +41,7 @@ namespace UserInterface
 		/// <summary> The ID of the sprite that should be drawn. </summary>
 		uint16_t	m_spriteID;
 
+		/// <summary> <c>true</c> if this element should be drawn and updated; otherwise, <c>false</c>. </summary>
 		bool		m_isActive;
 
 		/// <summary> The position. </summary>

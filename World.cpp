@@ -1,45 +1,48 @@
 #include "World.h"
 
+// Framework includes.
+#include <SDL_events.h>
+
+// Data includes.
+#include "Point.h"
+
+// Service includes.
+#include "Controls.h"
+#include "ParticleManager.h"
+#include "Audio.h"
+#include "Screen.h"
+
 // Utility includes.
 #include "Random.h"
 #include "AudioData.h"
-
-// Service includes.
-#include "Events.h"
-#include "Controls.h"
 
 // Map generation includes.
 #include "CavernGenerator.h"
 #include "DungeonGenerator.h"
 
-// Data includes.
-#include "Point.h"
-#include "Game.h"
-
 /// <summary> Draws this <see cref="World"/>. </summary>
-void WorldObjects::World::Draw()
+/// <param name="_services"> The service provider. </param>
+void WorldObjects::World::Draw(Services::ServiceProvider& _services)
 {
 	// Tell the camera to draw the world.
-	m_camera.Draw(*this);
+	m_camera.Draw(*this, _services);
 }
 
 /// <summary> Binds this <see cref="World"/> to certain events. </summary>
-void WorldObjects::World::Initialise()
+/// <param name="_events"> The events bus. </param>
+void WorldObjects::World::Initialise(Events::Events& _events)
 {
-	// Get the event service.
-	Events::Events& events = MainGame::Game::GetService().GetEvents();
-
 	// Bind the keydown event.
-	events.AddFrameworkListener(SDL_KEYDOWN, std::bind(&World::handleKeyDown, this, std::placeholders::_1, std::placeholders::_2));
+	_events.AddFrameworkListener(SDL_KEYDOWN, std::bind(&World::handleKeyDown, this, std::placeholders::_1));
 
 	// Bind the minigame stop event.
-	events.AddUserListener(Events::UserEvent::StopMinigame, std::bind(&World::stopMinigame, this, std::placeholders::_1, std::placeholders::_2));
+	_events.AddUserListener(Events::UserEvent::StopMinigame, std::bind(&World::stopMinigame, this, std::placeholders::_1));
 
 	// Initialise the player.
-	m_player.Initialise();
+	m_player.Initialise(_events);
 
 	// Initialise the camera.
-	m_camera.Initialise();
+	m_camera.Initialise(_events);
 }
 
 /// <summary> Resets the world to its starting state. </summary>
@@ -83,43 +86,40 @@ void WorldObjects::World::generateRandomMap()
 }
 
 /// <summary> Handles the player pressing a key to move. </summary>
-/// <param name="_scancode"> The scan code of the pressed key. </param>
-/// <param name="_mod"> The modifier key that the player was holding on the key press. </param>
-void WorldObjects::World::handleKeyDown(void* _scancode, void* _mod)
+/// <param name="_context"> The context of the event. </param>
+void WorldObjects::World::handleKeyDown(Events::EventContext* _context)
 {
 	// If the game state is not map, do nothing.
-	if (MainGame::Game::GetGameState() != MainGame::GameState::Map) { return; }
-
-	// Get the controls service.
-	Controls::Controls& controls = MainGame::Game::GetService().GetControls();
+	if (_context->m_gameState != MainGame::GameState::Map) { return; }
 
 	// Cast the scancode and mod.
-	SDL_Scancode scancode = *static_cast<SDL_Scancode*>(_scancode);
-	uint16_t mod = *static_cast<uint16_t*>(_mod);
+	SDL_Scancode scancode = *static_cast<SDL_Scancode*>(_context->m_data1);
+	uint16_t mod = *static_cast<uint16_t*>(_context->m_data2);
 
 	// Get the desired command from the input.
-	Controls::Command currentCommand = controls.GetCommandFromKey(scancode);
+	Controls::Command currentCommand = _context->m_services->GetService<Controls::Controls>(Services::ServiceType::Controls).GetCommandFromKey(scancode);
 
 	// Handle the command.
 	switch (currentCommand)
 	{
 	// Handle the player interacting with the object they're standing on.
-	case Controls::Command::Interact:	{ handleInteraction(); break; }
+	case Controls::Command::Interact:	{ handleInteraction(*_context->m_services); break; }
 
 	// If the player swings, handle what they swing at.
-	case Controls::Command::Swing:		{ handleSwinging(); break; }
+	case Controls::Command::Swing:		{ handleSwinging(*_context->m_services); break; }
 
 	// Handle movement, if the shift key is held, just face in that direction.
-	case Controls::Command::MoveUp:		{ handleMovement(Directions::Up, mod & KMOD_SHIFT); break; }
-	case Controls::Command::MoveDown:	{ handleMovement(Directions::Down, mod & KMOD_SHIFT); break; }
-	case Controls::Command::MoveLeft:	{ handleMovement(Directions::Left, mod & KMOD_SHIFT); break; }
-	case Controls::Command::MoveRight:	{ handleMovement(Directions::Right, mod & KMOD_SHIFT); break; }
+	case Controls::Command::MoveUp:		{ handleMovement(*_context->m_services, Directions::Up, mod & KMOD_SHIFT); break; }
+	case Controls::Command::MoveDown:	{ handleMovement(*_context->m_services, Directions::Down, mod & KMOD_SHIFT); break; }
+	case Controls::Command::MoveLeft:	{ handleMovement(*_context->m_services, Directions::Left, mod & KMOD_SHIFT); break; }
+	case Controls::Command::MoveRight:	{ handleMovement(*_context->m_services, Directions::Right, mod & KMOD_SHIFT); break; }
 	}
 }
 
 /// <summary> Handle turn-based logic. </summary>
+/// <param name="_services"> The service provider. </param>
 /// <param name="_amount"> The amount of turns to do, defaults to <c>1</c>. </param>
-void WorldObjects::World::doTurn(const uint8_t _amount = 1)
+void WorldObjects::World::doTurn(Services::ServiceProvider& _services, const uint8_t _amount = 1)
 {
 	// Repeat for the amount of needed turns.
 	for (uint8_t i = 0; i < _amount; i++)
@@ -128,12 +128,13 @@ void WorldObjects::World::doTurn(const uint8_t _amount = 1)
 		m_turnsUntilCollapse = std::max(0, m_turnsUntilCollapse - 1);
 
 		// If the counter is at 0, collapse a bit.
-		if (m_turnsUntilCollapse == 0) { collapse(); }
+		if (m_turnsUntilCollapse == 0) { collapse(_services); }
 	}
 }
 
 /// <summary> Causes some tiles to cave in. </summary>
-void WorldObjects::World::collapse()
+/// <param name="_services"> The service provider. </param>
+void WorldObjects::World::collapse(Services::ServiceProvider& _services)
 {
 	// How many tiles have to be caved in.
 	uint8_t tilesToCollapse = Random::RandomBetween(18, 40);
@@ -157,24 +158,25 @@ void WorldObjects::World::collapse()
 			// If the player was crushed by this tile, send the end game event.
 			if (position == m_player.GetTilePosition()) 
 			{ 
-				MainGame::Game::GetService().GetEvents().PushEvent(Events::UserEvent::PlayerDied, NULL, NULL);
-				MainGame::Game::GetService().GetAudio().PlaySound(AudioData::SoundID::PlayerCrushed);
+				_services.GetService<Events::Events>(Services::ServiceType::Events).PushEvent(Events::UserEvent::PlayerDied, NULL, NULL);
+				_services.GetService<Audio::Audio>(Services::ServiceType::Audio).PlaySound(AudioData::SoundID::PlayerCrushed);
 			}
 		}
-		else { ++collapseAttempts; }
+		else { collapseAttempts++; }
 	}
 
 	// Play the collapse sound.
-	MainGame::Game::GetService().GetAudio().PlaySound(AudioData::SoundID::Collapse);
+	_services.GetService<Audio::Audio>(Services::ServiceType::Audio).PlaySound(AudioData::SoundID::Collapse);
 
 	// Shake the screen a lot.
-	MainGame::Game::GetService().GetScreen().ShakeScreen(75);
+	_services.GetService<Screens::Screen>(Services::ServiceType::Screen).ShakeScreen(20);
 }
 
 /// <summary> Handles player movement. </summary>
+/// <param name="_services"> The service provider. </param>
 /// <param name="_direction"> The direction in which the player wants to move. </param>
 /// <param name="_noMovement"> Is <c>true</c> if the player just wants to face in the direction; otherwise, <c>false</c>. </param>
-void WorldObjects::World::handleMovement(const Directions _direction, const bool _noMovement)
+void WorldObjects::World::handleMovement(Services::ServiceProvider& _services, const Directions _direction, const bool _noMovement)
 {
 	// Create a direction object of the wanted move.
 	Direction desiredDirection = Direction(_direction);
@@ -183,8 +185,8 @@ void WorldObjects::World::handleMovement(const Directions _direction, const bool
 	if (!_noMovement && m_tileData.IsCellClearAndInRange(m_player.GetTilePosition() + desiredDirection.GetNormal())) 
 	{
 		m_player.MoveInDirection(_direction);
-		doTurn();
-		MainGame::Game::GetService().GetAudio().PlayRandomSound(AudioData::VariedSoundID::Step);
+		doTurn(_services);
+		_services.GetService<Audio::Audio>(Services::ServiceType::Audio).PlayRandomSound(AudioData::VariedSoundID::Step);
 	}
 	else { m_player.SetFacing(_direction); }
 
@@ -193,7 +195,8 @@ void WorldObjects::World::handleMovement(const Directions _direction, const bool
 }
 
 /// <summary> Handles the player swinging their pickaxe to mine the cell in front of them. </summary>
-void WorldObjects::World::handleSwinging()
+/// <param name="_services"> The service provider. </param>
+void WorldObjects::World::handleSwinging(Services::ServiceProvider& _services)
 {	
 	// Get the position of the cell to be mined.
 	Point minePosition = m_player.GetTilePosition() + m_player.GetFacing().GetNormal();
@@ -205,22 +208,21 @@ void WorldObjects::World::handleSwinging()
 	if (m_tileData.GetTileAt(minePosition).m_prosperity == 0) 
 	{
 		m_tileData.FillCellWithRandomFloor(minePosition); 
-		doTurn(2);
+		doTurn(_services, 2);
 
 		// Play the sound.
-		MainGame::Game::GetService().GetAudio().PlayRandomSound(AudioData::VariedSoundID::Hit);
+		_services.GetService<Audio::Audio>(Services::ServiceType::Audio).PlayRandomSound(AudioData::VariedSoundID::Hit);
 
 		// Create particles.
-		MainGame::Game::GetService().GetParticles().AddParticles(minePosition * SpriteData::c_tileSize, 50, SpriteData::ParticleID::WallStart, SpriteData::ParticleID::WallEnd);
+		_services.GetService<Particles::ParticleManager>(Services::ServiceType::Particles).AddParticles(minePosition * SpriteData::c_tileSize, 50, SpriteData::ParticleID::WallStart, SpriteData::ParticleID::WallEnd);
 
 		// Shake the screen a bit.
-		MainGame::Game::GetService().GetScreen().ShakeScreen(10);
+		_services.GetService<Screens::Screen>(Services::ServiceType::Screen).ShakeScreen(4);
 	}
 	else
 	{
-		// Get the events service then push the event.
-		Events::Events& events = MainGame::Game::GetService().GetEvents();
-		events.PushEvent(Events::UserEvent::StartMinigame, new Point(minePosition), new uint8_t(m_tileData.GetTileAt(minePosition).m_prosperity));
+		// Push the event to start the minigame.
+		_services.GetService<Events::Events>(Services::ServiceType::Events).PushEvent(Events::UserEvent::StartMinigame, new Point(minePosition), new uint8_t(m_tileData.GetTileAt(minePosition).m_prosperity));
 	}
 
 	// Uncover the seen tiles.
@@ -228,12 +230,13 @@ void WorldObjects::World::handleSwinging()
 }
 
 /// <summary> Handles the player interacting with the object on which they are standing. </summary>
-void WorldObjects::World::handleInteraction()
+/// <param name="_services"> The service provider. </param>
+void WorldObjects::World::handleInteraction(Services::ServiceProvider& _services)
 {
 	// If the player is standing on the exit point, take them to a new floor.
 	if (m_player.GetTilePosition() == m_exitPoint.GetTilePosition()) 
 	{
-		MainGame::Game::GetService().GetAudio().PlaySound(AudioData::SoundID::UseExit);
+		_services.GetService<Audio::Audio>(Services::ServiceType::Audio).PlaySound(AudioData::SoundID::UseExit);
 		generateRandomMap();
 		m_floorCount++;
 	}
@@ -269,24 +272,23 @@ void WorldObjects::World::uncoverTiles()
 }
 
 /// <summary> Handles breaking the gem wall after the player has finished mining it. </summary>
-/// <param name="_tilePosition"> The position of the tile. </param>
-/// <param name="_unused"> Unused. </param>
-void WorldObjects::World::stopMinigame(void* _tilePosition, void* _unused)
+/// <param name="_context"> The context of the event. </param>
+void WorldObjects::World::stopMinigame(Events::EventContext* _context)
 {
 	// Cast the data.
-	Point tilePosition = *static_cast<Point*>(_tilePosition);
+	Point tilePosition = *static_cast<Point*>(_context->m_data1);
 
 	// Since the minigame has ended, the cave wall has collapsed, meaning the wall should be destroyed.
 	m_tileData.FillCellWithRandomFloor(tilePosition);
 
 	// Play the gem wall collapse sound.
-	MainGame::Game::GetService().GetAudio().PlaySound(AudioData::SoundID::GemWallCollapse);
+	_context->m_services->GetService<Audio::Audio>(Services::ServiceType::Audio).PlaySound(AudioData::SoundID::GemWallCollapse);
 
 	// Create particles.
-	MainGame::Game::GetService().GetParticles().AddParticles(tilePosition * SpriteData::c_tileSize, 50, SpriteData::ParticleID::WallStart, SpriteData::ParticleID::WallEnd);
+	_context->m_services->GetService<Particles::ParticleManager>(Services::ServiceType::Particles).AddParticles(tilePosition * SpriteData::c_tileSize, 50, SpriteData::ParticleID::WallStart, SpriteData::ParticleID::WallEnd);
 
 	// Do turns.
-	doTurn(10);
+	doTurn(*_context->m_services, 10);
 
 	// Uncover the seen tiles.
 	uncoverTiles();

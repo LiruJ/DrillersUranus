@@ -1,48 +1,42 @@
 #include "MainMenu.h"
 
-// Service includes.
-#include "Game.h"
-#include "Screen.h"
-
 /// <summary> Draws the menu. </summary>
-void UserInterface::MainMenu::Draw()
+/// <param name="_services"> The service provider. </param>
+void UserInterface::MainMenu::Draw(Services::ServiceProvider& _services) const
 {
 	// Draw the background first.
-	m_backgroundFrame.Draw();
+	m_backgroundFrame.Draw(_services);
 
 	// Draw the help screen.
-	m_helpFrame.Draw();
+	m_helpFrame.Draw(_services);
 
 	// Draw the buttons.
-	m_playButton.Draw();
-	m_helpButton.Draw();
-	m_exitButton.Draw();
-	m_backButton.Draw();
+	m_playButton.Draw(_services);
+	m_helpButton.Draw(_services);
+	m_exitButton.Draw(_services);
+	m_backButton.Draw(_services);
 }
 
 /// <summary> Binds events. </summary>
-void UserInterface::MainMenu::Initialise()
+void UserInterface::MainMenu::Initialise(Events::Events& _events)
 {
 	// Initialise the buttons.
 	m_playButton.SetEvent(Events::UserEvent::StartGame, 0);
-	m_playButton.Initialise();
+	m_playButton.Initialise(_events);
 
 	m_helpButton.SetEvent(Events::UserEvent::HelpScreen, 0);
-	m_helpButton.Initialise();
+	m_helpButton.Initialise(_events);
 
 	m_exitButton.SetEvent(Events::UserEvent::QuitGame, 0);
-	m_exitButton.Initialise();
+	m_exitButton.Initialise(_events);
 
 	m_backButton.SetEvent(Events::UserEvent::MainMenu, 0);
-	m_backButton.Initialise();
-
-	// Get the events service.
-	Events::Events& events = MainGame::Game::GetService().GetEvents();
+	m_backButton.Initialise(_events);
 
 	// Bind the state events.
-	events.AddUserListener(Events::UserEvent::StartGame, std::bind(&MainMenu::disableAll, this, std::placeholders::_1, std::placeholders::_2));
-	events.AddUserListener(Events::UserEvent::HelpScreen, std::bind(&MainMenu::showHelp, this, std::placeholders::_1, std::placeholders::_2));
-	events.AddUserListener(Events::UserEvent::MainMenu, std::bind(&MainMenu::hideHelp, this, std::placeholders::_1, std::placeholders::_2));
+	_events.AddUserListener(Events::UserEvent::StartGame, std::bind(&MainMenu::disableAll, this, std::placeholders::_1));
+	_events.AddUserListener(Events::UserEvent::HelpScreen, std::bind(&MainMenu::showHelp, this, std::placeholders::_1));
+	_events.AddUserListener(Events::UserEvent::MainMenu, std::bind(&MainMenu::hideHelp, this, std::placeholders::_1));
 }
 
 /// <summary> Sets all non-background elements to the given active value. </summary>
@@ -58,7 +52,7 @@ void UserInterface::MainMenu::setAllActive(const bool _active)
 }
 
 /// <summary> Shows the help screen and back button. </summary>
-void UserInterface::MainMenu::showHelp(void *, void *)
+void UserInterface::MainMenu::showHelp(Events::EventContext*)
 {
 	// Start by disabling all elements.
 	setAllActive(false);
@@ -69,7 +63,7 @@ void UserInterface::MainMenu::showHelp(void *, void *)
 }
 
 /// <summary> Hides the help screen and reactivates the menu. </summary>
-void UserInterface::MainMenu::hideHelp(void *, void *)
+void UserInterface::MainMenu::hideHelp(Events::EventContext*)
 {
 	// Start by enabling all elements.
 	setAllActive(true);

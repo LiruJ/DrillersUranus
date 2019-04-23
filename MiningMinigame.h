@@ -8,6 +8,11 @@
 #include "WallData.h"
 #include "WallGem.h"
 
+// Service includes.
+#include "ServiceProvider.h"
+#include "Events.h"
+#include "EventContext.h"
+
 // Utility includes.
 #include <vector>
 
@@ -26,11 +31,11 @@ namespace Minigames
 		/// <summary> Creates the initial minigame. </summary>
 		MiningMinigame() : m_collapseTimer(c_maxTimer), m_wallData(120, 60), m_wallGems() { }
 
-		void Initialise();
+		void Initialise(Events::Events&);
 
-		void Draw();
+		void Draw(Services::ServiceProvider&);
 
-		void Prepare(Point, uint8_t);
+		void Prepare(Services::ServiceProvider&, Point, uint8_t);
 	private:
 		/// <summary> The tools. </summary>
 		static Tool					s_tools[3];
@@ -58,13 +63,13 @@ namespace Minigames
 
 		void placeGems(uint8_t);
 
-		void changeTool(void*, void*);
+		void changeTool(Events::EventContext*);
 
-		void hotkeyTool(void*, void*);
+		void hotkeyTool(Events::EventContext*);
 
-		void mineAt(void*, void*);
+		void mineAt(Events::EventContext*);
 
-		void mined(void*, void*);
+		void mined(Events::EventContext*);
 	};
 }
 #endif

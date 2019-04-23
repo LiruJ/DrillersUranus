@@ -22,7 +22,7 @@ namespace UserInterface
 		/// <param name="_spriteID"> The sprite ID. </param>
 		Button(const Point _position, const Point _size, const uint16_t _spriteID) : Frame::Frame(_position, _size, _spriteID) { }
 
-		void Initialise();
+		void Initialise(Events::Events&);
 
 		/// <summary> Sets the event. </summary>
 		/// <param name="_userEvent"> The <see cref="UserEvent"/> that should be fired when the button is clicked. </param>
@@ -36,7 +36,7 @@ namespace UserInterface
 		/// <remarks> To avoid messing around with void pointers, this is just an int32_t. This int32_t may refer to many things, indices, sizes, booleans, etc., so a void pointer should not be required. </remarks>
 		int32_t m_data;
 
-		void handleClick(void*, void*);
+		void handleClick(Events::EventContext*);
 	};
 }
 #endif

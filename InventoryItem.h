@@ -5,6 +5,9 @@
 #include "WallGem.h"
 #include "Point.h"
 
+// Service includes.
+#include "ServiceProvider.h"
+
 // Utility includes.
 #include "SpriteData.h"
 
@@ -25,13 +28,13 @@ namespace Inventory
 		InventoryItem(const Minigames::WallGem _gem) : m_gemID(_gem.GetID()), m_stackAmount(1), m_singleValue(_gem.GetValue()) {}
 
 		/// <summary> Increments the amount of gems in this stack by <c>1</c>. </summary>
-		inline void AddToStack() { ++m_stackAmount; }
+		inline void AddToStack() { m_stackAmount++; }
 
 		/// <summary> Calculates the value of the entire stack. </summary>
 		/// <returns> The value of the entire stack. </returns>
 		inline uint32_t CalculateStackValue() const { return m_stackAmount * m_singleValue; }
 
-		void Draw(Point) const;
+		void Draw(Point, Services::ServiceProvider&) const;
 	private:
 		/// <summary> The ID of the <see cref="WallGem"/> that this <see cref="InventoryItem"/> represents. </summary>
 		SpriteData::GemID m_gemID;

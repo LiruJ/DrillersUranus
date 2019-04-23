@@ -1,6 +1,11 @@
 #ifndef MINIGAME_MENU_H
 #define MINIGAME_MENU_H
 
+// Service includes.
+#include "ServiceProvider.h"
+#include "Events.h"
+#include "EventContext.h"
+
 // UI includes.
 #include "ProgressBar.h"
 #include "Button.h"
@@ -18,9 +23,9 @@ namespace UserInterface
 		/// <summary> Creates the basic minigame menu. </summary>
 		MinigameMenu() {}
 
-		void Initialise(uint16_t);
+		void Initialise(uint16_t, Events::Events&);
 
-		void Draw();
+		void Draw(Services::ServiceProvider&) const;
 	private:
 		/// <summary> The buttom UI behind the buttons and collapse bar. </summary>
 		Frame		m_bottomBar;
@@ -32,19 +37,19 @@ namespace UserInterface
 		Button		m_toolButtons[3];
 
 		/// <summary> Fires when the current tool is changed, hides the tool's button. </summary>
-		/// <param name="_toolID"> The new tool ID. </param>
-		void toolChanged(void* _toolID, void*) { for (uint8_t i = 0; i < 3; i++) { m_toolButtons[i].SetActive(*static_cast<uint8_t*>(_toolID) != i); } }
+		/// <param name="_context"> The context of the event. </param>
+		void toolChanged(Events::EventContext* _context) { for (uint8_t i = 0; i < 3; i++) { m_toolButtons[i].SetActive(*static_cast<uint8_t*>(_context->m_data1) != i); } }
 
-		void wallMined(void*, void*);
+		void wallMined(Events::EventContext*);
 
 		/// <summary> Starts the menu and initialises. </summary>
-		void start(void*, void*) { m_collapseBar.SetValue(0); }
+		void start(Events::EventContext* = NULL) { m_collapseBar.SetValue(0); }
 
 		/// <summary> Shows this menu. </summary>
-		void show(void*, void*) { setActive(true); }
+		void show(Events::EventContext* = NULL) { setActive(true); }
 
 		/// <summary> Hides this menu. </summary>
-		void hide(void*, void*) { setActive(false); }
+		void hide(Events::EventContext* = NULL) { setActive(false); }
 
 		void setActive(bool);
 	};

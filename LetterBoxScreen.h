@@ -7,9 +7,6 @@
 // Service includes.
 #include "Time.h"
 
-// Data includes.
-#include "Vector2.h"
-
 // Utility includes.
 #include <math.h>
 
@@ -21,23 +18,23 @@ namespace Screens
 	public:
 		LetterBoxScreen() : m_offset(0, 0), m_currentStrength(0), m_currentDirection(0) { Resize(c_designDimensions.x, c_designDimensions.y); }
 
-		virtual Point		ScreenToWindowSpace(const Point _screenPosition) { return (m_position + m_offset) + (_screenPosition * m_scale); }
+		virtual Point		ScreenToWindowSpace(const Point _screenPosition)	{ return (m_position + m_offset) + (_screenPosition * m_scale); }
 
-		virtual Point		WindowToScreenSpace(const Point _windowPosition) { return ((_windowPosition + m_offset) - m_position) / m_scale; }
+		virtual Point		WindowToScreenSpace(const Point _windowPosition)	{ return ((_windowPosition + m_offset) - m_position) / m_scale; }
 
-		virtual Point		ScreenToWindowSize(const Point _screenSize) { return Point(ceil((float_t)_screenSize.x * m_scale), ceil((float_t)_screenSize.y * m_scale)); }
+		virtual Point		ScreenToWindowSize(const Point _screenSize)			{ return Point(ceil((float_t)_screenSize.x * m_scale), ceil((float_t)_screenSize.y * m_scale)); }
 
-		virtual int32_t		ScreenToWindowSize(const int32_t _screenSize) { return (int32_t)ceil(_screenSize * m_scale); }
+		virtual int32_t		ScreenToWindowSize(const int32_t _screenSize)		{ return (int32_t)ceil(_screenSize * m_scale); }
 
-		virtual Point		WindowToScreenSize(const Point _windowSize) { return Point(ceil((float_t)_windowSize.x / m_scale), ceil((float_t)_windowSize.y / m_scale)); }
+		virtual Point		WindowToScreenSize(const Point _windowSize)			{ return Point(ceil((float_t)_windowSize.x / m_scale), ceil((float_t)_windowSize.y / m_scale)); }
 
-		virtual int32_t		WindowToScreenSize(const int32_t _windowSize) { return (int32_t)ceil(_windowSize / m_scale); }
+		virtual int32_t		WindowToScreenSize(const int32_t _windowSize)		{ return (int32_t)ceil(_windowSize / m_scale); }
 
 		virtual Rectangle	ScreenToWindowBounds(const Rectangle _screenBounds) { return Rectangle(ScreenToWindowSpace(Point(_screenBounds.x, _screenBounds.y)), ScreenToWindowSize(Point(_screenBounds.w, _screenBounds.h))); }
 
 		virtual Rectangle	WindowToScreenBounds(const Rectangle _windowBounds) { return Rectangle(WindowToScreenSpace(Point(_windowBounds.x, _windowBounds.y)), WindowToScreenSize(Point(_windowBounds.w, _windowBounds.h))); }
 
-		virtual float_t		GetScale() { return m_scale; }
+		virtual float_t		GetScale()											{ return m_scale; }
 
 		virtual void		ShakeScreen(uint16_t);
 
@@ -52,7 +49,7 @@ namespace Screens
 		const Point		c_aspectRatio = Point(16, 9);
 
 		/// <summary> The minimum strength in pixels before the screen stops shaking. </summary>
-		const float_t	c_minimumStrength = 2;
+		const float_t	c_minimumStrength = 2.0f;
 
 		/// <summary> The multiplier of how much strength is lost per second while shaking. </summary>
 		const float_t	c_strengthDecay = 3.5f;

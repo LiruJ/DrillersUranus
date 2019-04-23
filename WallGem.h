@@ -7,6 +7,9 @@
 #include "GemCollider.h"
 #include "WallData.h"
 
+// Service includes.
+#include "ServiceProvider.h"
+
 // Utility includes.
 #include "SpriteData.h"
 
@@ -36,7 +39,7 @@ namespace Minigames
 			}
 		}
 
-		void Draw();
+		void Draw(Services::ServiceProvider&);
 
 		/// <summary> Finds if this <see cref="WallGem"/> is fully covered up by the given <see cref="WallData"/>. </summary>
 		/// <param name="_wallData"> The data against which to check. </param>

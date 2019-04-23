@@ -1,7 +1,6 @@
 #include "Inventory.h"
 
 // Service includes.
-#include "Game.h"
 #include "Graphics.h"
 #include "Screen.h"
 
@@ -36,11 +35,12 @@ uint32_t Inventory::Inventory::CalculateCombinedValue()
 
 /// <summary> Draws the contents of the inventory from the given position on the screen. </summary>
 /// <param name="_position"> The position from which to draw. </param>
-void Inventory::Inventory::Draw(const Point _position)
+/// <param name="_services"> The service provider. </param>
+void Inventory::Inventory::Draw(const Point _position, Services::ServiceProvider& _services)
 {
 	// Get the graphics and screen services.
-	Graphics::Graphics& graphics = MainGame::Game::GetService().GetGraphics();
-	Screens::Screen& screen = MainGame::Game::GetService().GetScreen();
+	Graphics::Graphics& graphics = _services.GetService<Graphics::Graphics>(Services::ServiceType::Graphics);
+	Screens::Screen& screen = _services.GetService<Screens::Screen>(Services::ServiceType::Screen);
 
 	// Start drawing items at the given position.
 	Point currentPosition = _position;
@@ -48,7 +48,7 @@ void Inventory::Inventory::Draw(const Point _position)
 	while (itemIterator != m_inventoryItems.end())
 	{
 		// Draw the item at the given position.
-		itemIterator->second.Draw(currentPosition);
+		itemIterator->second.Draw(currentPosition, _services);
 
 		// Move the position down and increment the iterator.
 		currentPosition.y += 32;

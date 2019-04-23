@@ -13,6 +13,7 @@
 #include "LetterBoxScreen.h"
 #include "GameTime.h"
 #include "ExplodingParticles.h"
+#include "EventContext.h"
 
 // Utility includes.
 #include <string>
@@ -23,51 +24,40 @@
 
 namespace MainGame
 {
-	/// <summary> Represents the current state of the <see cref="Game"/>. </summary>
-	enum GameState { MainMenu, Map, Minigame, Exit, Lost };
-
 	/// <summary> Represents the main game which ties all the components together. </summary>
 	class Game
 	{
 	public:
 		Game();
 
-		int32_t Run();
-
-		/// <summary> Gets the current service provider. </summary>
-		/// <returns> The current service provider. </returns>
-		static inline Services&		GetService() { return s_serviceProvider; }
-
-		/// <summary> Gets the current game state. </summary>
-		/// <returns> The current game state. </returns>
-		static inline GameState		GetGameState() { return s_currentGameState; }
+		void Run();
 	private:
-		/// <summary> The service provider. </summary>
-		static ServiceProvider		s_serviceProvider;
-
-		/// <summary> The current state of the game. </summary>
-		static GameState			s_currentGameState;
-
 		/// <summary> The folder in which the content is stored. </summary>
 		const std::string			c_contentFolder = "Content";
 
+		/// <summary> The service provider. </summary>
+		Services::ServiceProvider	m_serviceProvider;
+
+		/// <summary> The current state of the game. </summary>
+		GameState					m_currentGameState;
+
 		/// <summary> The graphical service which allows for textures to be loaded. </summary>
-		Graphics::SDLGraphics*		m_SDLGraphics;
+		Graphics::SDLGraphics		m_SDLGraphics;
 
 		/// <summary> The audio service which allows for sounds to be loaded. </summary>
-		Audio::SDLAudio*			m_SDLAudio;
+		Audio::SDLAudio				m_SDLAudio;
 
 		/// <summary> The screen service which allows for resizing. </summary>
-		Screens::LetterBoxScreen*	m_letterBoxScreen;
+		Screens::LetterBoxScreen	m_letterBoxScreen;
 
 		/// <summary> The events service which allows for events to be pumped. </summary>
-		Events::SDLEvents*			m_events;
+		Events::SDLEvents			m_events;
 
 		/// <summary> The time service which allows for updating. </summary>
-		Time::GameTime*				m_gameTime;
+		Time::GameTime				m_gameTime;
 
 		/// <summary> The particles service which allows for updating. </summary>
-		Particles::ExplodingParticles* m_particles;
+		Particles::ExplodingParticles m_particles;
 
 		/// <summary> The main menu. </summary>
 		UserInterface::MainMenu		m_mainMenu;
@@ -94,23 +84,22 @@ namespace MainGame
 
 		void unload();
 
-		void startMinigame(void*, void*);
+		void startMinigame(Events::EventContext*);
 
-		void stopMinigame(void*, void*);
+		void stopMinigame(Events::EventContext* = NULL);
 
 		/// <summary> Handles the window resize event. </summary>
-		/// <param name="_windowX"> The pointer to the new window width. </param>
-		/// <param name="_windowY"> The pointer to the new window height. </param>
-		void resizeScreen(void* _windowX, void* _windowY) { m_letterBoxScreen->Resize(*static_cast<int32_t*>(_windowX), *static_cast<int32_t*>(_windowY)); }
+		/// <param name="_context"> The context of the event. </param>
+		void resizeScreen(Events::EventContext* _context) { m_letterBoxScreen.Resize(*static_cast<int32_t*>(_context->m_data1), *static_cast<int32_t*>(_context->m_data2)); }
 
 		/// <summary> Sets the game state to exit so that the game will quit the update loop. </summary>
-		void exitGame(void*, void*) { s_currentGameState = GameState::Exit; }
+		void exitGame(Events::EventContext* = NULL) { m_currentGameState = GameState::Exit; }
 
-		void loseGame(void*, void*);
+		void loseGame(Events::EventContext* = NULL);
 
-		void startGame(void*, void*);
+		void startGame(Events::EventContext* = NULL);
 	
-		void endGame(void*, void*);
+		void endGame(Events::EventContext* = NULL);
 	};
 }
 #endif

@@ -1,6 +1,11 @@
 #ifndef GAMEMENU_H
 #define GAMEMENU_H
 
+// Service includes.
+#include "ServiceProvider.h"
+#include "Events.h"
+#include "EventContext.h"
+
 // Data includes.
 #include "Point.h"
 
@@ -21,9 +26,9 @@ namespace UserInterface
 		/// <summary> Creates the basic game menu. </summary>
 		GameMenu() : m_currentState(MenuState::Alive) {}
 
-		void Initialise();
+		void Initialise(Events::Events&);
 
-		void Draw(WorldObjects::World& _world);
+		void Draw(WorldObjects::World& _world, Services::ServiceProvider&);
 	private:
 		/// <summary> The different states of the menu. </summary>
 		enum MenuState { Alive, Dead };
@@ -46,16 +51,16 @@ namespace UserInterface
 		void setActive(bool);
 
 		/// <summary> Hides this menu. </summary>
-		void hide(void*, void*) { setActive(false); }
+		void hide(Events::EventContext* = NULL) { setActive(false); }
 
 		/// <summary> Shows this menu. </summary>
-		void show(void*, void*) { setActive(true); }
+		void show(Events::EventContext* = NULL) { setActive(true); }
 
 		/// <summary> Shows the death screen. </summary>
-		void showDeathScreen(void* _unused = NULL, void* _unused2 = NULL) { m_currentState = MenuState::Dead; m_endScreen.SetActive(true); m_quitButton.SetPosition(Point(384, 286)); }
+		void showDeathScreen(Events::EventContext* = NULL) { m_currentState = MenuState::Dead; m_endScreen.SetActive(true); m_quitButton.SetPosition(Point(384, 286)); }
 
 		/// <summary> Hides the death screen. </summary>
-		void hideDeathScreen(void* _unused = NULL, void* _unused2 = NULL) { m_currentState = MenuState::Alive; m_endScreen.SetActive(false); m_quitButton.SetPosition(Point(832, 508)); }
+		void hideDeathScreen(Events::EventContext* = NULL) { m_currentState = MenuState::Alive; m_endScreen.SetActive(false); m_quitButton.SetPosition(Point(832, 508)); }
 	};
 }
 #endif

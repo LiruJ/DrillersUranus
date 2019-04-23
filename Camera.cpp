@@ -5,7 +5,6 @@
 #include "IReadOnlyTileMap.h"
 
 // Service includes.
-#include "Game.h"
 #include "Graphics.h"
 #include "Screen.h"
 
@@ -14,11 +13,12 @@
 
 /// <summary> Draws the given world from the <see cref="Camera"/>'s perspective. </summary>
 /// <param name="_world"> The world to draw. </param>
-void WorldObjects::Camera::Draw(World& _world)
+/// <param name="_services"> The service provider. </param>
+void WorldObjects::Camera::Draw(World& _world, Services::ServiceProvider& _services)
 {
 	// Get the graphics and screen services.
-	Graphics::Graphics& graphics = MainGame::Game::GetService().GetGraphics();
-	Screens::Screen& screen = MainGame::Game::GetService().GetScreen();
+	Graphics::Graphics& graphics = _services.GetService<Graphics::Graphics>(Services::ServiceType::Graphics);
+	Screens::Screen& screen = _services.GetService<Screens::Screen>(Services::ServiceType::Screen);
 
 	// Get the tiledata.
 	IReadOnlyTileMap& tileMap = _world.GetTileMap();
@@ -47,12 +47,12 @@ void WorldObjects::Camera::Draw(World& _world)
 	}
 
 	// Draw the spawn and exit points if they're on screen.
-	if (isOnScreen(_world.GetSpawn())) { _world.GetSpawn().Draw(m_worldPosition); }
-	if (isOnScreen(_world.GetExit()) && tileMap.GetTileAt(_world.GetExit().GetTilePosition()).m_visibility) { _world.GetExit().Draw(m_worldPosition); }
+	if (isOnScreen(_world.GetSpawn())) { _world.GetSpawn().Draw(m_worldPosition, _services); }
+	if (isOnScreen(_world.GetExit()) && tileMap.GetTileAt(_world.GetExit().GetTilePosition()).m_visibility) { _world.GetExit().Draw(m_worldPosition, _services); }
 
 	// Draw the player.
-	_world.GetPlayer().Draw(m_worldPosition);
+	_world.GetPlayer().Draw(m_worldPosition, _services);
 
 	// Draw the UI.
-	m_gameMenu.Draw(_world);
+	m_gameMenu.Draw(_world, _services);
 }

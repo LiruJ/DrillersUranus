@@ -1,6 +1,9 @@
 #ifndef EVENTS_H
 #define EVENTS_H
 
+// Data includes.
+#include "EventContext.h"
+
 // Utility includes.
 #include <functional>
 
@@ -25,12 +28,12 @@ namespace Events
 		/// <summary> Adds a function that will be called when the given user event is fired. </summary>
 		/// <param name="_userEvent"> The user event. </param>
 		/// <param name="_function"> The function to be called. </param>
-		virtual void AddUserListener(UserEvent _userEvent, std::function<void(void*, void*)> _function) = 0;
+		virtual void AddUserListener(UserEvent _userEvent, std::function<void(EventContext*)> _function) = 0;
 		
 		/// <summary> Adds a function that will be called when the given framework event is fired. </summary>
 		/// <param name="_frameworkEventID"> The ID of the framework event. </param>
 		/// <param name="_function"> The function to be called. </param>
-		virtual void AddFrameworkListener(uint32_t _frameworkEventID, std::function<void(void*, void*)> _function) = 0;
+		virtual void AddFrameworkListener(uint32_t _frameworkEventID, std::function<void(EventContext*)> _function) = 0;
 	};
 }
 #endif

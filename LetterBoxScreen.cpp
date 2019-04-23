@@ -3,6 +3,9 @@
 // Framework includes.
 #include <SDL_stdinc.h>
 
+// Data includes.
+#include "Vector2.h"
+
 // Utility includes.
 #include "Random.h"
 

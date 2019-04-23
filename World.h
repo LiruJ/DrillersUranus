@@ -12,7 +12,9 @@
 #include "Camera.h"
 
 // Service includes.
-#include "Graphics.h"
+#include "ServiceProvider.h"
+#include "Events.h"
+#include "EventContext.h"
 
 // Utility includes.
 #include "SpriteData.h"
@@ -33,11 +35,11 @@ namespace WorldObjects
 		World(World&) = delete;
 		World& operator=(const World&) = delete;
 
-		void Initialise();
+		void Initialise(Events::Events&);
 
 		void Reset();
 
-		void Draw();
+		void Draw(Services::ServiceProvider&);
 
 		/// <summary> Gets the player. </summary>
 		/// <returns> The <see cref="Player"/>. </returns>
@@ -93,21 +95,21 @@ namespace WorldObjects
 
 		void generateRandomMap();
 
-		void handleKeyDown(void*, void*);
+		void handleKeyDown(Events::EventContext*);
 
-		void handleMovement(Directions, bool);
+		void handleMovement(Services::ServiceProvider&, Directions, bool);
 
-		void handleSwinging();
+		void handleSwinging(Services::ServiceProvider&);
 
-		void handleInteraction();
+		void handleInteraction(Services::ServiceProvider&);
 
 		void uncoverTiles();
 
-		void stopMinigame(void*, void*);
+		void stopMinigame(Events::EventContext*);
 
-		void doTurn(uint8_t);
+		void doTurn(Services::ServiceProvider&, uint8_t);
 
-		void collapse();
+		void collapse(Services::ServiceProvider&);
 	};
 }
 #endif

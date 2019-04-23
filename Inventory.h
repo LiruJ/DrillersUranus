@@ -6,6 +6,9 @@
 #include "WallGem.h"
 #include "Point.h"
 
+// Service includes.
+#include "ServiceProvider.h"
+
 // Utility includes.
 #include <map>
 #include "SpriteData.h"
@@ -24,11 +27,11 @@ namespace Inventory
 		void AddMinedGem(Minigames::WallGem);
 
 		/// <summary> Completely clears out the inventory. </summary>
-		void Reset() { m_inventoryItems.clear(); }
+		inline void Reset() { m_inventoryItems.clear(); }
 
 		uint32_t CalculateCombinedValue();
 
-		void Draw(Point);
+		void Draw(Point, Services::ServiceProvider&);
 	private:
 		/// <summary> The collection of <see cref="InventoryItem"/>s. </summary>
 		std::map<SpriteData::GemID, InventoryItem> m_inventoryItems;

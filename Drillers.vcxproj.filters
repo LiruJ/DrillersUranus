@@ -88,12 +88,15 @@
     <Filter Include="Header Files\Services\Particles">
       <UniqueIdentifier>{88751a34-2c9f-4b4d-8c32-59ef53962335}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\MainGame">
+      <UniqueIdentifier>{9e2f152e-d6cc-4a4f-8f92-e2fb68b782b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\MainGame">
+      <UniqueIdentifier>{f15cce62-1a7d-42ba-be40-44e926e1e588}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SDLGraphics.cpp">
@@ -180,15 +183,12 @@
     <ClCompile Include="Particle.cpp">
       <Filter>Source Files\Structures</Filter>
     </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files\MainGame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ServiceProvider.h">
-      <Filter>Header Files\Services</Filter>
-    </ClInclude>
-    <ClInclude Include="Services.h">
       <Filter>Header Files\Services</Filter>
     </ClInclude>
     <ClInclude Include="Point.h">
@@ -343,6 +343,15 @@
     </ClInclude>
     <ClInclude Include="Particle.h">
       <Filter>Header Files\Services\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="EventContext.h">
+      <Filter>Header Files\Services\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Header Files\MainGame</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Header Files\MainGame</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

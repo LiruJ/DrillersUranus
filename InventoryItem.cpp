@@ -1,17 +1,17 @@
 ﻿#include "InventoryItem.h"
 
 // Service includes.
-#include "Game.h"
 #include "Graphics.h"
 #include "Screen.h"
 
 /// <summary> Draws this item at the given position. </summary>
 /// <param name="_position"> The screen-position at which to draw. </param>
-void Inventory::InventoryItem::Draw(const Point _position) const
+/// <param name="_services"> The service provider. </param>
+void Inventory::InventoryItem::Draw(const Point _position, Services::ServiceProvider& _services) const
 {
 	// Get the graphics and screen services.
-	Graphics::Graphics& graphics = MainGame::Game::GetService().GetGraphics();
-	Screens::Screen& screen = MainGame::Game::GetService().GetScreen();
+	Graphics::Graphics& graphics = _services.GetService<Graphics::Graphics>(Services::ServiceType::Graphics);
+	Screens::Screen& screen = _services.GetService<Screens::Screen>(Services::ServiceType::Screen);
 
 	// Draw the frame and gem.
 	graphics.Draw(SpriteData::SheetID::UI, SpriteData::UIID::InventoryFrame, screen.GetScale(), screen.ScreenToWindowSpace(_position));

@@ -4,6 +4,10 @@
 // Derived includes.
 #include "MapObject.h"
 
+// Service includes.
+#include "Events.h"
+#include "EventContext.h"
+
 // Data includes.
 #include "Direction.h"
 #include "Inventory.h"
@@ -17,7 +21,7 @@ namespace GameObjects
 		/// <summary> Creates a basic <see cref="Player"/>. </summary>
 		Player() : MapObject::MapObject(SpriteData::ObjectID::PlayerUp), m_sightDistance(4), m_facing(Direction(Directions::Up)) {}
 
-		void Initialise();
+		void Initialise(Events::Events&);
 
 		/// <summary> Moves and faces in the given <see cref="Direction"/>. </summary>
 		/// <param name="_direction"> The direction in which to move. </param>
@@ -33,7 +37,7 @@ namespace GameObjects
 
 		/// <summary> Gets how far the player can see. </summary>
 		/// <returns> How far the player can see. </returns>
-		inline uint8_t GetSightDistance() const { return m_sightDistance; }
+		inline uint8_t GetSightDistance()					const	{ return m_sightDistance; }
 
 		/// <summary> Gets the player's inventory. </summary>
 		/// <returns> The player's inventory. </returns>
@@ -48,7 +52,7 @@ namespace GameObjects
 		/// <summary> The <see cref="Inventory"/> within which the <see cref="WallGem"/>s are stored. </summary>
 		Inventory::Inventory m_inventory;
 
-		void minedGem(void*, void*);
+		void minedGem(Events::EventContext*);
 	};
 }
 #endif

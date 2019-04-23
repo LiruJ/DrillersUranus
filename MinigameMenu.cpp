@@ -1,13 +1,12 @@
 #include "MinigameMenu.h"
 
-// Data includes.
-#include "Game.h"
-
 // Utility includes.
 #include "SpriteData.h"
 
 /// <summary> Initialises the UI. </summary>
-void UserInterface::MinigameMenu::Initialise(const uint16_t _maxTimer)
+/// <param name="_maxTimer"> The highest value of the colla[se timer. </param>
+/// <param name="_events"> The events bus. </param>
+void UserInterface::MinigameMenu::Initialise(const uint16_t _maxTimer, Events::Events& _events)
 {
 	// Initialise the background UI.
 	m_bottomBar = UserInterface::Frame(Point(0, 480), Point(960, 60), SpriteData::UIID::MinigameBar);
@@ -22,42 +21,39 @@ void UserInterface::MinigameMenu::Initialise(const uint16_t _maxTimer)
 	{
 		m_toolButtons[i] = UserInterface::Button(Point(i * 32, 480), Point(32, 32), SpriteData::UIID::Pickaxe + i);
 		m_toolButtons[i].SetEvent(Events::UserEvent::ChangeTool, i);
-		m_toolButtons[i].Initialise();
+		m_toolButtons[i].Initialise(_events);
 	}
 
-	// Get the events service.
-	Events::Events& events = MainGame::Game::GetService().GetEvents();
-
 	// Bind the tool changed event.
-	events.AddUserListener(Events::UserEvent::ChangeTool, std::bind(&MinigameMenu::toolChanged, this, std::placeholders::_1, std::placeholders::_2));
+	_events.AddUserListener(Events::UserEvent::ChangeTool, std::bind(&MinigameMenu::toolChanged, this, std::placeholders::_1));
 
 	// Bind the wall mined event.
-	events.AddUserListener(Events::UserEvent::MinedWall, std::bind(&MinigameMenu::wallMined, this, std::placeholders::_1, std::placeholders::_2));
+	_events.AddUserListener(Events::UserEvent::MinedWall, std::bind(&MinigameMenu::wallMined, this, std::placeholders::_1));
 
 	// Bind the minigame starting to this menu showing.
-	events.AddUserListener(Events::UserEvent::StartMinigame, std::bind(&MinigameMenu::show, this, std::placeholders::_1, std::placeholders::_2));
-	events.AddUserListener(Events::UserEvent::StartMinigame, std::bind(&MinigameMenu::start, this, std::placeholders::_1, std::placeholders::_2));
+	_events.AddUserListener(Events::UserEvent::StartMinigame, std::bind(&MinigameMenu::show, this, std::placeholders::_1));
+	_events.AddUserListener(Events::UserEvent::StartMinigame, std::bind(&MinigameMenu::start, this, std::placeholders::_1));
 
 	// Bind the minigame stopping to this menu hiding.
-	events.AddUserListener(Events::UserEvent::StopMinigame, std::bind(&MinigameMenu::hide, this, std::placeholders::_1, std::placeholders::_2));
-	events.AddUserListener(Events::UserEvent::StartGame, std::bind(&MinigameMenu::hide, this, std::placeholders::_1, std::placeholders::_2));
+	_events.AddUserListener(Events::UserEvent::StopMinigame, std::bind(&MinigameMenu::hide, this, std::placeholders::_1));
+	_events.AddUserListener(Events::UserEvent::StartGame, std::bind(&MinigameMenu::hide, this, std::placeholders::_1));
 }
 
 /// <summary> Draws this menu. </summary>
-void UserInterface::MinigameMenu::Draw()
+/// <param name="_services"> The service provider. </param>
+void UserInterface::MinigameMenu::Draw(Services::ServiceProvider& _services) const
 {
-	m_bottomBar.Draw();
-	m_collapseBar.Draw();
-	for (uint8_t i = 0; i < 3; i++) { m_toolButtons[i].Draw(); }
+	m_bottomBar.Draw(_services);
+	m_collapseBar.Draw(_services);
+	for (uint8_t i = 0; i < 3; i++) { m_toolButtons[i].Draw(_services); }
 }
 
 /// <summary> Fires when the wall is mined, updates the progress bar. </summary>
-/// <param name="_collapseTimer"> The new value of the collapse timer. </param>
-/// <param name="_maxTimer"> The max value of the collapse timer. </param>
-void UserInterface::MinigameMenu::wallMined(void* _collapseTimer, void* _maxTimer)
+/// <param name="_context"> The context of the event. </param>
+void UserInterface::MinigameMenu::wallMined(Events::EventContext* _context)
 {
 	// Set the value of the collapse bar.
-	m_collapseBar.SetValue((*static_cast<uint16_t*>(_maxTimer) - (*static_cast<uint16_t*>(_collapseTimer))));
+	m_collapseBar.SetValue((*static_cast<uint16_t*>(_context->m_data1) - (*static_cast<uint16_t*>(_context->m_data2))));
 }
 
 /// <summary> Sets the active status of all elements. </summary>

@@ -5,15 +5,17 @@
 #include "IReadOnlyTileMap.h"
 
 // Service includes.
-#include "Game.h"
 #include "Graphics.h"
 #include "Screen.h"
 
-void UserInterface::Minimap::Draw(WorldObjects::World& _world)
+/// <summary> Draws the minimap based on the given world. </summary>
+/// <param name="_world"> The world. </param>
+/// <param name="_services"> The service provider. </param>
+void UserInterface::Minimap::Draw(WorldObjects::World& _world, Services::ServiceProvider& _services)
 {
 	// Get the graphics and screen services.
-	Graphics::Graphics& graphics = MainGame::Game::GetService().GetGraphics();
-	Screens::Screen& screen = MainGame::Game::GetService().GetScreen();
+	Graphics::Graphics& graphics = _services.GetService<Graphics::Graphics>(Services::ServiceType::Graphics);
+	Screens::Screen& screen = _services.GetService<Screens::Screen>(Services::ServiceType::Screen);
 
 	// Get the tile map.
 	WorldObjects::IReadOnlyTileMap& tileMap = _world.GetTileMap();

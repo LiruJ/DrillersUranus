@@ -7,5 +7,6 @@ int main(int argc, char * argv[])
 	MainGame::Game game;
 
 	// Start the main game loop, quit when the loop exits.
-	return game.Run();
+	game.Run();
+	return 0;
 }
