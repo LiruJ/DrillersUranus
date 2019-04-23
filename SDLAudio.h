@@ -5,7 +5,7 @@
 #include "Audio.h"
 
 // Framework includes.
-#include "SDL_mixer.h"
+#include <SDL_mixer.h>
 
 // Service includes.
 #include "Logger.h"

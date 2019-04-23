@@ -5,7 +5,7 @@
 #include "Graphics.h"
 
 // Framework includes.
-#include "SDL.h"
+#include <SDL.h>
 #include <SDL_ttf.h>
 
 // Data includes.
