@@ -20,11 +20,11 @@ namespace UserInterface
 	public:
 		/// <summary> Creates the default main menu. </summary>
 		MainMenu() : m_backgroundFrame(Point(0, 0), Point(960, 540), SpriteData::UIID::MenuBackground),
-			m_helpFrame(Point(320, 142), Point(320, 256), SpriteData::UIID::HelpScreen),
+			m_helpFrame(Point(200, 46), Point(560, 448), SpriteData::UIID::HelpScreen),
 			m_playButton(Point(416, 208), Point(128, 32), SpriteData::UIID::PlayButton),
 			m_helpButton(Point(416, 256), Point(128, 32), SpriteData::UIID::HelpButton),
 			m_exitButton(Point(416, 304), Point(128, 32), SpriteData::UIID::QuitButton),
-			m_backButton(Point(323, 363), Point(128, 32), SpriteData::UIID::BackButton)
+			m_backButton(Point(632, 462), Point(128, 32), SpriteData::UIID::BackButton)
 		{
 			// Hide the help screen to start with.
 			hideHelp();

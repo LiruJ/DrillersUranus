@@ -162,7 +162,7 @@ void MainGame::Game::loadTextures()
 		Rectangle(128, 64, 128, 32),
 		Rectangle(128, 96, 128, 32),
 		Rectangle(128, 128, 128, 32),
-		Rectangle(256, 0, 320, 256),
+		Rectangle(256, 0, 560, 448),
 		Rectangle(128, 224, 128, 96),
 	});
 
