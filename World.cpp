@@ -48,7 +48,7 @@ void WorldObjects::World::Initialise(Events::Events& _events)
 /// <summary> Resets the world to its starting state. </summary>
 void WorldObjects::World::Reset()
 {
-	m_floorCount = 0;
+	m_floorCount = 9;
 	m_player.GetInventory().Reset();
 	generateRandomMap();
 }
@@ -234,11 +234,23 @@ void WorldObjects::World::handleSwinging(Services::ServiceProvider& _services)
 void WorldObjects::World::handleInteraction(Services::ServiceProvider& _services)
 {
 	// If the player is standing on the exit point, take them to a new floor.
-	if (m_player.GetTilePosition() == m_exitPoint.GetTilePosition()) 
+	if (m_player.GetTilePosition() == m_exitPoint.GetTilePosition()) { handleNewFloor(_services); }
+}
+
+/// <summary> Handles the player going down a floor. </summary>
+/// <param name="_services"> The service provider. </param>
+void WorldObjects::World::handleNewFloor(Services::ServiceProvider& _services)
+{
+	// Play the exit sound.
+	_services.GetService<Audio::Audio>(Services::ServiceType::Audio).PlaySound(AudioData::SoundID::UseExit);
+
+	// If the floor will be less than 10, continue on as normal; otherwise, win the game.
+	if (++m_floorCount < 10) { generateRandomMap(); }
+	else
 	{
-		_services.GetService<Audio::Audio>(Services::ServiceType::Audio).PlaySound(AudioData::SoundID::UseExit);
-		generateRandomMap();
-		m_floorCount++;
+		// Play the sound for the player winning, and push the won event.
+		_services.GetService<Events::Events>(Services::ServiceType::Events).PushEvent(Events::UserEvent::PlayerWon, NULL, NULL);
+		_services.GetService<Audio::Audio>(Services::ServiceType::Audio).PlaySound(AudioData::SoundID::Win);
 	}
 }
 

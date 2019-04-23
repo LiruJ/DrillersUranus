@@ -23,6 +23,7 @@ void MainGame::Game::draw()
 	{
 	case MainMenu: { m_mainMenu.Draw(m_serviceProvider); break; }
 	case Lost:
+	case Won:
 	case Map: { m_world.Draw(m_serviceProvider); m_particles.Draw(m_SDLGraphics, m_letterBoxScreen, m_world.GetCamera().GetWorldPosition()); break; }
 	case Minigame: { m_miningMinigame.Draw(m_serviceProvider); m_particles.Draw(m_SDLGraphics, m_letterBoxScreen); break; }
 	default: { throw std::exception("Invalid gamestate."); }
@@ -113,8 +114,9 @@ void MainGame::Game::initialiseBindings()
 	m_events.AddFrameworkListener(SDL_QUIT, std::bind(&Game::exitGame, this, std::placeholders::_1));
 	m_events.AddUserListener(Events::UserEvent::QuitGame, std::bind(&Game::exitGame, this, std::placeholders::_1));
 
-	// Bind the lose game.
+	// Bind the lose/win game.
 	m_events.AddUserListener(Events::UserEvent::PlayerDied, std::bind(&Game::loseGame, this, std::placeholders::_1));
+	m_events.AddUserListener(Events::UserEvent::PlayerWon, std::bind(&Game::winGame, this, std::placeholders::_1));
 
 	// Bind the start game.
 	m_events.AddUserListener(Events::UserEvent::StartGame, std::bind(&Game::startGame, this, std::placeholders::_1));
@@ -190,6 +192,7 @@ void MainGame::Game::loadSounds()
 	m_SDLAudio.LoadSoundToID(AudioData::SoundID::PlayerCrushed, c_contentFolder + '\\' + "PlayerCrushed.wav");
 	m_SDLAudio.LoadSoundToID(AudioData::SoundID::UseExit, c_contentFolder + '\\' + "UseExit.wav");
 	m_SDLAudio.LoadSoundToID(AudioData::SoundID::UIClick, c_contentFolder + '\\' + "UIClick.wav");
+	m_SDLAudio.LoadSoundToID(AudioData::SoundID::Win, c_contentFolder + '\\' + "Win.wav");
 
 	// Load the music.
 	m_SDLAudio.LoadSongToID(AudioData::SongID::Main, c_contentFolder + '\\' + "Music1.wav");
@@ -269,6 +272,16 @@ void MainGame::Game::loseGame(Events::EventContext*)
 {
 	// Set the current game state to lost.
 	m_currentGameState = GameState::Lost;
+
+	// Kill particles.
+	m_particles.KillAllAlive();
+}
+
+/// <summary> Fires when the player makes it to level 10, does the same as the death screen but says "won" instead. </summary>
+void MainGame::Game::winGame(Events::EventContext*)
+{
+	// Set the current game state to won.
+	m_currentGameState = GameState::Won;
 
 	// Kill particles.
 	m_particles.KillAllAlive();

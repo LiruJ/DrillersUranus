@@ -5,7 +5,7 @@
 #include "Events.h"
 
 // Framework includes.
-#include "SDL.h"
+#include <SDL.h>
 
 // Utility includes.
 #include "GameState.h"
@@ -19,7 +19,7 @@ namespace Events
 	{
 	public:
 		/// <summary> Creates a new event bus and registers the user events. </summary>
-		SDLEvents() : m_functionsBySDLEventID(std::map<uint32_t, std::vector<std::function<void(EventContext*)>>>()), m_startingEventIndex(SDL_RegisterEvents(9)) { }
+		SDLEvents() : m_functionsBySDLEventID(std::map<uint32_t, std::vector<std::function<void(EventContext*)>>>()), m_startingEventIndex(SDL_RegisterEvents(10)) { }
 
 		void PumpEvents(MainGame::GameState, Services::ServiceProvider&);
 

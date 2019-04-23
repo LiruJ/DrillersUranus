@@ -4,7 +4,7 @@
 namespace AudioData
 {
 	/// <summary> The non-variant sounds. </summary>
-	enum SoundID { Collapse, GemWallCollapse, PlayerCrushed, GetGem, HitGem, UseExit, UIClick };
+	enum SoundID { Collapse, GemWallCollapse, PlayerCrushed, Win, GetGem, HitGem, UseExit, UIClick };
 
 	/// <summary> The varied sounds. </summary>
 	enum VariedSoundID { Step, Hit, Smash };

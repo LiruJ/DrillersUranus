@@ -97,6 +97,8 @@ namespace MainGame
 
 		void loseGame(Events::EventContext* = NULL);
 
+		void winGame(Events::EventContext* = NULL);
+
 		void startGame(Events::EventContext* = NULL);
 	
 		void endGame(Events::EventContext* = NULL);

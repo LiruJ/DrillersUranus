@@ -17,7 +17,7 @@ void UserInterface::GameMenu::Initialise(Events::Events& _events)
 	// Initialise the death screen.
 	m_endScreen = UserInterface::Frame(Point(384, 222), Point(128, 96), SpriteData::UIID::DeathScreen);
 	m_quitButton = UserInterface::Button(Point(384, 286), Point(128, 32), SpriteData::UIID::MenuButton);
-	hideDeathScreen();
+	hideEndScreen();
 
 	// Initialise the minimap.
 	m_minimap = Minimap(Rectangle(832, 32, 128, 128));
@@ -26,11 +26,12 @@ void UserInterface::GameMenu::Initialise(Events::Events& _events)
 	m_quitButton.SetEvent(Events::UserEvent::MainMenu, 0);
 	m_quitButton.Initialise(_events);
 
-	// Bind the player dying to the death screen showing.
-	_events.AddUserListener(Events::UserEvent::PlayerDied, std::bind(&GameMenu::showDeathScreen, this, std::placeholders::_1));
+	// Bind the player dying to the death screen showing, and the same with the win screen.
+	_events.AddUserListener(Events::UserEvent::PlayerDied, std::bind(&GameMenu::showLostScreen, this, std::placeholders::_1));
+	_events.AddUserListener(Events::UserEvent::PlayerWon, std::bind(&GameMenu::showWonScreen, this, std::placeholders::_1));
 
 	// Bind the game starting to the death screen hiding.
-	_events.AddUserListener(Events::UserEvent::StartGame, std::bind(&GameMenu::hideDeathScreen, this, std::placeholders::_1));
+	_events.AddUserListener(Events::UserEvent::StartGame, std::bind(&GameMenu::hideEndScreen, this, std::placeholders::_1));
 
 	// Bind the minigame starting to this menu hiding.
 	_events.AddUserListener(Events::UserEvent::StartMinigame, std::bind(&GameMenu::hide, this, std::placeholders::_1));
@@ -75,11 +76,22 @@ void UserInterface::GameMenu::Draw(WorldObjects::World& _world, Services::Servic
 	// Draw the quit button.
 	m_quitButton.Draw(_services);
 
-	// Draw the player's inventory's worth depending on their alive status.
+	// Position the worth based on the state of the menu.
 	Point worthPosition = Point();
-	if (m_currentState == MenuState::Alive) { worthPosition = Point(868, 164); }
-	else if (m_currentState == MenuState::Dead) { worthPosition = Point(424, 254); }
+
+	// Determine what to draw above the menu.
+	std::string menuText = "";
+
+	switch (m_currentState)
+	{
+	case UserInterface::GameMenu::Alive: { worthPosition = Point(868, 164); break; }
+	case UserInterface::GameMenu::Dead: { worthPosition = Point(424, 254); menuText = "DEAD"; break; }
+	case UserInterface::GameMenu::Escaped: { worthPosition = Point(424, 254); menuText = "ESCAPED"; break; }
+	}
+
+	// Draw the player's worth and menu text.
 	graphics.DrawString(SpriteData::FontID::SmallDetail, '$' + std::to_string(_world.GetPlayer().GetInventory().CalculateCombinedValue()), screen.ScreenToWindowSpace(worthPosition), { 255, 255, 255, 255 });
+	graphics.DrawString(SpriteData::FontID::SmallDetail, menuText, screen.ScreenToWindowSpace(worthPosition - Point(16, 24)), { 255, 255, 255, 255 });
 }
 
 /// <summary> Activates or deactivates this menu. </summary>
@@ -90,6 +102,6 @@ void UserInterface::GameMenu::setActive(bool _active)
 	m_quitButton.SetActive(_active);
 	m_sideBar.SetActive(_active);
 
-	// If the player is still alive, don't activate the end screen.
-	if (m_currentState == MenuState::Dead) { m_endScreen.SetActive(_active); }
+	// If the player is dead or has won, activate the end screen.
+	if (m_currentState != MenuState::Alive) { m_endScreen.SetActive(_active); }
 }

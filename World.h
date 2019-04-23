@@ -103,6 +103,8 @@ namespace WorldObjects
 
 		void handleInteraction(Services::ServiceProvider&);
 
+		void handleNewFloor(Services::ServiceProvider&);
+
 		void uncoverTiles();
 
 		void stopMinigame(Events::EventContext*);

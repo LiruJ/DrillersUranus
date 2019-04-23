@@ -3,6 +3,6 @@
 namespace MainGame
 {
 	/// <summary> Represents the current state of the <see cref="Game"/>. </summary>
-	enum GameState { MainMenu, Map, Minigame, Exit, Lost };
+	enum GameState { MainMenu, Map, Minigame, Exit, Lost, Won };
 }
 #endif

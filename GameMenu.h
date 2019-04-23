@@ -31,7 +31,7 @@ namespace UserInterface
 		void Draw(WorldObjects::World& _world, Services::ServiceProvider&);
 	private:
 		/// <summary> The different states of the menu. </summary>
-		enum MenuState { Alive, Dead };
+		enum MenuState { Alive, Dead, Escaped };
 
 		/// <summary> The state of the menu currently. </summary>
 		MenuState	m_currentState;
@@ -56,11 +56,14 @@ namespace UserInterface
 		/// <summary> Shows this menu. </summary>
 		void show(Events::EventContext* = NULL) { setActive(true); }
 
-		/// <summary> Shows the death screen. </summary>
-		void showDeathScreen(Events::EventContext* = NULL) { m_currentState = MenuState::Dead; m_endScreen.SetActive(true); m_quitButton.SetPosition(Point(384, 286)); }
+		/// <summary> Shows the lost screen. </summary>
+		void showLostScreen(Events::EventContext* = NULL) { m_currentState = MenuState::Dead; m_endScreen.SetActive(true); m_quitButton.SetPosition(Point(384, 286)); }
 
-		/// <summary> Hides the death screen. </summary>
-		void hideDeathScreen(Events::EventContext* = NULL) { m_currentState = MenuState::Alive; m_endScreen.SetActive(false); m_quitButton.SetPosition(Point(832, 508)); }
+		/// <summary> Shows the won screen. </summary>
+		void showWonScreen(Events::EventContext* = NULL) { m_currentState = MenuState::Escaped; m_endScreen.SetActive(true); m_quitButton.SetPosition(Point(384, 286)); }
+
+		/// <summary> Hides the end screen. </summary>
+		void hideEndScreen(Events::EventContext* = NULL) { m_currentState = MenuState::Alive; m_endScreen.SetActive(false); m_quitButton.SetPosition(Point(832, 508)); }
 	};
 }
 #endif
