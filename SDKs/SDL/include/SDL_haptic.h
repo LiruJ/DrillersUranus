@@ -732,7 +732,7 @@ typedef struct SDL_HapticCustom
  *  \brief The generic template for any haptic effect.
  *
  *  All values max at 32767 (0x7FFF).  Signed values also can be negative.
- *  Time values unless specified otherwise are in milliseconds.
+ *  DeltaTime values unless specified otherwise are in milliseconds.
  *
  *  You can also pass ::SDL_HAPTIC_INFINITY to length instead of a 0-32767
  *  value.  Neither delay, interval, attack_length nor fade_length support
@@ -779,7 +779,7 @@ typedef struct SDL_HapticCustom
     | attack_level --> |                        \
     |                  |                        |  <---  fade_level
     |
-    +--------------------------------------------------> Time
+    +--------------------------------------------------> DeltaTime
                        [--]                 [---]
                        attack_length        fade_length
 

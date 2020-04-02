@@ -42,7 +42,7 @@ namespace Particles
 		/// <summary> How much scale is lost per second. </summary>
 		float_t m_scaleSpeed;
 
-		void Update(Time::Time&);
+		void Update(Time::DeltaTime&);
 
 		void Draw(uint16_t, Graphics::Graphics&, Screens::Screen&, Point = Point(0));
 	};

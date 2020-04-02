@@ -25,7 +25,7 @@ Particles::ExplodingParticles::~ExplodingParticles()
 
 /// <summary> Updates the particles based on the time that has passed. </summary>
 /// <param name="_gameTime"> The current gametime. </param>
-void Particles::ExplodingParticles::Update(Time::Time& _gameTime)
+void Particles::ExplodingParticles::Update(Time::DeltaTime& _gameTime)
 {
 	// Update each particle, if any are below 0 scale after updating, move them to the pool.
 	std::vector<Particle*>::iterator activeIterator = m_activeParticles.begin();

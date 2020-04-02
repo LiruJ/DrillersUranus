@@ -31,7 +31,7 @@ void Screens::LetterBoxScreen::ShakeScreen(const uint16_t _strength)
 
 /// <summary> Updates the screen and the shake effect. </summary>
 /// <param name="_gameTime"> The current game time. </param>
-void Screens::LetterBoxScreen::Update(Time::Time& _gameTime)
+void Screens::LetterBoxScreen::Update(Time::DeltaTime& _gameTime)
 {
 	// If there is no strength, don't shake the screen at all.
 	if (m_currentStrength <= 0) { return; }

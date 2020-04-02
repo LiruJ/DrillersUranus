@@ -38,7 +38,7 @@ namespace Screens
 
 		virtual void		ShakeScreen(uint16_t);
 
-		void				Update(Time::Time&);
+		void				Update(Time::DeltaTime&);
 
 		void				Resize(int32_t, int32_t);
 	private:

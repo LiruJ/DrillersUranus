@@ -14,7 +14,7 @@
 namespace Time
 {
 	/// <summary> Represents a gametime object using SDL's performance counter. </summary>
-	class GameTime : public Time
+	class GameTime : public DeltaTime
 	{
 	public:
 		/// <summary> Updates the gametime for the current frame. </summary>

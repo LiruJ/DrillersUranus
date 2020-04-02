@@ -37,7 +37,7 @@ void Graphics::SDLGraphics::Initialise(const int32_t _width, const int32_t _heig
 	}
 
 	// Create the renderer.
-	m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED || SDL_RENDERER_PRESENTVSYNC);
+	m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (m_renderer == nullptr)
 	{
 		SDL_DestroyWindow(m_window);

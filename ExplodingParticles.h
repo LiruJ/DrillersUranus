@@ -26,7 +26,7 @@ namespace Particles
 
 		ExplodingParticles() : m_activeParticles(std::vector<Particle*>()), m_deadParticles(std::vector<Particle*>()) { }
 
-		void Update(Time::Time&);
+		void Update(Time::DeltaTime&);
 
 		void Draw(Graphics::Graphics&, Screens::Screen&, Point = Point(0));
 

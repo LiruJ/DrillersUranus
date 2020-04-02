@@ -2,7 +2,7 @@
 
 /// <summary> Updates the movement, rotation, and scale of this particle based on the time that has passed. </summary>
 /// <param name="_time"> The current gametime. </param>
-void Particles::Particle::Update(Time::Time& _gameTime)
+void Particles::Particle::Update(Time::DeltaTime& _gameTime)
 {
 	// Change the rotation based on the speed.
 	m_rotation += m_rotationSpeed * _gameTime.GetDeltaTimeS();

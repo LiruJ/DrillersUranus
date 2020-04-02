@@ -7,10 +7,10 @@
 namespace Time
 {
 	/// <summary> Represents an interfaced version of a time manager class which allows for access to game time. </summary>
-	class Time
+	class DeltaTime
 	{
 	public:
-		virtual ~Time() {}
+		virtual ~DeltaTime() {}
 
 		/// <summary> Get the total amount of time that the game has been running in milliseconds. </summary>
 		/// <returns> The total amount of milliseconds that the game has been running. </returns>
